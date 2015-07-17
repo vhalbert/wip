@@ -65,7 +65,7 @@ public  class TestLinuxCommands {
 		Select command = (Select)VDBUtility.TRANSLATION_UTILITY.parseCommand("select results From ExecTable where arguments = 'ls'"); //$NON-NLS-1$
 		
 	
-		performTest(command, 4, 1);
+		performTest(command, 6, 1);
 	}	
 	
 	protected List<Object> performTest(Select command, int rowcnt, int colCount) throws Exception {
