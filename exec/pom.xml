@@ -8,7 +8,7 @@
     <description>ExecTranslator Translator</description>
     <packaging>jar</packaging>
     <properties>
-        <version.org.jboss.teiid>8.7.1</version.org.jboss.teiid>
+        <version.org.jboss.teiid>8.7.0.Final</version.org.jboss.teiid>
         <version.javax.resource.connector.api>1.5</version.javax.resource.connector.api>
         <version.junit.junit>4.12</version.junit.junit>
         <version.mockito>1.9.5</version.mockito>
