@@ -1,0 +1,69 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+		<artifactId>teiid-quickstart-parent</artifactId>
+		<groupId>org.jboss.teiid.quickstart</groupId>
+		<version>2.1.0</version>
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>dv_quickstart</artifactId>
+	<!-- packaging>pom</packaging-->
+
+	<name>Data Virtualization Quickstart</name>
+	<description>This is the Data Virtualization Quickstart</description>
+	<dependencies>
+          <dependency>
+               <groupId>junit</groupId>
+               <artifactId>junit</artifactId>
+           </dependency>
+    </dependencies>        
+    <build>
+        <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+	<!--  			<configuration>
+					<includes>
+						<include>**/pojo/*</include>
+					</includes>
+				</configuration-->
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>QS_UTIL</mainClass>
+						</manifest>
+					</archive>
+				</configuration>				
+				<executions>
+					<execution>
+						<id>make-a-jar</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>dist_kit.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                  <execution>
+                    <id>create-assemblies</id>
+                    <phase>package</phase>
+                    <goals>
+                      <goal>single</goal>
+                    </goals>
+                  </execution>
+                </executions>
+            </plugin>   
+       			
+		</plugins>
+	</build>
+</project>

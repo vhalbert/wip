@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.4.1  (Unix)">
+	<META NAME="CREATED" CONTENT="20150803;8541000">
+	<META NAME="CHANGED" CONTENT="20150804;19363300">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P><BR><BR>
+</P>
+<OL>
+	<LI><P>When this kit is unzipped, it will be the location the EAP
+	and DV downloads should be placed.</P>
+	<LI><P>Download the below kits to this directory location (referred
+	to as quickstart_home).</P>
+	<LI><P>Open a terminal window to the quickstart_home</P>
+	<LI><P>run the setup_dv.sh (.bat) script to install and configure
+	the DV server. This will:</P>
+</OL>
+<UL>
+	<UL>
+		<LI><P>install EAP</P>
+		<LI><P>install DV</P>
+		<LI><P>start server</P>
+		<LI><P>configure and deploy quick start data sources (H2 and web
+		service)</P>
+		<LI><P>deploy example VDB, name portfolio 
+		</P>
+	</UL>
+</UL>
+<OL START=5>
+	<LI><P>Notes on installation</P>
+</OL>
+<UL>
+	<UL>
+		<LI><P>1 common password for all users (admin, teiidUser,
+		dashboardAdmin): admin_1!</P>
+		<UL>
+			<LI><P>To change the password, the following 2 files need to be
+			changed</P>
+			<UL>
+				<LI><P>eap-installer.xml.variables</P>
+				<LI><P>dv-installer.xml.variables</P>
+			</UL>
+		</UL>
+		<LI><P>to stop the server, run shutdown_server.sh</P>
+	</UL>
+</UL>
+<OL START=6>
+	<LI><P>Test the vdb</P>
+</OL>
+<UL>
+	<UL>
+		<LI><P>connect</P>
+		<UL>
+			<LI><P>URL: jdbc:teiid:<A HREF="mailto:portfolio@mm">portfolio@mm</A>://localhost:31000</P>
+			<LI><P>Username/Password: admin / admin_1!</P>
+		</UL>
+		<LI><P>Example queries</P>
+		<UL>
+			<LI><P>(h2) select * from Accounts.Customer</P>
+			<LI><P>(csv) select * from Stocks.StockPrices</P>
+			<LI><P>(webservice) select * from
+			CustomerCredit.CustomersCreditView</P>
+			<LI><P>(h2 &amp; csv) select * from Stocks.StockPrices</P>
+			<LI><P>(h2 &amp; webservice) select * from
+			CustomerCreditInfo.CustomersCreditInfoView</P>
+		</UL>
+	</UL>
+</UL>
+<P><BR><BR>
+</P>
+<P>Downloads (click on the link):</P>
+<P>EAP 6.4 -
+<A HREF="http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar</U></FONT></FONT></FONT></A></P>
+<P>For initial testing, pull the DV 6.2 ER3 kit from here:</P>
+<P><A HREF="http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar">http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar</A></P>
+<P>The following link is to jboss.org, but its for the 6.1 kit, for
+which the install process isn't for, so it might not work.  But when
+DV 6.2 is released, this will be where we'll want the users to pull
+from.</P>
+<P>DV 6.2 -
+<A HREF="http://www.jboss.org/download-manager/file/jboss-dv-installer-6.1.0.redhat-3.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>http://www.jboss.org/download-manager/file/jboss-dv-installer-6.1.0.redhat-3.jar</U></FONT></FONT></FONT></A></P>
+<P>JBDS -
+<A HREF="https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar</U></FONT></FONT></FONT></A></P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>

@@ -1,0 +1,1 @@
+The lib directory should contain the QS_LIB (quickstart utility) jar.
