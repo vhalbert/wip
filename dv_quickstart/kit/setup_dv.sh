@@ -46,7 +46,7 @@ echo "DV server has been installed, starting server"
 
 cd $JBOSS_HOME/bin
 
-./standalone.sh &
+./standalone.sh >>console.log &
 
 cd $DIRNAME
 

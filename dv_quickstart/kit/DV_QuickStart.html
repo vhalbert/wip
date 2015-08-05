@@ -5,17 +5,17 @@
 	<TITLE></TITLE>
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.4.1  (Unix)">
 	<META NAME="CREATED" CONTENT="20150803;8541000">
-	<META NAME="CHANGED" CONTENT="20150804;19363300">
+	<META NAME="CHANGED" CONTENT="20150805;15010800">
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
 <P><BR><BR>
 </P>
 <OL>
-	<LI><P>When this kit is unzipped, it will be the location the EAP
-	and DV downloads should be placed.</P>
+	<LI><P>When this kit is unzipped, it will be the location that the
+	EAP and DV downloads should be placed.</P>
 	<LI><P>Download the below kits to this directory location (referred
 	to as quickstart_home).</P>
-	<LI><P>Open a terminal window to the quickstart_home</P>
+	<LI><P>Open a terminal window and 'cd' into this quickstart_home</P>
 	<LI><P>run the setup_dv.sh (.bat) script to install and configure
 	the DV server. This will:</P>
 </OL>
@@ -70,6 +70,48 @@
 		</UL>
 	</UL>
 </UL>
+<OL>
+	<LI VALUE=1><P>Example Data</P>
+</OL>
+<UL>
+	<UL>
+		<LI><P>H2 database</P>
+		<UL>
+			<LI><P>Schema: Accounts 
+			</P>
+			<UL>
+				<LI><P>Table:  Customer (SSN, FirstName, LastName, etc.)</P>
+				<LI><P>Table:  Product (ID, Symbol, Company_Name)</P>
+			</UL>
+		</UL>
+		<LI><P>CSV file</P>
+		<UL>
+			<LI><P>Schema:  MarketData</P>
+			<LI><P>View:  Stocks 
+			</P>
+			<UL>
+				<LI><P>Table:  StockPrices (symbol, price)</P>
+			</UL>
+		</UL>
+		<LI><P>Web service</P>
+		<UL>
+			<LI><P>Schema:  CustomerCreditSource</P>
+			<LI><P>View:  CustomerCredit 
+			</P>
+			<UL>
+				<LI><P>Table: CustomerCreditView (customernumber, creditlimit,
+				creditscore)</P>
+			</UL>
+		</UL>
+		<LI><P>Views</P>
+		<UL>
+			<LI><P>Stocks.Stock:   List the stockPrice for each product</P>
+			<LI><P>CustomerCreditInfo.CustomersCreditInfoView:   List the
+			creditLimit and creditScore for each customer 
+			</P>
+		</UL>
+	</UL>
+</UL>
 <P><BR><BR>
 </P>
 <P>Downloads (click on the link):</P>
@@ -78,7 +120,7 @@
 <P>For initial testing, pull the DV 6.2 ER3 kit from here:</P>
 <P><A HREF="http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar">http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar</A></P>
 <P>The following link is to jboss.org, but its for the 6.1 kit, for
-which the install process isn't for, so it might not work.  But when
+which the install process isn't for, so it might not work. But when
 DV 6.2 is released, this will be where we'll want the users to pull
 from.</P>
 <P>DV 6.2 -
