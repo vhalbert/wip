@@ -1,0 +1,2 @@
+file=org.teiid.embedded.translator.FileTranslator
+h2=org.teiid.embedded.translator.H2JDBCTranslator

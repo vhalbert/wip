@@ -1,0 +1,1 @@
+file=org.teiid.embedded.connector.FileConnector
