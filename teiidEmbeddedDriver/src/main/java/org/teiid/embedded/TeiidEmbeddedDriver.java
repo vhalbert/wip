@@ -81,8 +81,10 @@ public class TeiidEmbeddedDriver {
 		manager.initialize(configurationFileName);
 	}
 	
-	public void startServer() {
+	public void startServer() throws Exception {
 		server.start(manager.getEmbeddedConfiguration());
+		
+		manager.deployVDBs();
 	}
 	/**
 	 * Call to deploy a VDB xml file
@@ -131,7 +133,7 @@ public class TeiidEmbeddedDriver {
 	 * @throws Exception
 	 */
 	public Connection getConnection(String url, Properties props) throws Exception {
-		return server.getDriver().connect("jdbc:teiid:Portfolio", props);
+		return server.getDriver().connect(url, props);
 	}
 	
 	public void shutdown() {

@@ -24,26 +24,26 @@ package org.teiid.embedded.translator;
 import org.teiid.embedded.Configuration;
 import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.component.TeiidTranslatorWrapper;
-import org.teiid.translator.file.FileExecutionFactory;
+import org.teiid.translator.excel.ExcelExecutionFactory;
 
 
 /**
  * @author vanhalbert
  *
  */
-public class FileTranslator extends TeiidTranslatorWrapper {
+public class ExcelTranslator extends TeiidTranslatorWrapper {
+
 	
 	@Override
 	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
 			throws Exception {
 		
-	   	FileExecutionFactory fileExecutionFactory = new FileExecutionFactory();
-	   	
-    	this.applyProperties(fileExecutionFactory, config.getProperties());
- 
-    	fileExecutionFactory.start();
-    	manager.getEmbeddedServer().addTranslator( config.getType(), fileExecutionFactory);
+		ExcelExecutionFactory factory = new ExcelExecutionFactory();
+		this.applyProperties(factory, config.getProperties());
 		
+		factory.start();
+		manager.getEmbeddedServer().addTranslator(config.getType(), factory);
+
 	}
 
 }

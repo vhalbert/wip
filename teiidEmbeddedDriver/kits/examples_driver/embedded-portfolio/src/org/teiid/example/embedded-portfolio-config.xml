@@ -32,8 +32,17 @@
     <transactionmgr>
         <className>org.teiid.embedded.transactionmgr.ArjunaTransactionManager</className>
         <properties>
+            <property name="NodeIdentifier">1</property>
+            <property name="SocketProcessIdPort">0</property>
+            <property name="SocketProcessIdMaxPorts">10</property>
+            
+            <property name="EnableStatistics">false</property>
+            <property name="DefaultTimeout">300</property>
+            <property name="TransactionStatusManagerEnable">false</property>
+            <property name="TxReaperTimeout">120000</property>
         </properties>         
     </transactionmgr>   	
+
 
 <!--  * =====================================================================*   -->
 <!--  *    translators defines the translation logic to use                  *   -->

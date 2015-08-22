@@ -65,7 +65,11 @@
                 <artifactId>translator-jdbc</artifactId>
                 <version>${version.org.jboss.teiid}</version>
             </dependency>
-    
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>translator-excel</artifactId>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>   
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>

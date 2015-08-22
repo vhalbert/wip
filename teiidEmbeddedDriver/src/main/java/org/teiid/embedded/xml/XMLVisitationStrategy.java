@@ -78,6 +78,9 @@ public class XMLVisitationStrategy {
     public TransactionMgrConfiguration getTransactionMgr() throws TeiidComponentException {
         Element transmgrElement = embeddedConfigDoc.getRootElement().getChild(TagNames.TransactionMgr.ROOT);
         
+        // transaction mgr is optional
+        if (transmgrElement == null) return null;
+        
         TransactionMgrConfiguration config = new TransactionMgrConfiguration();
         
         setCommonConfiguration(transmgrElement, config, false);
@@ -85,7 +88,8 @@ public class XMLVisitationStrategy {
         Element classNameElement = transmgrElement.getChild(TagNames.TransactionMgr.CLASS_NAME);
        
         if (classNameElement == null) {
-      		throw new RuntimeException("Invalid structured xml file, no " + TagNames.TransactionMgr.CLASS_NAME + " found in " + TagNames.TransactionMgr.ROOT + " element");
+        	return null;
+//      		throw new RuntimeException("Invalid structured xml file, no " + TagNames.TransactionMgr.CLASS_NAME + " found in " + TagNames.TransactionMgr.ROOT + " element");
       	  
         }
         String className = classNameElement.getText();

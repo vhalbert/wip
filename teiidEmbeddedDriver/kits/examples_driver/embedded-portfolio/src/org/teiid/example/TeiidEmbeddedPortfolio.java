@@ -148,6 +148,8 @@ public class TeiidEmbeddedPortfolio {
 		execute(c, "select * from StockPrices", false);
 		execute(c, "select * from Stock", true);
 		
+		server.shutdown();
+		
 		stopH2Server();
 	}
 

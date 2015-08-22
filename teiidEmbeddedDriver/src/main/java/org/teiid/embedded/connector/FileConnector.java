@@ -45,7 +45,6 @@ public class FileConnector extends TeiidConnectorWrapper {
     	
     	EmbeddedUtil.setProperties(managedconnectionFactory, config.getProperties());
     	
-//		managedconnectionFactory.setParentDirectory("data");
 		manager.getEmbeddedServer().addConnectionFactory(cc.getJndiName(), managedconnectionFactory.createConnectionFactory());
 
 		

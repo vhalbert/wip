@@ -24,6 +24,7 @@ package org.teiid.embedded;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
 
 import org.teiid.core.util.PropertiesUtils;
@@ -79,7 +80,10 @@ public class TeiidEmbeddedMgr {
 		//			configuring the TransactionMgr.
 		xmlConfig.getEmbeddedConfiguration().accept(tecVisitor);
 		
-		xmlConfig.getTransactionMgrConfiguration().accept(tecVisitor);
+		// transmgr is optional
+		if (xmlConfig.getTransactionMgrConfiguration() != null) {
+			xmlConfig.getTransactionMgrConfiguration().accept(tecVisitor);
+		}
 		
 		Collection<TranslatorConfiguration> mt = xmlConfig.getTranslators();
 		for (TranslatorConfiguration tc : mt) {
@@ -90,6 +94,19 @@ public class TeiidEmbeddedMgr {
 			cc.accept(tecVisitor);
 		}
 
+	}
+	
+	public void deployVDBs() throws Exception {
+		List<String> vdbs = xmlConfig.getVDBs();
+		if (vdbs == null || vdbs.isEmpty()) return;
+		
+		for (String vdb:vdbs) {
+			if (vdb.toLowerCase().endsWith(".zip")) {
+				driver.deployVDBZip(vdb);
+			} else {
+				driver.deployVDB(vdb);
+			}
+		}
 	}
 	
 	public ClassRegistry getClassRegistry()

@@ -1,2 +1,3 @@
 file=org.teiid.embedded.translator.FileTranslator
+excel=org.teiid.embedded.translator.ExcelTranslator
 h2=org.teiid.embedded.translator.H2JDBCTranslator
