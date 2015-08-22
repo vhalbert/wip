@@ -25,7 +25,6 @@ import org.teiid.embedded.Configuration;
 import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.component.TeiidConnectorWrapper;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
-import org.teiid.embedded.util.EmbeddedUtil;
 import org.teiid.resource.adapter.file.FileManagedConnectionFactory;
 
 /**
@@ -43,7 +42,7 @@ public class FileConnector extends TeiidConnectorWrapper {
     	
     	FileManagedConnectionFactory managedconnectionFactory = new FileManagedConnectionFactory();
     	
-    	EmbeddedUtil.setProperties(managedconnectionFactory, config.getProperties());
+    	this.applyProperties(managedconnectionFactory, config.getProperties());
     	
 		manager.getEmbeddedServer().addConnectionFactory(cc.getJndiName(), managedconnectionFactory.createConnectionFactory());
 

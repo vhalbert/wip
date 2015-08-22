@@ -41,7 +41,9 @@ public class TestConnectors {
 	@BeforeClass
 	public static void onlyOnce() {
 		DRIVER = new TeiidEmbeddedDriver();
-		MANAGER = new TeiidEmbeddedMgr(DRIVER);		
+		MANAGER = new TeiidEmbeddedMgr(DRIVER);	
+		
+		DRIVER.LOG_COMPONENT_SET_METHODS = true;
 	}
 	
 	@Test public void testFileConnector() throws Exception {	
