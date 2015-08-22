@@ -14,10 +14,6 @@
     <fileSet>
         <directory>kits/examples_driver</directory>
         <outputDirectory>./examples_driver</outputDirectory>     
-        <filtered>true</filtered> 
-        <includes>
-          <include>**/*</include>
-        </includes> 
         <excludes>
             <exclude>**/*.sh</exclude>
         </excludes>  
@@ -25,14 +21,13 @@
    <fileSet>
         <directory>target</directory>
         <outputDirectory>lib/</outputDirectory>     
-        <filtered>false</filtered> 
         <includes>
           <include>teiidEmbeddedDriver*.jar</include>
         </includes>   
     </fileSet> 
     <fileSet>
         <directory>kits/examples_driver</directory>
-        <outputDirectory>./examples_driver</outputDirectory>      
+        <outputDirectory>./examples_driver</outputDirectory>     
         <includes>
           <include>**/*.sh</include>
         </includes>   
