@@ -40,46 +40,6 @@ public class TeiidEmbeddedConfigurationVisitor implements ConfigurationVisitor {
 		ComponentWrapper cw = config.createComponentWrapperInstance(manager);
 		cw.initialize(manager, config);
 		
-//		if (config instanceof EmbeddedServerConfiguration) {
-//			manager.setEmbeddedConfiguration(  ((TeiidEmbeddedConfigurationWrapper) cw).getEmbeddedConfiguration() );
-//		}
-			
-		
-//		if (config instanceof TranslatorConfiguration) {
-//			TranslatorConfiguration tc = (TranslatorConfiguration) config;
-//			
-//			try {
-//				TeiidTranslatorWrapper tw =  manager.getClassRegistry().getTranslatorClassInstance(tc.getType());
-//				tw.initialize(manager.getEmbeddedServer(), tc);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} else if (config instanceof ConnectorConfiguration) {
-//			ConnectorConfiguration cc = (ConnectorConfiguration) config;
-//			
-//			try {
-//				TeiidConnectorWrapper cw =  manager.getClassRegistry().getConnectorClassInstance(cc.getType());
-//				cw.initialize(manager.getEmbeddedServer(), cc);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		} else if (config instanceof EmbeddedServerConfiguration) {
-//			EmbeddedServerConfiguration esc = (EmbeddedServerConfiguration) config;
-//			
-//			TeiidEmbeddedConfigurationWrapper tecw = new TeiidEmbeddedConfigurationWrapper();
-//			
-//			tecw.initialize(manager.getEmbeddedServer(), esc);
-//			
-//			manager.setEmbeddedConfiguration(tecw.getEmbeddedConfiguration());
-//			
-//		} else if (config instanceof TransactionMgrConfiguration) {
-//			TransactionMgrConfiguration tmr = (TransactionMgrConfiguration) config;
-//			
-//			TeiidTransactionMgrWrapper tmw = (TeiidTransactionMgrWrapper) tmr.createComponentWrapperInstance(manager);
-//			
-//			
-//			
-//		}
 	}
 
 }

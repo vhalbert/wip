@@ -43,19 +43,7 @@ public class TeiidEmbeddedConfigurationWrapper extends ComponentWrapper {
 		}
 		
 		manager.setEmbeddedConfiguration(emdConfig);
-		
-//		this.emdConfig = (EmbeddedConfiguration) config.createComponentWrapperInstance(manager);
-    	
-//		if (this.transactionMgrClassName != null) {					
-//			Class<?> clz = ClassRegistry.loadClass(getTransactionMgrClassName(), this.getClass().getClassLoader());
-//			TeiidTransactionMgrWrapper wrapper = (TeiidTransactionMgrWrapper)  clz.newInstance();
-//			config.setTransactionManager(wrapper.getTransactionManager()); 
-//		}
+
 	}
-	
-//	
-//	public EmbeddedConfiguration getEmbeddedConfiguration() {
-//		return this.emdConfig;
-//	}
 
 }

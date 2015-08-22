@@ -32,9 +32,6 @@ public abstract class BaseConfiguration  {
 	private String name = "NotAssigned";
 	private Properties properties = null;
 	
-//	public void accept(ConfigurationVisitor visitor) throws Exception {
-//		visitor.visit( this);
-//	}
 	
 	public void setName(String name) {
 		this.name = name;

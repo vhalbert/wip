@@ -31,7 +31,4 @@ public interface ConfigurationVisitor {
 
 	public void visit(Configuration configuration) throws Exception;
 	
-//	public void visit(TranslatorConfiguration translator);
-	
-//	public void visit(TransactionMgrConfiguration transactionMgr);
 }

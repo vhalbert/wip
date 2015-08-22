@@ -134,46 +134,12 @@ public class TeiidEmbeddedDriver {
 		return server.getDriver().connect("jdbc:teiid:Portfolio", props);
 	}
 	
-
 	public void shutdown() {
 		server.stop();
 	}
-
-//	public ClassRegistry getClassRegistry()
-//	{
-//		return this.registry;
-//	}
 	
 	public EmbeddedServer getEmbeddedServer() {
 		return this.server;
 	}
 	
-//	protected void setEmbeddedConfiguration(EmbeddedConfiguration ec) {
-//		this.config = ec;
-//	}
-	
-//	private void loadMappingFiles() throws IOException {
-//		
-//		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(TRANSLATOR_MAPPING_FILE);
-//		if (urlToFile == null) {
-//			throw new RuntimeException("Unable to get URL for file " + TRANSLATOR_MAPPING_FILE);
-//		}
-//
-//		Properties translatorMapping = PropertiesUtils.loadFromURL(urlToFile);
-//
-//		urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(CONNECTOR_MAPPING_FILE);
-//		if (urlToFile == null) {
-//			throw new RuntimeException("Unable to get URL for file " + CONNECTOR_MAPPING_FILE);
-//		}
-//
-//		Properties connectorMapping = PropertiesUtils.loadFromURL(urlToFile);
-//		
-//		registry.setConnectorTypeClassMapping(connectorMapping);
-//		registry.setTranslatorTypeClassMapping(translatorMapping);
-//	}
-
-//	public static void main(String[] args) throws Exception {
-//	
-//	}
-
 }
