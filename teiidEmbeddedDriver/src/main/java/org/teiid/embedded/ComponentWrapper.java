@@ -21,6 +21,7 @@
  */
 package org.teiid.embedded;
 
+import java.lang.reflect.Method;
 import java.util.Properties;
 
 import org.teiid.embedded.util.EmbeddedUtil;
@@ -40,11 +41,23 @@ import org.teiid.embedded.util.EmbeddedUtil;
  *
  */
 public abstract class ComponentWrapper {
+	
+	public static boolean LOG_SETTINGS = TeiidEmbeddedDriver.LOG_COMPONENT_SET_METHODS;
 
 	public abstract void initialize(TeiidEmbeddedMgr manager, Configuration config) throws Exception ;
 
 	protected void applyProperties(Object object, Properties props) {
-   	   	
+		if (LOG_SETTINGS) {
+			TELogger.log("\r---- Component: " + object.getClass().getSimpleName() + "\r");
+			Method[] ms = object.getClass().getMethods();
+			for (Method m: ms) {
+				if (m.getName().startsWith("set") && m.getParameterTypes().length == 1) {
+					TELogger.log("\t" + m.getName() + " (type) " + m.getParameterTypes()[0]  + "\r");
+				}
+			}
+			TELogger.log("---- End Component: " + object.getClass().getSimpleName());
+		}
+		
 		if (props != null) {
 			EmbeddedUtil.setProperties(object, props);
 		}

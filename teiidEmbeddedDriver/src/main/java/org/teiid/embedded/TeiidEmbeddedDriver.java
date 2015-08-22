@@ -57,6 +57,8 @@ import org.teiid.runtime.EmbeddedServer;
  */
 @SuppressWarnings("nls")
 public class TeiidEmbeddedDriver {
+	
+	public static boolean LOG_COMPONENT_SET_METHODS = false;
 
 	private EmbeddedServer server;
 	private TeiidEmbeddedMgr manager;
