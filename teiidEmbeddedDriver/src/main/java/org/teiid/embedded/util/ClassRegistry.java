@@ -26,8 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.teiid.embedded.TeiidConnectorWrapper;
-import org.teiid.embedded.TeiidTranslatorWrapper;
+import org.teiid.embedded.component.TeiidConnectorWrapper;
+import org.teiid.embedded.component.TeiidTranslatorWrapper;
 
 
 /**

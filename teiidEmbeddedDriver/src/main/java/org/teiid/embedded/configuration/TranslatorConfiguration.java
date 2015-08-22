@@ -21,14 +21,18 @@
  */
 package org.teiid.embedded.configuration;
 
+import org.teiid.embedded.ComponentWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.component.TeiidTranslatorWrapper;
+
 
 /**
  * @author vanhalbert
  *
  */
-public class TranslatorConfiguration extends BaseConfiguration {
+public class TranslatorConfiguration extends Configuration {
 	
-	private String type;
 	private String connectorName;
 	
 	// Not every translator will have a defined connector in the configuration.  For those that don't,
@@ -43,20 +47,6 @@ public class TranslatorConfiguration extends BaseConfiguration {
 	}
 
 	/**
-	 * Returns the translator type.  This is the translator type used in the mapping of 
-	 * the source model to the data source.
-	 * @return type
-	 */
-	public String getType() {
-		return type;
-	}
-	/**
-	 * @param type Sets type to the specified value.
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
-	/**
 	 * Returns the name of the connector.  This must match one of the named connectors that were defined.
 	 * @return connectorName
 	 */
@@ -69,6 +59,15 @@ public class TranslatorConfiguration extends BaseConfiguration {
 	public void setConnectorName(String connectorName) {
 		this.connectorName = connectorName;
 		this.hasConnector = true;
+	}
+	
+	
+	@Override
+	public  ComponentWrapper createComponentWrapperInstance(TeiidEmbeddedMgr manager) throws Exception {
+		TeiidTranslatorWrapper tw =  manager.getClassRegistry().getTranslatorClassInstance(getType());
+		tw.initialize(manager, this);
+		return tw;
+
 	}
 
 }

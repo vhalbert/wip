@@ -21,26 +21,35 @@
  */
 package org.teiid.embedded;
 
-
 import java.util.Properties;
 
-import org.teiid.embedded.configuration.ConnectorConfiguration;
 import org.teiid.embedded.util.EmbeddedUtil;
-import org.teiid.runtime.EmbeddedServer;
 
 /**
+ * The implementation of the ComponentWrapper represents the actual component logic that is 
+ * used for configuring a specific component in the EmbeddedServer.
+ * 
+ * Examples implementations:
+ * <li>each translator will be implemented
+ * <li>each resource adapter or data sources that don't need external resources
+ * <li>transaction manager
+ * <li>embedded configuration that controls embedded server
+ * 
+ * 
  * @author vanhalbert
  *
  */
-public abstract class TeiidConnectorWrapper {
-	
-	public abstract void initialize(EmbeddedServer server, ConnectorConfiguration config) throws Exception ;
-	
+public abstract class ComponentWrapper {
+
+	public abstract void initialize(TeiidEmbeddedMgr manager, Configuration config) throws Exception ;
+
 	protected void applyProperties(Object object, Properties props) {
    	   	
 		if (props != null) {
 			EmbeddedUtil.setProperties(object, props);
 		}
-
 	}
+
+	
+
 }

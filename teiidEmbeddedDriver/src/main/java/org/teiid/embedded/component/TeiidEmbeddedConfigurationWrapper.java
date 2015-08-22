@@ -19,37 +19,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded.connector;
+package org.teiid.embedded.component;
 
+import org.teiid.embedded.ComponentWrapper;
 import org.teiid.embedded.Configuration;
 import org.teiid.embedded.TeiidEmbeddedMgr;
-import org.teiid.embedded.component.TeiidConnectorWrapper;
-import org.teiid.embedded.configuration.ConnectorConfiguration;
 import org.teiid.embedded.util.EmbeddedUtil;
-import org.teiid.resource.adapter.file.FileManagedConnectionFactory;
+import org.teiid.runtime.EmbeddedConfiguration;
 
 /**
  * @author vanhalbert
  *
  */
-public class FileConnector extends TeiidConnectorWrapper {
-
+public class TeiidEmbeddedConfigurationWrapper extends ComponentWrapper {
 
 	@Override
-	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
-			throws Exception {
+	public void initialize(TeiidEmbeddedMgr manager, Configuration config) throws Exception {
 		
-		ConnectorConfiguration cc = (ConnectorConfiguration) config;
-    	
-    	FileManagedConnectionFactory managedconnectionFactory = new FileManagedConnectionFactory();
-    	
-    	EmbeddedUtil.setProperties(managedconnectionFactory, config.getProperties());
-    	
-//		managedconnectionFactory.setParentDirectory("data");
-		manager.getEmbeddedServer().addConnectionFactory(cc.getJndiName(), managedconnectionFactory.createConnectionFactory());
-
+		EmbeddedConfiguration emdConfig = new EmbeddedConfiguration();
+     	
+		if (config.getProperties() != null) {
+			EmbeddedUtil.setProperties(emdConfig, config.getProperties());
+		}
 		
-
+		manager.setEmbeddedConfiguration(emdConfig);
+		
+//		this.emdConfig = (EmbeddedConfiguration) config.createComponentWrapperInstance(manager);
+    	
+//		if (this.transactionMgrClassName != null) {					
+//			Class<?> clz = ClassRegistry.loadClass(getTransactionMgrClassName(), this.getClass().getClassLoader());
+//			TeiidTransactionMgrWrapper wrapper = (TeiidTransactionMgrWrapper)  clz.newInstance();
+//			config.setTransactionManager(wrapper.getTransactionManager()); 
+//		}
 	}
+	
+//	
+//	public EmbeddedConfiguration getEmbeddedConfiguration() {
+//		return this.emdConfig;
+//	}
 
 }

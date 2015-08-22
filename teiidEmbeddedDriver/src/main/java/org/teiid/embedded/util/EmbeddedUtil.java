@@ -25,6 +25,7 @@ import java.io.File;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.teiid.core.util.PropertiesUtils;
@@ -45,6 +46,25 @@ public class EmbeddedUtil {
 					k, v);
 		}
 	}
+	
+	/**
+	 * Call to set bean property, but only perform it for those specified
+	 * for the <code>useprops</code>
+	 * @param obj
+	 * @param useprops are the only properties to apply
+	 * @param props
+	 */
+	public static void setProperties(Object obj, List<String> useprops, Properties props) {
+		
+		for (String propName : useprops) {
+			String v = props.getProperty(propName);
+			if (v != null) {
+				PropertiesUtils.setBeanProperty(obj,
+					propName, v);
+			}
+		}
+
+	}	
 	
 	public static String getStoreDir() {
 		String defDir = getSystemProperty("user.home") + File.separator + ".teiid/embedded/data"; //$NON-NLS-1$ //$NON-NLS-2$

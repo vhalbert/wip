@@ -19,29 +19,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded;
+package org.teiid.embedded.component;
 
 
-import java.util.Properties;
-
-import org.teiid.embedded.configuration.TranslatorConfiguration;
-import org.teiid.embedded.util.EmbeddedUtil;
-import org.teiid.runtime.EmbeddedServer;
+import org.teiid.embedded.ComponentWrapper;
 
 /**
  * @author vanhalbert
  *
  */
-public abstract class TeiidTranslatorWrapper {
-
-
-	public abstract void initialize(EmbeddedServer server, TranslatorConfiguration config) throws Exception ;
+public abstract class TeiidConnectorWrapper extends ComponentWrapper {
 	
-	protected void applyProperties(Object object, Properties props) {
-   	   	
-		if (props != null) {
-			EmbeddedUtil.setProperties(object, props);
-		}
-
-	}
 }

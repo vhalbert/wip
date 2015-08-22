@@ -21,8 +21,7 @@
  */
 package org.teiid.embedded.xml;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Collection;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -38,43 +37,43 @@ public class TestXMLConfiguration {
 	@Test public void testBenchMarkConfiguration() throws Exception {						
 		
 		XMLConfiguration c = new XMLConfiguration();
-		c.configureEmbedded("BenchmarkConfiguration.xml");
+		c.createConfigurationComponents("BenchmarkConfiguration.xml");
 		
 		Assert.assertNotNull(c.getEmbeddedConfiguration());
 		Assert.assertNotNull(c.getConnectors());
 		Assert.assertNotNull(c.getTranslators());
 		Assert.assertNotNull(c.getVDBs());
+		Assert.assertNotNull(c.getTransactionMgrConfiguration());
+		
 		
 		Assert.assertEquals(2, c.getTranslators().size());
 		Assert.assertEquals(1, c.getConnectors().size());
 		Assert.assertEquals(2, c.getVDBs().size());
 		
-		Map<String, TranslatorConfiguration> mt = c.getTranslators();
+		Collection<TranslatorConfiguration> mt = c.getTranslators();
 		
-		Iterator<String> mtIt = mt.keySet().iterator();
-		while (mtIt.hasNext()) {
-			String k = mtIt.next();
-			TranslatorConfiguration t = mt.get(k);
+		for(TranslatorConfiguration t:mt) {
 			if (t.getName().equals("file-translator")) {
 				Assert.assertEquals(0, t.getProperties().size());
 			} else if (t.getName().equals("h2-translator")) {
 				Assert.assertEquals(1, t.getProperties().size());
 			}
 		}
-		Map<String, ConnectorConfiguration> ct = c.getConnectors();
-		Iterator<String> ctIt = ct.keySet().iterator();
-		while (ctIt.hasNext()) {
-			String k = ctIt.next();
-			ConnectorConfiguration t = ct.get(k);
+		Collection<ConnectorConfiguration> ct = c.getConnectors();
+		for(ConnectorConfiguration t:ct) {
 			Assert.assertEquals(1, t.getProperties().size());
-			if (k.equals("file-connector")) {
+			if (t.getName().equals("file-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/marketdata-file");
 				Assert.assertEquals(1, t.getProperties().size());
-			} else if (k.equals("h2-connector")) {
+			} else if (t.getName().equals("h2-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/accounts-ds");
 				Assert.assertEquals(0, t.getProperties().size());
 			}
 		}
+		
+		Assert.assertEquals(c.getTransactionMgrConfiguration().getClassName(), "org.teiid.embedded.transactionmgr.ArjunaTransactionManager");
+		
+		
 
 		
 	}	

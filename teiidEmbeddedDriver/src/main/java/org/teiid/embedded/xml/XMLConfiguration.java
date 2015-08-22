@@ -23,6 +23,7 @@ package org.teiid.embedded.xml;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import org.teiid.core.TeiidComponentException;
 import org.teiid.embedded.EmbeddedPlugin;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
 import org.teiid.embedded.configuration.EmbeddedServerConfiguration;
+import org.teiid.embedded.configuration.TransactionMgrConfiguration;
 import org.teiid.embedded.configuration.TranslatorConfiguration;
 
 /**
@@ -40,11 +42,12 @@ import org.teiid.embedded.configuration.TranslatorConfiguration;
 public class XMLConfiguration {
 
 	EmbeddedServerConfiguration embeddedConfig;
+	TransactionMgrConfiguration transMgrConfig;
 	Map<String, TranslatorConfiguration> translators;
 	Map<String, ConnectorConfiguration> connectors;
 	List<String> vdbs;
 
-	public void configureEmbedded(String fileName) throws Exception {
+	public void createConfigurationComponents(String fileName) throws Exception {
 
 		URL urlToFile = XMLConfiguration.class.getClassLoader().getResource(fileName);
 		if (urlToFile == null) {
@@ -56,6 +59,7 @@ public class XMLConfiguration {
 		strategy.init(xmlFile);
 		
 		embeddedConfig = strategy.getEmbeddedServerConfiguration();
+		transMgrConfig = strategy.getTransactionMgr();
 		translators = strategy.getTranslatorConfigurations();
 		connectors = strategy.getConnectorConfigurations();
 				
@@ -82,12 +86,16 @@ public class XMLConfiguration {
 		return embeddedConfig;
 	}
 	
-	public Map<String, TranslatorConfiguration> getTranslators() {
-		return translators;
+	public TransactionMgrConfiguration getTransactionMgrConfiguration() {
+		return transMgrConfig;
+	}
+	
+	public Collection<TranslatorConfiguration> getTranslators() {
+		return translators.values();
 	}
 
-	public Map<String, ConnectorConfiguration> getConnectors() {
-		return connectors;
+	public Collection<ConnectorConfiguration> getConnectors() {
+		return connectors.values();
 	}
 	
 	public List<String> getVDBs() {

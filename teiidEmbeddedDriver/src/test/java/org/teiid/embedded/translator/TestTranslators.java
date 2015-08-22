@@ -26,21 +26,24 @@ import java.util.Properties;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.teiid.embedded.TeiidEmbeddedDriver;
+import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.configuration.TranslatorConfiguration;
-import org.teiid.runtime.EmbeddedServer;
 
 /**
  * @author vanhalbert
  *
  */
 public class TestTranslators {
-	static EmbeddedServer SERVER;
+	static TeiidEmbeddedDriver DRIVER;
+	static TeiidEmbeddedMgr MANAGER;
 	
 	@BeforeClass
 	public static void onlyOnce() {
-		SERVER = new EmbeddedServer();
-		
-	}
+		DRIVER = new TeiidEmbeddedDriver();
+		MANAGER = new TeiidEmbeddedMgr(DRIVER);		
+	}	
+	
 	@Test public void testFileTranslator() throws Exception {	
 		TranslatorConfiguration config = new TranslatorConfiguration();
 		config.setName("fileTranslator");
@@ -51,7 +54,7 @@ public class TestTranslators {
 		config.setProperties(props);
 		
 		FileTranslator ft = new FileTranslator();
-		ft.initialize(SERVER, config);
+		ft.initialize(MANAGER, config);
 		
 	}
 	
@@ -66,13 +69,13 @@ public class TestTranslators {
 		config.setProperties(props);
 		
 		H2JDBCTranslator ft = new H2JDBCTranslator();
-		ft.initialize(SERVER, config);
+		ft.initialize(MANAGER, config);
 		
 	}	
 	
 	@AfterClass
 	public static void shutDown() {
-		SERVER.stop();
+		DRIVER.shutdown();
 	}
 
 }

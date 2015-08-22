@@ -21,9 +21,12 @@
  */
 package org.teiid.embedded.transactionmgr;
 
-import javax.transaction.TransactionManager;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.teiid.embedded.TeiidTransactionMgrWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.component.TeiidTransactionMgrWrapper;
 import org.teiid.embedded.util.EmbeddedUtil;
 
 import com.arjuna.ats.arjuna.common.ObjectStoreEnvironmentBean;
@@ -34,25 +37,50 @@ import com.arjuna.common.internal.util.propertyservice.BeanPopulator;
  * @author vanhalbert
  *
  */
-public class ArjunaTransactionManager implements TeiidTransactionMgrWrapper {
+public class ArjunaTransactionManager extends TeiidTransactionMgrWrapper {
 	
+//	@Override
+//	public TransactionManager getTransactionManager() throws Exception {
+//	
+//		
+//		this.applyProperties(arjPropertyManager.getCoreEnvironmentBean(), getProperties());
+//		
+//		
+//		
+//		return com.arjuna.ats.jta.TransactionManager.transactionManager();
+//	}
+
+
 	@Override
-	public TransactionManager getTransactionManager() throws Exception {
-	
-		arjPropertyManager.getCoreEnvironmentBean().setNodeIdentifier("1");
-		arjPropertyManager.getCoreEnvironmentBean().setSocketProcessIdPort(0);
-		arjPropertyManager.getCoreEnvironmentBean().setSocketProcessIdMaxPorts(10);
+	public void initialize(TeiidEmbeddedMgr manager, Configuration config) throws Exception {
 		
-		arjPropertyManager.getCoordinatorEnvironmentBean().setEnableStatistics(false);
-		arjPropertyManager.getCoordinatorEnvironmentBean().setDefaultTimeout(300);
-		arjPropertyManager.getCoordinatorEnvironmentBean().setTransactionStatusManagerEnable(false);
-		arjPropertyManager.getCoordinatorEnvironmentBean().setTxReaperTimeout(120000);
+		List<String> propNames = new ArrayList<String>(3);
+		propNames.add("NodeIdentifier");
+		propNames.add("SocketProcessIdPort");
+		propNames.add("SocketProcessIdMaxPorts");
+		
+		EmbeddedUtil.setProperties(arjPropertyManager.getCoreEnvironmentBean(), propNames, config.getProperties());
+
+		propNames = new ArrayList<String>(3);
+		propNames.add("EnableStatistics");
+		propNames.add("DefaultTimeout");
+		propNames.add("TransactionStatusManagerEnable");
+		propNames.add("TxReaperTimeout");
+		
+		EmbeddedUtil.setProperties(arjPropertyManager.getCoordinatorEnvironmentBean(), propNames, config.getProperties());
 		
 		String storeDir = EmbeddedUtil.getStoreDir();
 		
 		arjPropertyManager.getObjectStoreEnvironmentBean().setObjectStoreDir(storeDir);
-		BeanPopulator.getNamedInstance(ObjectStoreEnvironmentBean.class, "communicationStore").setObjectStoreDir(storeDir); //$NON-NLS-1$
 		
-		return com.arjuna.ats.jta.TransactionManager.transactionManager();
+		BeanPopulator.getNamedInstance(ObjectStoreEnvironmentBean.class, "communicationStore").setObjectStoreDir(storeDir); //$NON-NLS-1$
+
+		this.applyProperties(arjPropertyManager.getCoreEnvironmentBean(), config.getProperties());
+		
+//		
+//		return com.arjuna.ats.jta.TransactionManager.transactionManager();
+
+		manager.getEmbeddedConfiguration().setTransactionManager(com.arjuna.ats.jta.TransactionManager.transactionManager());
 	}
+
 }

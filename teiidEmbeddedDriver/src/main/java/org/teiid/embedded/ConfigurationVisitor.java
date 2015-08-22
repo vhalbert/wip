@@ -19,7 +19,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded.configuration;
+package org.teiid.embedded;
+
 
 
 /**
@@ -28,7 +29,7 @@ package org.teiid.embedded.configuration;
  */
 public interface ConfigurationVisitor {
 
-	public void visit(Configuration server) throws Exception;
+	public void visit(Configuration configuration) throws Exception;
 	
 //	public void visit(TranslatorConfiguration translator);
 	

@@ -21,9 +21,9 @@
  */
 package org.teiid.embedded.translator;
 
-import org.teiid.embedded.TeiidTranslatorWrapper;
-import org.teiid.embedded.configuration.TranslatorConfiguration;
-import org.teiid.runtime.EmbeddedServer;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.component.TeiidTranslatorWrapper;
 import org.teiid.translator.file.FileExecutionFactory;
 
 
@@ -34,15 +34,28 @@ import org.teiid.translator.file.FileExecutionFactory;
 public class FileTranslator extends TeiidTranslatorWrapper {
 
 
+//	public void initialize(EmbeddedServer server, TranslatorConfiguration config)
+//			throws Exception {
+//    	FileExecutionFactory fileExecutionFactory = new FileExecutionFactory();
+//    	   	
+//    	this.applyProperties(fileExecutionFactory, config.getProperties());
+// 
+//    	fileExecutionFactory.start();
+//    	server.addTranslator( config.getType(), fileExecutionFactory);
+//	}
+	
 	@Override
-	public void initialize(EmbeddedServer server, TranslatorConfiguration config)
+	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
 			throws Exception {
-    	FileExecutionFactory fileExecutionFactory = new FileExecutionFactory();
-    	   	
+		
+	   	FileExecutionFactory fileExecutionFactory = new FileExecutionFactory();
+	   	
     	this.applyProperties(fileExecutionFactory, config.getProperties());
  
     	fileExecutionFactory.start();
-    	server.addTranslator(config.getType(), fileExecutionFactory);
+    	manager.getEmbeddedServer().addTranslator( config.getType(), fileExecutionFactory);
+		
+//		initialize(manager, config);
 	}
 
 }

@@ -26,21 +26,24 @@ import java.util.Properties;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.teiid.embedded.TeiidEmbeddedDriver;
+import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
-import org.teiid.runtime.EmbeddedServer;
 
 /**
  * @author vanhalbert
  *
  */
 public class TestConnectors {
-	static EmbeddedServer SERVER;
+	static TeiidEmbeddedDriver DRIVER;
+	static TeiidEmbeddedMgr MANAGER;
 	
 	@BeforeClass
 	public static void onlyOnce() {
-		SERVER = new EmbeddedServer();
-		
+		DRIVER = new TeiidEmbeddedDriver();
+		MANAGER = new TeiidEmbeddedMgr(DRIVER);		
 	}
+	
 	@Test public void testFileConnector() throws Exception {	
 		ConnectorConfiguration config = new ConnectorConfiguration();
 		config.setName("fileConnector");
@@ -51,14 +54,14 @@ public class TestConnectors {
 		config.setProperties(props);
 		
 		FileConnector ft = new FileConnector();
-		ft.initialize(SERVER, config);
+		ft.initialize(MANAGER, config);
 		
 	}
 	
 	
 	@AfterClass
 	public static  void shutDown() {
-		SERVER.stop();
+		DRIVER.shutdown();
 	}
 
 }

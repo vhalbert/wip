@@ -19,21 +19,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded.configuration;
+package org.teiid.embedded.component;
 
+import org.teiid.embedded.ComponentWrapper;
 
 /**
  * @author vanhalbert
  *
- * This is visitable.
- * 
- * The implementations will be for each of the types to be configurable.
- * Example:
- * <li>Embedded server itself</li>
- * <li>TransactionMgr</li>
- * <li>Translator/Connector<li>
  */
-public interface Configuration {
+public abstract class TeiidTransactionMgrWrapper extends ComponentWrapper {
 
-	public void accept(ConfigurationVisitor visitor) throws Exception;
 }

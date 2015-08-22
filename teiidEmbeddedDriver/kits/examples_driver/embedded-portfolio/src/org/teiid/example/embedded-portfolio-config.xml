@@ -27,9 +27,13 @@
 		<properties>
 		</properties>
 	
-        <transactionmgr>org.teiid.embedded.transactionmgr.ArjunaTransactionManager</transactionmgr>
-	
 	</embedded>
+	
+    <transactionmgr>
+        <className>org.teiid.embedded.transactionmgr.ArjunaTransactionManager</className>
+        <properties>
+        </properties>         
+    </transactionmgr>   	
 
 <!--  * =====================================================================*   -->
 <!--  *    translators defines the translation logic to use                  *   -->

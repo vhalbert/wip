@@ -21,19 +21,16 @@
  */
 package org.teiid.embedded.configuration;
 
-import org.teiid.embedded.TeiidTransactionMgrWrapper;
-import org.teiid.embedded.util.ClassRegistry;
-import org.teiid.embedded.util.EmbeddedUtil;
-import org.teiid.runtime.EmbeddedConfiguration;
-import org.teiid.runtime.EmbeddedServer;
+import org.teiid.embedded.ComponentWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
 
 
 /**
  * @author vanhalbert
  *
  */
-public class EmbeddedServerConfiguration extends BaseConfiguration {
-	private EmbeddedConfiguration config;
+public class EmbeddedServerConfiguration extends Configuration {
 	
 	private String transactionMgrClassName;
 	
@@ -50,24 +47,10 @@ public class EmbeddedServerConfiguration extends BaseConfiguration {
 	public void setTransactionMgrClassName(String transactionMgrClassName) {
 		this.transactionMgrClassName = transactionMgrClassName;
 	}
-
-	public void initialize(EmbeddedServer server)
-			throws Exception {
-    	
-		config = new EmbeddedConfiguration();
-     	
-		if (this.getProperties() != null) {
-			EmbeddedUtil.setProperties(config, getProperties());
-		}
-    	
-		if (this.transactionMgrClassName != null) {					
-			Class<?> clz = ClassRegistry.loadClass(getTransactionMgrClassName(), this.getClass().getClassLoader());
-			TeiidTransactionMgrWrapper wrapper = (TeiidTransactionMgrWrapper)  clz.newInstance();
-			config.setTransactionManager(wrapper.getTransactionManager()); 
-		}
-	}
 	
-	public EmbeddedConfiguration getEmbeddedConfiguration() {
-		return this.config;
-	}
+	@Override
+	public  ComponentWrapper createComponentWrapperInstance(TeiidEmbeddedMgr manager) throws Exception {
+		return this.createComponentWrapperInstance("org.teiid.embedded.component.TeiidEmbeddedConfigurationWrapper");
+	}	
+
 }

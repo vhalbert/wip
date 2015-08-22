@@ -24,20 +24,11 @@ package org.teiid.embedded;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
-import org.teiid.core.util.PropertiesUtils;
-import org.teiid.embedded.configuration.ConnectorConfiguration;
-import org.teiid.embedded.configuration.TranslatorConfiguration;
-import org.teiid.embedded.util.ClassRegistry;
-import org.teiid.embedded.xml.XMLConfiguration;
-import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 
 
@@ -48,35 +39,30 @@ import org.teiid.runtime.EmbeddedServer;
  * <li>For data sources like JDBC, they need to be created and a Data Source instance (with jndiName) configured. 
  * 
  * 
- * To use the TeiidEmbeddManager, the following is an example of the process flow for usage:
- * 		TeiidEmbeddedManager tem = new TeiidEmbeddedManager();
+ * To use the TeiidEmbeddedDriver, the following is an example of the process flow for usage:
+ * 		TeiidEmbeddedDriver driver = new TeiidEmbeddedDriver();
  * 		String configFileName = ...
- * 		tem.initialize(configFileName);
+ * 		driver.initialize(configFileName);
  * 
  *  --- the following configuring of the data source is optional, depending on the type of data source connecting to ---
  * 		DataSource ds = .....
- * 		tem.getEmbeddedServer().addConnectionFactory("jndi-name", ds);
+ * 		driver.getEmbeddedServer().addConnectionFactory("jndi-name", ds);
  * 
- * 		tem.startServer();
+ * 		driver.startServer();
  * 
- * 		tem.deployVDB(vdbFileName);
+ * 		driver.deployVDB(vdbFileName);
  * 
- * 		tem.getConnection(jdbcURL, properties);
+ * 		driver.getConnection(jdbcURL, properties);
  * 
  */
 @SuppressWarnings("nls")
 public class TeiidEmbeddedDriver {
-	private static final String TRANSLATOR_MAPPING_FILE = "org/teiid/embedded/TranslatorMapping.txt";
-	private static final String CONNECTOR_MAPPING_FILE = "org/teiid/embedded/ConnectorMapping.txt";
-	
+
 	private EmbeddedServer server;
-	private EmbeddedConfiguration config;
-	private XMLConfiguration xmlConfig;
-	
-	private ClassRegistry registry = new ClassRegistry();
+	private TeiidEmbeddedMgr manager;
 	
 	public TeiidEmbeddedDriver() {
-		
+		server = new EmbeddedServer();
 	}
 	
 	/**
@@ -91,38 +77,12 @@ public class TeiidEmbeddedDriver {
 	 * @throws Exception 
 	 */
 	public void initialize(String configurationFileName) throws Exception {
-		
-		loadMappingFiles();
-		
-		server = new EmbeddedServer();
-		xmlConfig = new XMLConfiguration();
-		xmlConfig.configureEmbedded(configurationFileName);
-		
-		TeiidEmbeddedConfiguration tecVisitor = new TeiidEmbeddedConfiguration(this);
-		
-		xmlConfig.getEmbeddedConfiguration().accept(tecVisitor);
-		
-		Map<String, TranslatorConfiguration> mt = xmlConfig.getTranslators();
-		Iterator<String> mtIt = mt.keySet().iterator();
-		while (mtIt.hasNext()) {
-			String k = mtIt.next();
-			TranslatorConfiguration t = mt.get(k);
-			t.accept(tecVisitor);
-		}
-		Map<String, ConnectorConfiguration> ct = xmlConfig.getConnectors();
-		Iterator<String> ctIt = ct.keySet().iterator();
-		while (ctIt.hasNext()) {
-			String k = ctIt.next();
-			ConnectorConfiguration c = ct.get(k);
-			c.accept(tecVisitor);
-		}
-
-		config = tecVisitor.getEmbeddedServerConfiguation().getEmbeddedConfiguration();
-
+		manager = new TeiidEmbeddedMgr(this);
+		manager.initialize(configurationFileName);
 	}
 	
 	public void startServer() {
-		server.start(config);
+		server.start(manager.getEmbeddedConfiguration());
 	}
 	/**
 	 * Call to deploy a VDB xml file
@@ -175,42 +135,45 @@ public class TeiidEmbeddedDriver {
 	}
 	
 
-	
 	public void shutdown() {
 		server.stop();
 	}
 
-	protected ClassRegistry getClassRegistry()
-	{
-		return this.registry;
-	}
+//	public ClassRegistry getClassRegistry()
+//	{
+//		return this.registry;
+//	}
 	
 	public EmbeddedServer getEmbeddedServer() {
 		return this.server;
 	}
 	
-	private void loadMappingFiles() throws IOException {
-		
-		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(TRANSLATOR_MAPPING_FILE);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + TRANSLATOR_MAPPING_FILE);
-		}
-
-		Properties translatorMapping = PropertiesUtils.loadFromURL(urlToFile);
-
-		urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(CONNECTOR_MAPPING_FILE);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + CONNECTOR_MAPPING_FILE);
-		}
-
-		Properties connectorMapping = PropertiesUtils.loadFromURL(urlToFile);
-		
-		registry.setConnectorTypeClassMapping(connectorMapping);
-		registry.setTranslatorTypeClassMapping(translatorMapping);
-	}
-
-	public static void main(String[] args) throws Exception {
+//	protected void setEmbeddedConfiguration(EmbeddedConfiguration ec) {
+//		this.config = ec;
+//	}
 	
-	}
+//	private void loadMappingFiles() throws IOException {
+//		
+//		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(TRANSLATOR_MAPPING_FILE);
+//		if (urlToFile == null) {
+//			throw new RuntimeException("Unable to get URL for file " + TRANSLATOR_MAPPING_FILE);
+//		}
+//
+//		Properties translatorMapping = PropertiesUtils.loadFromURL(urlToFile);
+//
+//		urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(CONNECTOR_MAPPING_FILE);
+//		if (urlToFile == null) {
+//			throw new RuntimeException("Unable to get URL for file " + CONNECTOR_MAPPING_FILE);
+//		}
+//
+//		Properties connectorMapping = PropertiesUtils.loadFromURL(urlToFile);
+//		
+//		registry.setConnectorTypeClassMapping(connectorMapping);
+//		registry.setTranslatorTypeClassMapping(translatorMapping);
+//	}
+
+//	public static void main(String[] args) throws Exception {
+//	
+//	}
 
 }

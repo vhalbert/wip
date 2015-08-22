@@ -28,8 +28,8 @@
         </includes>   
     </fileSet> 
     <fileSet>
-        <directory>target/kits/embedded</directory>
-        <outputDirectory>/examples_driver</outputDirectory>      
+        <directory>kits/examples_driver</directory>
+        <outputDirectory>./examples_driver</outputDirectory>      
         <includes>
           <include>**/*.sh</include>
         </includes>   

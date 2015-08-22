@@ -21,29 +21,19 @@
  */
 package org.teiid.embedded.configuration;
 
+import org.teiid.embedded.ComponentWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.component.TeiidConnectorWrapper;
+
 
 /**
  * @author vanhalbert
  *
  */
-public class ConnectorConfiguration extends BaseConfiguration {
+public class ConnectorConfiguration extends Configuration {
 	
 	private String jndiName;
-	private String type;
-
-	/**
-	 * @return type
-	 */
-	public String getType() {
-		return type;
-	}
-
-	/**
-	 * @param type Sets type to the specified value.
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
 
 	/**
 	 * @return jndiName
@@ -57,5 +47,13 @@ public class ConnectorConfiguration extends BaseConfiguration {
 	 */
 	public void setJndiName(String jndiName) {
 		this.jndiName = jndiName;
+	}
+	
+	@Override
+	public  ComponentWrapper createComponentWrapperInstance(TeiidEmbeddedMgr manager) throws Exception {
+		TeiidConnectorWrapper cw =  manager.getClassRegistry().getConnectorClassInstance(getType());
+		cw.initialize(manager, this);
+		return cw;
+
 	}
 }

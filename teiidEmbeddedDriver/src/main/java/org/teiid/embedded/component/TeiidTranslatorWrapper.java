@@ -19,15 +19,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded;
+package org.teiid.embedded.component;
 
-import javax.transaction.TransactionManager;
+
+import org.teiid.embedded.ComponentWrapper;
 
 /**
  * @author vanhalbert
  *
  */
-public interface TeiidTransactionMgrWrapper {
-
-	TransactionManager getTransactionManager() throws Exception;
+public abstract class TeiidTranslatorWrapper extends ComponentWrapper {
+	
 }

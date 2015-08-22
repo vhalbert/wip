@@ -21,9 +21,9 @@
  */
 package org.teiid.embedded.translator;
 
-import org.teiid.embedded.TeiidTranslatorWrapper;
-import org.teiid.embedded.configuration.TranslatorConfiguration;
-import org.teiid.runtime.EmbeddedServer;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.component.TeiidTranslatorWrapper;
 import org.teiid.translator.jdbc.h2.H2ExecutionFactory;
 
 
@@ -33,9 +33,8 @@ import org.teiid.translator.jdbc.h2.H2ExecutionFactory;
  */
 public class H2JDBCTranslator extends TeiidTranslatorWrapper {
 
-
 	@Override
-	public void initialize(EmbeddedServer server, TranslatorConfiguration config)
+	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
 			throws Exception {
 
 		H2ExecutionFactory executionFactory = new H2ExecutionFactory() ;
@@ -45,7 +44,9 @@ public class H2JDBCTranslator extends TeiidTranslatorWrapper {
 
 //		executionFactory.setSupportsDirectQueryProcedure(true);
 		executionFactory.start();
-		server.addTranslator(config.getType(), executionFactory);
+		manager.getEmbeddedServer().addTranslator(config.getType(), executionFactory);
 	}
+	
+
 
 }

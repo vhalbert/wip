@@ -37,12 +37,17 @@ public interface TagNames {
         public static final String ROOT = "embedded"; //$NON-NLS-1$
         public static final String TRANSACTIONMGR = "transactionmgr"; //$NON-NLS-1$
         
-    }    
+    }   
+    
+    public static interface TransactionMgr {
+        public static final String ROOT = "transactionmgr"; //$NON-NLS-1$
+        public static final String CLASS_NAME = "className"; //$NON-NLS-1$
+        
+    }      
     public static interface Translators {
     	public static final String ROOT = "translators"; //$NON-NLS-1$
         public static final String TRANSLATOR = "translator"; //$NON-NLS-1$
         
-        public static final String TYPE = "type"; //$NON-NLS-1$
         public static final String CONNECTOR_NAME = "connectorName"; //$NON-NLS-1$
         
     }
@@ -51,8 +56,7 @@ public interface TagNames {
         public static final String CONNECTOR = "connector"; //$NON-NLS-1$
 
         public static final String JNDI_NAME = "jndiName"; //$NON-NLS-1$
-        public static final String TYPE = "type"; //$NON-NLS-1$
-
+ 
     } 
     
     public static interface VDBs {
@@ -66,8 +70,13 @@ public interface TagNames {
         
     } 
     
-    public static final class Attributes {
+    public static final class Common_Attributes {
          public static final String NAME = "name"; //$NON-NLS-1$
+    }
+    
+    public static final class Common_Elements {
+        public static final String TYPE = "type"; //$NON-NLS-1$
+    	
     }
     
    

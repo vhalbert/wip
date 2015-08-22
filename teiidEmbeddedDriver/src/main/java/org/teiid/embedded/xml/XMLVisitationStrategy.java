@@ -37,14 +37,13 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.teiid.core.TeiidComponentException;
+import org.teiid.embedded.Configuration;
 import org.teiid.embedded.EmbeddedPlugin;
 import org.teiid.embedded.TELogger;
-import org.teiid.embedded.configuration.BaseConfiguration;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
 import org.teiid.embedded.configuration.EmbeddedServerConfiguration;
+import org.teiid.embedded.configuration.TransactionMgrConfiguration;
 import org.teiid.embedded.configuration.TranslatorConfiguration;
-
-
 
 
 /**
@@ -71,10 +70,33 @@ public class XMLVisitationStrategy {
         
         EmbeddedServerConfiguration config = new EmbeddedServerConfiguration();
         
-        setCommonConfiguration(embeddedElement, config);
+        setCommonConfiguration(embeddedElement, config, false);
           
         return config;
     }
+    
+    public TransactionMgrConfiguration getTransactionMgr() throws TeiidComponentException {
+        Element transmgrElement = embeddedConfigDoc.getRootElement().getChild(TagNames.TransactionMgr.ROOT);
+        
+        TransactionMgrConfiguration config = new TransactionMgrConfiguration();
+        
+        setCommonConfiguration(transmgrElement, config, false);
+        
+        Element classNameElement = transmgrElement.getChild(TagNames.TransactionMgr.CLASS_NAME);
+       
+        if (classNameElement == null) {
+      		throw new RuntimeException("Invalid structured xml file, no " + TagNames.TransactionMgr.CLASS_NAME + " found in " + TagNames.TransactionMgr.ROOT + " element");
+      	  
+        }
+        String className = classNameElement.getText();
+        if (className == null) {
+    		throw new RuntimeException("No className value defined " + TagNames.TransactionMgr.CLASS_NAME);      	
+        }
+        
+        config.setClassName(className);
+        
+        return config;
+    }    
     
     public Map<String,TranslatorConfiguration> getTranslatorConfigurations() throws TeiidComponentException {
     	
@@ -91,15 +113,13 @@ public class XMLVisitationStrategy {
             Element transElement = (Element) iter.next();
             TranslatorConfiguration t = new TranslatorConfiguration();
             
-            setCommonConfiguration(transElement, t);
+            setCommonConfiguration(transElement, t, true);
            
-            String type = transElement.getChildText(TagNames.Translators.TYPE);
+            String type = t.getType();
             if (type == null || type.trim().length() == 0) {
             	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
     					"EMBDF10003", t.getName()));
             }
-
-            t.setType(type);
             
             /* 
              * NOTE: allowing for no connector to be defined for a translator
@@ -142,15 +162,14 @@ public class XMLVisitationStrategy {
             	c.setJndiName(jndiName);
             }
             
-            setCommonConfiguration(connectorElement, c);
+            setCommonConfiguration(connectorElement, c, true);
             
-            String type = connectorElement.getChildText(TagNames.Connectors.TYPE);
+            String type = c.getType();
             if (type == null || type.trim().length() == 0) {
             	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
     					"EMBDF10003", c.getName()));
             }
 
-            c.setType(type);
             connectors.put(c.getName(), c);
         }
         
@@ -177,23 +196,29 @@ public class XMLVisitationStrategy {
         return vdbs;
     }
             
-    private void setCommonConfiguration(Element element, BaseConfiguration bo) throws TeiidComponentException {
+    private void setCommonConfiguration(Element element, Configuration config, boolean requiresName) throws TeiidComponentException {
     	if (element == null) {
-    		throw new RuntimeException("Invalid structured xml file, no element found for " + bo.getClass().getSimpleName());
+    		throw new RuntimeException("Invalid structured xml file, no element found for " + config.getClass().getSimpleName());
     	}
     	
-    	String name = element.getAttributeValue(TagNames.Attributes.NAME);
+    	String name = element.getAttributeValue(TagNames.Common_Attributes.NAME);
         
-        if (name == null || name.trim().length() == 0) {
+        if (requiresName && (name == null || name.trim().length() == 0)) {
         	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-					"EMBDF10000", "NULL", bo.getClass().getSimpleName()));
+					"EMBDF10000", "NULL", config.getClass().getSimpleName()));
         }
-        bo.setName( name );
+        config.setName( name );
+        
+        String type = element.getChildText(TagNames.Common_Elements.TYPE);
+
+        if (type != null) {
+        	config.setType(type);
+        }
         
         Properties props = getProperties(element);
         
         if (props != null) {
-        	bo.setProperties(props);
+        	config.setProperties(props);
         }
 
     }
@@ -212,7 +237,7 @@ public class XMLVisitationStrategy {
 		final Iterator<Element> iter = propertyChildren.iterator();
 		while (iter.hasNext()) {
 			final Element propElement = (Element) iter.next();
-				String name = propElement.getAttributeValue(TagNames.Attributes.NAME);
+				String name = propElement.getAttributeValue(TagNames.Common_Attributes.NAME);
 				String value = propElement.getValue();
 				
 				if (name == null) {

@@ -21,11 +21,37 @@
  */
 package org.teiid.embedded.configuration;
 
+import org.teiid.embedded.ComponentWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+
+
 
 /**
  * @author vanhalbert
  *
  */
-public class TransactionMgrConfiguration extends BaseConfiguration {
+public class TransactionMgrConfiguration extends Configuration {
+	private String className;
 	
+	/**
+	 * @return className
+	 */
+	public String getClassName() {
+		return className;
+	}
+
+	/**
+	 * @param className Sets className to the specified value.
+	 */
+	public void setClassName(String className) {
+		this.className = className;
+	}
+
+	@Override
+	public ComponentWrapper createComponentWrapperInstance(TeiidEmbeddedMgr manager) throws Exception {
+		return this.createComponentWrapperInstance(getClassName());
+	}
+
+
 }
