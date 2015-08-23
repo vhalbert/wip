@@ -23,6 +23,8 @@ package org.teiid.embedded.connector;
 
 import java.util.Properties;
 
+import org.junit.Assert;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +45,7 @@ public class TestConnectors {
 		DRIVER = new TeiidEmbeddedDriver();
 		MANAGER = new TeiidEmbeddedMgr(DRIVER);	
 		
-		DRIVER.LOG_COMPONENT_SET_METHODS = true;
+		TeiidEmbeddedDriver.LOG_COMPONENT_SET_METHODS = true;
 	}
 	
 	@Test public void testFileConnector() throws Exception {	
@@ -60,6 +62,25 @@ public class TestConnectors {
 		
 	}
 	
+	@Test public void testCassandraConnector() throws Exception {	
+		ConnectorConfiguration config = new ConnectorConfiguration();
+		config.setName("cassandraConnector");
+		config.setJndiName("java:/demoCassandra");
+		
+		Properties props = new Properties();
+		props.setProperty(CassandraConnector.ADDRESS_PROPERTY, "196.156.8.100");
+		props.setProperty(CassandraConnector.KEYSPACE_PROPERTY, "example");
+		config.setProperties(props);
+		
+		CassandraConnector ft = new CassandraConnector();
+		ft.initialize(MANAGER, config);
+		
+		// verify the properties from the cassandra.properties was loaded and overriding
+		// the above settings.
+		Assert.assertEquals(config.getProperties().getProperty(CassandraConnector.ADDRESS_PROPERTY), "10.66.218.46") ;
+		Assert.assertEquals(config.getProperties().getProperty(CassandraConnector.KEYSPACE_PROPERTY), "demo") ;
+		
+	}
 	
 	@AfterClass
 	public static  void shutDown() {

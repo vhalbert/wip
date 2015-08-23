@@ -94,13 +94,14 @@ public class TeiidEmbeddedDriver {
 	 * @throws Exception
 	 */
 	public void deployVDB(String vdbFileName) throws Exception {
-		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(vdbFileName);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for vdb file " + vdbFileName);
+		
+		File f = new File(vdbFileName);
+		if (!f.exists()) {
+			throw new RuntimeException("Unable to get File for vdb file " + f.getAbsolutePath());
+			
 		}
-		File vdbFile = new File(urlToFile.toURI());		
 
-		deployVDB(new FileInputStream(vdbFile));
+		deployVDB(new FileInputStream(f));
 	}
 	
 	/**
@@ -114,17 +115,13 @@ public class TeiidEmbeddedDriver {
 	}
 	
 	/**
-	 * Call to deploy a VDB Zip xml file
-	 * @param vdbFileName
+	 * Call to deploy a VDB Zip xml file by passing in its= URL
+	 * @param vdbURL
 	 * @throws Exception
 	 */
-	public void deployVDBZip(String vdbFileName) throws Exception {
-		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(vdbFileName);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for vdb zip file " + vdbFileName);
-		}
+	public void deployVDBZip(URL vdbURL) throws Exception {
 		
-		server.deployVDBZip(urlToFile);
+		server.deployVDBZip(vdbURL);
 	}
 	
 	/** 

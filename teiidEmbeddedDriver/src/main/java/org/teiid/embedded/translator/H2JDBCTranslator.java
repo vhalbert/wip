@@ -38,13 +38,10 @@ public class H2JDBCTranslator extends TeiidTranslatorWrapper {
 			throws Exception {
 
 		H2ExecutionFactory executionFactory = new H2ExecutionFactory() ;
-		
-	   	
+			   	
 		this.applyProperties(executionFactory, config.getProperties());
-
-//		executionFactory.setSupportsDirectQueryProcedure(true);
 		executionFactory.start();
-		manager.getEmbeddedServer().addTranslator(config.getType(), executionFactory);
+		manager.getEmbeddedServer().addTranslator(config.getName(), executionFactory);
 	}
 	
 

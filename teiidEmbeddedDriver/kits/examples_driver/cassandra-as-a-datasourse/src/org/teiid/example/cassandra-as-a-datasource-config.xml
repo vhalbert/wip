@@ -28,21 +28,6 @@
 		</properties>
 	
 	</embedded>
-	
-    <transactionmgr>
-        <className>org.teiid.embedded.transactionmgr.ArjunaTransactionManager</className>
-        <properties>
-            <property name="NodeIdentifier">1</property>
-            <property name="SocketProcessIdPort">0</property>
-            <property name="SocketProcessIdMaxPorts">10</property>
-            
-            <property name="EnableStatistics">false</property>
-            <property name="DefaultTimeout">300</property>
-            <property name="TransactionStatusManagerEnable">false</property>
-            <property name="TxReaperTimeout">120000</property>
-        </properties>         
-    </transactionmgr>   	
-
 
 <!--  * =====================================================================*   -->
 <!--  *    translators defines the translation logic to use                  *   -->
@@ -50,20 +35,12 @@
 <!--  * =====================================================================* -->
 
 	<translators>
-		<translator name="file">
-			<connectorName>file-connector</connectorName>
-			<type>file</type>
+		<translator name="cassandra">
+			<connectorName>cassandra-connector</connectorName>
+			<type>cassandra</type>
+			
 			<properties>
 			</properties>
-					
-
-		</translator>
-		<translator name="h2">
-			<type>h2</type>
-			<properties>
-				<property name="SupportsDirectQueryProcedure">true</property>
-			</properties>
-					
 
 		</translator>
 	
@@ -75,11 +52,12 @@
 
 	
 	<connectors>
-		<connector name="file-connector">
-		    <type>file</type>
-			<jndiName>java:/marketdata-file</jndiName>
+		<connector name="cassandra-connector">
+		    <type>cassandra</type>
+			<jndiName>java:/demoCassandra</jndiName>
 			<properties>
-				<property name="ParentDirectory">data</property>
+				<property name="Address">127.0.0.1</property>
+				<property name="Keyspace">demo</property>
 			</properties>
 		
 		</connector>	

@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-<!--  * =====================================================================*   -->
-<!-- 
-		Rules:  
-			Each object MUST have a name, and be unique within its type
-			Translator:
-				- does not have to have a related connector, but if defined, must
-					match a defined connector
-				- the type MUST be defined, which maps to the Teiid translator types
-			Connector:
-				- jndiName is optional and will be validated @link TeiidConnectorWrapper
-                - the type MUST be defined, which maps to the Teiid connector types
-			VDB's are not required and the user can deploy on their own
-
- -->
-<!--  * =====================================================================* -->
-
-
-<!--  * =====================================================================*   -->
-<!--  *    Embedded defines the following:                  *   -->
-<!--  *    		-  embedded settings                   		*   -->
-<!--  *    		-  transactionmgr, if used                  *   -->
-<!--  * =====================================================================* -->
-
 	<embedded name="teiidEmbeddedInstance">
 		<properties>
 		</properties>
@@ -33,45 +10,30 @@
     <transactionmgr>          
     </transactionmgr>	
 
-<!--  * =====================================================================*  
-      *    translators defines the translation logic to use               
-      *    -  type:  it must match one entry in the src/main/resources   TranslatorMapping.txt file 
-      *    -  connectorName:  maps to the connector to use
-      *    -  properties:  defines the properties that are to be set on the translator, when created         
-      * =====================================================================* -->
-
 	<translators>
-        <translator name="excel-translator">
-            <connectorName>excel-connector</connectorName>
-            <type>excel</type>
+        <translator name="file-translator">
+            <connectorName>file-connector</connectorName>
+            <type>file</type>
             <properties>
-                <property name="SupportsDirectQueryProcedure">true</property>
             </properties>
+                   
         </translator>
 
 	</translators>
 	
-<!--  * =====================================================================*  
-      *    connectors defines the data sources to access   
-      *    -  jndiName:  the jndi name that the datasource will be defined with             
-      *    -  type:  it must match one entry in the src/main/resources   ConnectorMapping.txt file 
-      *    -  properties:  defines the properties that are to be set on the connector, when created         
-     * =====================================================================* -->
-
-	
 	<connectors>
 
-        <connector name="excel-connector">
-            <jndiName>java:/excel-file</jndiName>
+        <connector name="file-connector">
             <type>file</type>
+            <jndiName>java:/marketdata-file</jndiName>
             <properties>
-                <property name="ParentDirectory">data</property>
+                <property name="ParentDirectory">src/test/resources/data</property>
             </properties>
         
-        </connector>    			
+        </connector>  			
 	</connectors>
 	<vdbs>
-		<vdb>excel-vdb.xml</vdb>
+		<vdb>test-embedded-driver-vdb.xml</vdb>
 	</vdbs>
 </configuration>
 

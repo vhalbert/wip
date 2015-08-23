@@ -1,1 +1,2 @@
 file=org.teiid.embedded.connector.FileConnector
+cassandra=org.teiid.embedded.connector.CassandraConnector

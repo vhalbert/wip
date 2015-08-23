@@ -48,7 +48,8 @@
     </transactionmgr>	
 
 <!--  * =====================================================================*  
-      *    translators defines the translation logic to use               
+      *    translators defines the translation logic to use     
+      *    -  name:  maps to the VDB translator-name for the sourc model        
       *    -  type:  it must match one entry in the src/main/resources   TranslatorMapping.txt file 
       *    -  connectorName:  maps to the connector to use
       *    -  properties:  defines the properties that are to be set on the translator, when created         
@@ -77,10 +78,17 @@
 			</properties>
 		</translator>
 	
+	    <translator name="cassandra-translator">
+            <connectorName>cassandra-connector</connectorName>
+            <type>cassandra</type>
+            <properties>
+            </properties>
+        </translator>
 	</translators>
 	
 <!--  * =====================================================================*  
-      *    connectors defines the data sources to access   
+      *    connectors defines the data sources to access  
+      *    -  name:  unique identification purposes across all connectors
       *    -  jndiName:  the jndi name that the datasource will be defined with             
       *    -  type:  it must match one entry in the src/main/resources   ConnectorMapping.txt file 
       *    -  properties:  defines the properties that are to be set on the connector, when created         
@@ -93,17 +101,26 @@
 			<type>file</type>
 			<properties>
 				<property name="ParentDirectory">data</property>
-			</properties>
-		
+			</properties>		
 		</connector>
+		
         <connector name="excel-connector">
             <jndiName>java:/excel-file</jndiName>
             <type>file</type>
             <properties>
                 <property name="ParentDirectory">data</property>
             </properties>
+        </connector>  
         
-        </connector>    			
+        <connector name="cassandra-connector">
+            <type>cassandra</type>
+            <jndiName>java:/demoCassandra</jndiName>
+            <properties>
+                <property name="Address">127.0.0.1</property>
+                <property name="Keyspace">demo</property>
+            </properties>
+        
+        </connector>          			
 	</connectors>
 	<vdbs>
 		<vdb>vdb1.xml</vdb>

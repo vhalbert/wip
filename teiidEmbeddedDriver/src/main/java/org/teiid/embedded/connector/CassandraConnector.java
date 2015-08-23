@@ -21,31 +21,70 @@
  */
 package org.teiid.embedded.connector;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Properties;
+
+import org.teiid.core.util.PropertiesUtils;
 import org.teiid.embedded.Configuration;
 import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.component.TeiidConnectorWrapper;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
-import org.teiid.resource.adapter.file.FileManagedConnectionFactory;
+import org.teiid.resource.adapter.cassandra.CassandraManagedConnectionFactory;
 
 /**
  * @author vanhalbert
  *
  */
-public class FileConnector extends TeiidConnectorWrapper {
+public class CassandraConnector extends TeiidConnectorWrapper {
+	public static final String ADDRESS_PROPERTY = "Address";
+	public static final String KEYSPACE_PROPERTY = "Keyspace";
+	
+	private static final String CASSANDRA_PROP_FILE = "cassandra.properties";
 
+	private String address = null;
+	private String keyspace = null;
 
 	@Override
 	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
 			throws Exception {
 		
+		initCassandraProperties();
+		
 		ConnectorConfiguration cc = (ConnectorConfiguration) config;
     	
-    	FileManagedConnectionFactory managedconnectionFactory = new FileManagedConnectionFactory();
+		CassandraManagedConnectionFactory managedconnectionFactory = new CassandraManagedConnectionFactory();
     	
+		if (address != null) {
+			config.setProperty(ADDRESS_PROPERTY, address);
+		}
+		if (keyspace != null) {
+			config.setProperty(KEYSPACE_PROPERTY, keyspace);
+		}
+		
     	this.applyProperties(managedconnectionFactory, config.getProperties());
     	
 		manager.getEmbeddedServer().addConnectionFactory(cc.getJndiName(), managedconnectionFactory.createConnectionFactory());
 
 	}
+	
+	private void initCassandraProperties() throws IOException {
+		URL urlToFile = ClassLoader.getSystemClassLoader().getResource(CASSANDRA_PROP_FILE);
+
+		if (urlToFile == null) {
+			throw new RuntimeException("Unable to get URL for file " + "cassandra.properties");
+		}
+		
+		Properties props = PropertiesUtils.loadFromURL(urlToFile);
+		if(props.getProperty("cassandra.address") != null) {
+			address = props.getProperty("cassandra.address");
+		}
+		
+		if(props.getProperty("cassandra.keyspace") != null){
+			keyspace = props.getProperty("cassandra.keyspace");
+		}
+
+	}
+	
 
 }

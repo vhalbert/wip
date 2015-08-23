@@ -21,6 +21,8 @@
  */
 package org.teiid.embedded;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
@@ -102,9 +104,18 @@ public class TeiidEmbeddedMgr {
 		
 		for (String vdb:vdbs) {
 			if (vdb.toLowerCase().endsWith(".zip")) {
-				driver.deployVDBZip(vdb);
+				
+				URL urlToFile = getURL(vdb);
+				driver.deployVDBZip(urlToFile);
+				
 			} else {
-				driver.deployVDB(vdb);
+				
+				URL urlToFile = getURL(vdb);
+
+				File vdbFile = new File(urlToFile.toURI());		
+
+				driver.deployVDB(new FileInputStream(vdbFile));				
+
 			}
 		}
 	}
@@ -132,22 +143,21 @@ public class TeiidEmbeddedMgr {
 	
 	private void loadMappingFiles() throws IOException {
 		
-		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(TRANSLATOR_MAPPING_FILE);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + TRANSLATOR_MAPPING_FILE);
-		}
+		Properties translatorMapping = PropertiesUtils.loadFromURL( getURL(TRANSLATOR_MAPPING_FILE)  );
 
-		Properties translatorMapping = PropertiesUtils.loadFromURL(urlToFile);
-
-		urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource(CONNECTOR_MAPPING_FILE);
-		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + CONNECTOR_MAPPING_FILE);
-		}
-
-		Properties connectorMapping = PropertiesUtils.loadFromURL(urlToFile);
+		Properties connectorMapping = PropertiesUtils.loadFromURL( getURL(CONNECTOR_MAPPING_FILE));
 		
 		registry.setConnectorTypeClassMapping(connectorMapping);
 		registry.setTranslatorTypeClassMapping(translatorMapping);
+	}
+	
+	private static URL getURL(String fileName)  {
+		URL urlToFile = ClassLoader.getSystemClassLoader().getResource(fileName);
+		if (urlToFile == null) {
+			throw new RuntimeException("Unable to get URL for file " + fileName);
+		}
+
+		return urlToFile;
 	}
 
 }

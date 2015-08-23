@@ -41,7 +41,7 @@
       * =====================================================================* -->
 
 	<translators>
-        <translator name="excel-translator">
+        <translator name="excel">
             <connectorName>excel-connector</connectorName>
             <type>excel</type>
             <properties>

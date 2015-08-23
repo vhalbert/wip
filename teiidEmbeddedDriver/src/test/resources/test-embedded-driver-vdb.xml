@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="Portfolio" version="1">
+
+    <description>The Portfolio Dynamic VDB</description>
+    
+    <!-- 
+      Setting to use connector supplied metadata. Can be "true" or "cached".  
+      "true" will obtain metadata once for every launch of Teiid. 
+      "cached" will save a file containing the metadata into 
+      the deploy/<vdb name>/<vdb version/META-INF directory
+    -->
+    <property name="UseConnectorMetadata" value="true" />
+
+    <!-- 
+      Each model represents a access to one or more sources.
+      The name of the model will be used as a top level schema name
+      for all of the metadata imported from the connector.
+    
+      NOTE: Multiple models, with different import settings, can be bound to 
+      the same connector binding and will be treated as the same source at
+      runtime. 
+    --> 
+    <model name="MarketData">
+        <!-- 
+            Each source represents a translator and data source. There are 
+            pre-defined translators, or you can create one.
+        -->
+        <source name="text-connector" translator-name="file-translator" connection-jndi-name="java:/marketdata-file"/>
+    </model>
+    
+    <model name="Stocks" type="VIRTUAL">
+        <metadata type="DDL"><![CDATA[
+                
+        CREATE VIEW StockPrices (
+            symbol string,
+            price bigdecimal
+            )
+            AS  
+               SELECT SP.symbol, SP.price
+                FROM (EXEC MarketData.getTextFiles('*.txt')) AS f, 
+                    TEXTTABLE(f.file COLUMNS symbol string, price bigdecimal HEADER) AS SP;
+
+                 
+        ]]> </metadata>
+    </model>
+
+
+
+</vdb>

@@ -46,8 +46,8 @@ public class TestXMLConfiguration {
 		Assert.assertNotNull(c.getTransactionMgrConfiguration());
 		
 		
-		Assert.assertEquals(3, c.getTranslators().size());
-		Assert.assertEquals(2, c.getConnectors().size());
+		Assert.assertEquals(4, c.getTranslators().size());
+		Assert.assertEquals(3, c.getConnectors().size());
 		Assert.assertEquals(2, c.getVDBs().size());
 		
 		Collection<TranslatorConfiguration> mt = c.getTranslators();
@@ -63,13 +63,15 @@ public class TestXMLConfiguration {
 		}
 		Collection<ConnectorConfiguration> ct = c.getConnectors();
 		for(ConnectorConfiguration t:ct) {
-			Assert.assertEquals(1, t.getProperties().size());
 			if (t.getName().equals("file-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/marketdata-file");
 				Assert.assertEquals(1, t.getProperties().size());
 			} else if (t.getName().equals("excel-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/excel-file");
 				Assert.assertEquals(1, t.getProperties().size());
+			} else if (t.getName().equals("cassandra-connector")) {
+				Assert.assertEquals(t.getJndiName(), "java:/demoCassandra");
+				Assert.assertEquals(2, t.getProperties().size());
 			}
 		}
 		

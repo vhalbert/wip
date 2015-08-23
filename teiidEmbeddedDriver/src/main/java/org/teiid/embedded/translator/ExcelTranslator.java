@@ -42,7 +42,7 @@ public class ExcelTranslator extends TeiidTranslatorWrapper {
 		this.applyProperties(factory, config.getProperties());
 		
 		factory.start();
-		manager.getEmbeddedServer().addTranslator(config.getType(), factory);
+		manager.getEmbeddedServer().addTranslator(config.getName(), factory);
 
 	}
 

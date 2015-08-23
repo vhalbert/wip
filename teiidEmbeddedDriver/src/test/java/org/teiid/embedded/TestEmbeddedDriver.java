@@ -36,7 +36,7 @@ import org.junit.Test;
  */
 public class TestEmbeddedDriver {
 
-	//@Test 
+	@Test 
 	public void testDriver() throws Exception {
 		
 		
@@ -44,16 +44,13 @@ public class TestEmbeddedDriver {
 		 server.initialize("test-embedded-driver-configuration.xml");
 
 		 server.startServer();
-		 
-//		 server.deployVDB("excel-vdb.xml");
-		
+	
 		 // NOTE:  not needing to call server.deployVDB(...) 
 		 //			because the VDB is specified in the configuration file
 		 
-		Connection c = server.getConnection("jdbc:teiid:ExcelVDB", null);
+		Connection c = server.getConnection("jdbc:teiid:Portfolio", null);
 		
-		execute(c, "SELECT * FROM Sheet1", false);
-		execute(c, "SELECT * FROM PersonalHoldings", true);
+		execute(c, "select * from StockPrices", false);
 		
 		server.shutdown();
 

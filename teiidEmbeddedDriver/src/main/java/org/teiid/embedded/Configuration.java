@@ -76,6 +76,10 @@ public abstract class Configuration {
 		this.properties = props;
 	}
 	
+	public void setProperty(String key, String value) {
+		this.properties.setProperty(key, value);
+	}
+	
 	public Properties getProperties() {
 		return this.properties;
 	}

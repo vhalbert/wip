@@ -43,7 +43,7 @@ public class TestTranslators {
 		DRIVER = new TeiidEmbeddedDriver();
 		MANAGER = new TeiidEmbeddedMgr(DRIVER);	
 		
-		DRIVER.LOG_COMPONENT_SET_METHODS = true;
+		TeiidEmbeddedDriver.LOG_COMPONENT_SET_METHODS = true;
 	}	
 	
 	@Test public void testFileTranslator() throws Exception {	
@@ -74,6 +74,36 @@ public class TestTranslators {
 		ft.initialize(MANAGER, config);
 		
 	}	
+	
+	@Test public void testCassandraTranslator() throws Exception {	
+		TranslatorConfiguration config = new TranslatorConfiguration();
+		config.setName("cassandra-Translator");
+		config.setConnectorName("cassandra-Connector");
+		config.setType("cassandra");
+		
+		Properties props = new Properties();
+		props.setProperty("SupportsDirectQueryProcedure", "true");
+		config.setProperties(props);
+		
+		H2JDBCTranslator ft = new H2JDBCTranslator();
+		ft.initialize(MANAGER, config);
+		
+	}	
+	
+	@Test public void testExcelTranslator() throws Exception {	
+		TranslatorConfiguration config = new TranslatorConfiguration();
+		config.setName("excel-Translator");
+		config.setConnectorName("fileConnector");
+		config.setType("excel");
+		
+		Properties props = new Properties();
+		props.setProperty("SupportsDirectQueryProcedure", "true");
+		config.setProperties(props);
+		
+		ExcelTranslator ft = new ExcelTranslator();
+		ft.initialize(MANAGER, config);
+		
+	}		
 	
 	@AfterClass
 	public static void shutDown() {
