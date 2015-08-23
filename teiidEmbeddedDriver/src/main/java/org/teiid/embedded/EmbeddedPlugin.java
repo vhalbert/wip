@@ -48,6 +48,10 @@ public class EmbeddedPlugin {
 		EMBDF10002,
 		EMBDF10003,
 		EMBDF10004,
-		EMBDF10005
+		
+		
+		EMBDR10001,
+		EMBDR10002
+		
 	}
 }

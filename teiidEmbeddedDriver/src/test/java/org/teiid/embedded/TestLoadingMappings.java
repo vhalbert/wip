@@ -37,9 +37,9 @@ public class TestLoadingMappings {
 	@Test public void testSetProperties() throws Exception {	
 		
 		
-		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource("org/teiid/embedded/TranslatorMapping.txt");
+		URL urlToFile = TeiidEmbeddedDriver.class.getClassLoader().getResource("org/teiid/embedded/TranslatorFactoryMapping.properties");
 		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + "TranslatorMapping.txt");
+			throw new RuntimeException("Unable to get URL for file " + "TranslatorFactoryMapping.properties");
 		}
 
 		Properties translatorMapping = PropertiesUtils.loadFromURL(urlToFile);

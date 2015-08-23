@@ -28,7 +28,7 @@
 
 	<embedded name="teiidEmbeddedInstance">
 		<properties>
-			<property name="xx">value</property>
+			<property name="UseDisk">false</property>
 		</properties>
 	
 	</embedded>

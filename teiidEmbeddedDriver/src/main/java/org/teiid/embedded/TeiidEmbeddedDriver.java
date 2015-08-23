@@ -24,12 +24,19 @@ package org.teiid.embedded;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
 
+import org.teiid.core.TeiidProcessingException;
+import org.teiid.dqp.internal.datamgr.ConnectorManagerRepository.ConnectorManagerException;
 import org.teiid.runtime.EmbeddedServer;
+import org.teiid.translator.TranslatorException;
 
 
 /**
@@ -63,6 +70,8 @@ public class TeiidEmbeddedDriver {
 	private EmbeddedServer server;
 	private TeiidEmbeddedMgr manager;
 	
+	private boolean isInitialized = false;
+	
 	public TeiidEmbeddedDriver() {
 		server = new EmbeddedServer();
 	}
@@ -81,9 +90,12 @@ public class TeiidEmbeddedDriver {
 	public void initialize(String configurationFileName) throws Exception {
 		manager = new TeiidEmbeddedMgr(this);
 		manager.initialize(configurationFileName);
+		this.isInitialized = true;
 	}
 	
 	public void startServer() throws Exception {
+		isInitialized();
+		
 		server.start(manager.getEmbeddedConfiguration());
 		
 		manager.deployVDBs();
@@ -91,37 +103,57 @@ public class TeiidEmbeddedDriver {
 	/**
 	 * Call to deploy a VDB xml file
 	 * @param vdbFileName
-	 * @throws Exception
+	 * @throws TeiidProcessingException(e);
 	 */
-	public void deployVDB(String vdbFileName) throws Exception {
+	public void deployVDB(String vdbFileName) throws TeiidProcessingException {
+		isInitialized();
 		
 		File f = new File(vdbFileName);
 		if (!f.exists()) {
-			throw new RuntimeException("Unable to get File for vdb file " + f.getAbsolutePath());
-			
+			throw new TeiidProcessingException(EmbeddedPlugin.Util.getString(EmbeddedPlugin.Event.EMBDR10002.toString(), f.getAbsolutePath()));			
 		}
 
-		deployVDB(new FileInputStream(f));
+		try {
+			deployVDB(new FileInputStream(f));
+		} catch (FileNotFoundException e) {
+			throw new TeiidProcessingException(e);
+		}
 	}
 	
 	/**
 	 * Call to deploy a VDB using InputStream
 	 * @param inputStream
-	 * @throws Exception
+	 * @throws TeiidProcessingException
 	 */
-	public void deployVDB(InputStream inputStream) throws Exception {
-
-		server.deployVDB(inputStream);
+	public void deployVDB(InputStream inputStream) throws TeiidProcessingException {
+		isInitialized();
+		
+		try {
+			server.deployVDB(inputStream);
+		} catch (ConnectorManagerException e) {
+			throw new TeiidProcessingException(e);
+		} catch (TranslatorException e) {
+			throw new TeiidProcessingException(e);
+		} catch (IOException e) {
+			throw new TeiidProcessingException(e);
+		}
 	}
 	
 	/**
 	 * Call to deploy a VDB Zip xml file by passing in its= URL
 	 * @param vdbURL
-	 * @throws Exception
+	 * @throws TeiidProcessingException
 	 */
-	public void deployVDBZip(URL vdbURL) throws Exception {
+	public void deployVDBZip(URL vdbURL) throws TeiidProcessingException {
+		isInitialized();
 		
-		server.deployVDBZip(vdbURL);
+		try {
+			server.deployVDBZip(vdbURL);
+		} catch (ConnectorManagerException | TranslatorException | IOException
+				| URISyntaxException e) {
+			
+			throw new TeiidProcessingException(e);
+		}
 	}
 	
 	/** 
@@ -129,18 +161,33 @@ public class TeiidEmbeddedDriver {
 	 * @param url
 	 * @param props
 	 * @return Connection
-	 * @throws Exception
+	 * @throws TeiidProcessingException
+	 * @throws SQLException 
 	 */
-	public Connection getConnection(String url, Properties props) throws Exception {
+	public Connection getConnection(String url, Properties props)  throws TeiidProcessingException, SQLException {
+		isInitialized();
+
 		return server.getDriver().connect(url, props);
 	}
 	
 	public void shutdown() {
-		server.stop();
+		if( server != null) {
+			server.stop();
+		}
 	}
 	
 	public EmbeddedServer getEmbeddedServer() {
 		return this.server;
 	}
+	
+	private void isInitialized() throws TeiidProcessingException {
+		if (isInitialized) return;
+		
+		if (manager == null) {
+			throw new TeiidProcessingException(EmbeddedPlugin.Util.getString(EmbeddedPlugin.Event.EMBDR10001.toString()));
+	
+		}
+	}
+
 	
 }

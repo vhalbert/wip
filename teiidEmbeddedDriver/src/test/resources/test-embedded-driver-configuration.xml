@@ -3,6 +3,7 @@
 
 	<embedded name="teiidEmbeddedInstance">
 		<properties>
+		  <property name="UseDisk">false</property>
 		</properties>
 	
 	</embedded>

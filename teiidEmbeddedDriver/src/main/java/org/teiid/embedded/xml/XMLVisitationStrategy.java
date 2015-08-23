@@ -121,8 +121,7 @@ public class XMLVisitationStrategy {
            
             String type = t.getType();
             if (type == null || type.trim().length() == 0) {
-            	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-    					"EMBDF10003", t.getName()));
+            	throw new TeiidComponentException(EmbeddedPlugin.Event.EMBDF10003, t.getName());
             }
             
             /* 
@@ -170,8 +169,7 @@ public class XMLVisitationStrategy {
             
             String type = c.getType();
             if (type == null || type.trim().length() == 0) {
-            	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-    					"EMBDF10003", c.getName()));
+               	throw new TeiidComponentException(EmbeddedPlugin.Event.EMBDF10003, c.getName());
             }
 
             connectors.put(c.getName(), c);
@@ -208,8 +206,9 @@ public class XMLVisitationStrategy {
     	String name = element.getAttributeValue(TagNames.Common_Attributes.NAME);
         
         if (requiresName && (name == null || name.trim().length() == 0)) {
-        	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-					"EMBDF10000", "NULL", config.getClass().getSimpleName()));
+        	final Object[] params = new Object[]{"NULL", config.getClass().getSimpleName()};
+           	throw new TeiidComponentException(EmbeddedPlugin.Event.EMBDF10000, EmbeddedPlugin.Util.gs(EmbeddedPlugin.Event.EMBDF10000, params));
+
         }
         config.setName( name );
         
@@ -245,13 +244,13 @@ public class XMLVisitationStrategy {
 				String value = propElement.getValue();
 				
 				if (name == null) {
-			      	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-							"EMBDF10001", parent.getName()));
+			      	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(EmbeddedPlugin.Event.EMBDF10001.toString(),
+							 parent.getName()));
 					
 				}
 				if (value == null) {
-			      	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(
-							"EMBDF10002", name));
+			      	throw new TeiidComponentException(EmbeddedPlugin.Util.getString(EmbeddedPlugin.Event.EMBDF10002.toString(),
+							name));
 		 					
 				}
 				
