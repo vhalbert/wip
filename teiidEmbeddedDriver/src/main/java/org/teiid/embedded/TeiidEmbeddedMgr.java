@@ -44,7 +44,7 @@ import org.teiid.runtime.EmbeddedServer;
 public class TeiidEmbeddedMgr {
 
 	private static final String CONNECTOR_MAPPING_FILE = "org/teiid/embedded/ConnectorMapping.txt";
-	private static final String TRANSLATOR_MAPPING_FILE = "org/teiid/embedded/TranslatorMapping.txt";
+	private static final String TRANSLATOR_MAPPING_FILE = "org/teiid/embedded/TranslatorFactoryMapping.properties";
 
 
 	private TeiidEmbeddedDriver driver;

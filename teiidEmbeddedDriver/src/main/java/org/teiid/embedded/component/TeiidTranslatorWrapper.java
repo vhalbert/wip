@@ -23,11 +23,35 @@ package org.teiid.embedded.component;
 
 
 import org.teiid.embedded.ComponentWrapper;
+import org.teiid.embedded.Configuration;
+import org.teiid.embedded.TeiidEmbeddedMgr;
+import org.teiid.embedded.configuration.TranslatorConfiguration;
+import org.teiid.translator.ExecutionFactory;
 
 /**
  * @author vanhalbert
  *
  */
-public abstract class TeiidTranslatorWrapper extends ComponentWrapper {
+public class TeiidTranslatorWrapper extends ComponentWrapper {
 	
+	@Override
+	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
+			throws Exception {
+		
+		ExecutionFactory<?, ?> factory = createExecutionFactory(manager, (TranslatorConfiguration) config);
+		this.applyProperties(factory, config.getProperties());
+		
+		addTranslator(manager, factory, config);	
+	}
+	
+	protected ExecutionFactory<?, ?> createExecutionFactory(TeiidEmbeddedMgr manager, TranslatorConfiguration config ) throws Exception {
+		ExecutionFactory<?, ?> factory =  manager.getClassRegistry().getFactoryClassInstance(config.getType());
+		return factory;
+	}
+	
+	
+	protected void addTranslator(TeiidEmbeddedMgr manager, ExecutionFactory<?, ?> factory, Configuration config) throws Exception  {
+		factory.start();
+		manager.getEmbeddedServer().addTranslator(config.getName(), factory);	
+	}
 }

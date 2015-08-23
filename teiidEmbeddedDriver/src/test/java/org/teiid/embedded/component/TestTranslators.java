@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301 USA.
  */
-package org.teiid.embedded.translator;
+package org.teiid.embedded.component;
 
 import java.util.Properties;
 
@@ -41,7 +41,13 @@ public class TestTranslators {
 	@BeforeClass
 	public static void onlyOnce() {
 		DRIVER = new TeiidEmbeddedDriver();
+
 		MANAGER = new TeiidEmbeddedMgr(DRIVER);	
+		try {
+			MANAGER.initialize("BenchmarkConfiguration.xml");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		TeiidEmbeddedDriver.LOG_COMPONENT_SET_METHODS = true;
 	}	
@@ -55,7 +61,7 @@ public class TestTranslators {
 		Properties props = new Properties();
 		config.setProperties(props);
 		
-		FileTranslator ft = new FileTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}
@@ -70,7 +76,7 @@ public class TestTranslators {
 		props.setProperty("SupportsDirectQueryProcedure", "true");
 		config.setProperties(props);
 		
-		H2JDBCTranslator ft = new H2JDBCTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}	
@@ -84,7 +90,7 @@ public class TestTranslators {
 		Properties props = new Properties();
 		config.setProperties(props);
 		
-		H2JDBCTranslator ft = new H2JDBCTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}	
@@ -99,7 +105,7 @@ public class TestTranslators {
 		props.setProperty("SupportsDirectQueryProcedure", "true");
 		config.setProperties(props);
 		
-		ExcelTranslator ft = new ExcelTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}	
@@ -113,7 +119,7 @@ public class TestTranslators {
 		Properties props = new Properties();
 		config.setProperties(props);
 		
-		WSTranslator ft = new WSTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}
@@ -127,7 +133,7 @@ public class TestTranslators {
 		Properties props = new Properties();
 		config.setProperties(props);
 		
-		MongoDBTranslator ft = new MongoDBTranslator();
+		TeiidTranslatorWrapper ft = (TeiidTranslatorWrapper) config.createComponentWrapperInstance(MANAGER);
 		ft.initialize(MANAGER, config);
 		
 	}	

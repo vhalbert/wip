@@ -28,6 +28,7 @@ import java.util.Properties;
 
 import org.teiid.embedded.component.TeiidConnectorWrapper;
 import org.teiid.embedded.component.TeiidTranslatorWrapper;
+import org.teiid.translator.ExecutionFactory;
 
 
 /**
@@ -63,26 +64,25 @@ public class ClassRegistry {
 		this.connectorMapping = props;
 	}
 	
-	
 	/**
 	 * Call to get a TeiidTranslatorWrapper instance.  
 	 * @param type
-	 * @return TeiidTranslatorWrapper
+	 * @return ExecutionFactory<?, ?>
 	 * @throws Exception
 	 */
-	public TeiidTranslatorWrapper getTranslatorClassInstance(String type) throws Exception {
+	public ExecutionFactory<?, ?> getFactoryClassInstance(String type) throws Exception {
 		Class<?> clz =  this.translatorClasses.get(type);
 		if (clz == null) {
 			String className = translatorMapping.getProperty(type);
 			
 			if (className == null) {
-				throw new Exception("No translator mapping className for type " + type);
+				throw new Exception("No ExecutionFactory className match for type " + type);
 			}
 			clz = registerTranslatorClass(type, className);
 		}
 		
-		return (TeiidTranslatorWrapper) clz.newInstance();
-	}
+		return (ExecutionFactory<?, ?>) clz.newInstance();
+	}	
 
 	
 	public TeiidConnectorWrapper getConnectorClassInstance(String type) throws Exception {

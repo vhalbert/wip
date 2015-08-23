@@ -64,7 +64,8 @@ public class TranslatorConfiguration extends Configuration {
 	
 	@Override
 	public  ComponentWrapper createComponentWrapperInstance(TeiidEmbeddedMgr manager) throws Exception {
-		TeiidTranslatorWrapper tw =  manager.getClassRegistry().getTranslatorClassInstance(getType());
+//		TeiidTranslatorWrapper tw =  manager.getClassRegistry().getTranslatorClassInstance(getType());
+		TeiidTranslatorWrapper tw = new TeiidTranslatorWrapper();
 		tw.initialize(manager, this);
 		return tw;
 
