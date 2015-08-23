@@ -95,6 +95,26 @@ public class TestConnectors {
 		
 	}	
 	
+	@Test public void testMongoDBConnector() throws Exception {	
+		ConnectorConfiguration config = new ConnectorConfiguration();
+		config.setName("mongodbConnector");
+		config.setJndiName("java:/mongoDS");
+		
+		Properties props = new Properties();
+		props.setProperty(MongoDBConnector.SERVERLIST_PROPERTY, "198.166.218.46:27017");
+		props.setProperty(MongoDBConnector.DBNAME_PROPERTY, "example");
+		config.setProperties(props);
+		
+		MongoDBConnector ft = new MongoDBConnector();
+		ft.initialize(MANAGER, config);
+		
+		// verify the properties from the mongodb.properties was loaded and overriding
+		// the above settings.
+		Assert.assertEquals(config.getProperties().getProperty(MongoDBConnector.SERVERLIST_PROPERTY), "10.66.218.46:27017") ;
+		Assert.assertEquals(config.getProperties().getProperty(MongoDBConnector.DBNAME_PROPERTY), "mydb") ;
+		
+	}	
+	
 	@AfterClass
 	public static  void shutDown() {
 		DRIVER.shutdown();

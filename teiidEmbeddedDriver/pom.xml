@@ -56,7 +56,12 @@
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>translator-ws</artifactId>
                 <version>${version.org.jboss.teiid}</version>
-            </dependency>   
+            </dependency>  
+              <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>translator-mongodb</artifactId>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>               
             <dependency>
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>connector-file</artifactId>
@@ -74,7 +79,13 @@
                 <artifactId>connector-cassandra</artifactId>
                 <classifier>lib</classifier>
                 <version>${version.org.jboss.teiid}</version>
-            </dependency>   
+            </dependency>  
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>connector-mongodb</artifactId>
+                <classifier>lib</classifier>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>               
             <dependency>
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>translator-jdbc</artifactId>

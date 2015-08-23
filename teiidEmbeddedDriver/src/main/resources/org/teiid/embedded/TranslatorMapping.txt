@@ -3,3 +3,4 @@ excel=org.teiid.embedded.translator.ExcelTranslator
 h2=org.teiid.embedded.translator.H2JDBCTranslator
 cassandra=org.teiid.embedded.translator.CassandraTranslator
 ws=org.teiid.embedded.translator.WSTranslator
+mongodb=org.teiid.embedded.translator.MongoDBTranslator

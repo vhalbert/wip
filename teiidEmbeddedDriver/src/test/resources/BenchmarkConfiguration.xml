@@ -90,7 +90,14 @@
             <type>ws</type>
             <properties>
             </properties>
-        </translator>        
+        </translator> 
+        
+        <translator name="translator-mongodb">
+            <connectorName>mongodb-connector</connectorName>
+            <type>mongodb</type>
+            <properties>
+            </properties>
+        </translator>               
         
 	</translators>
 	
@@ -134,7 +141,18 @@
             <type>ws</type>
             <properties>
             </properties>       
-        </connector>                 			
+        </connector> 
+        
+         <connector name="mongodb-connector">
+            <type>mongodb</type>
+            <jndiName>java:/mongoDS</jndiName>
+            <properties>
+                <property name="RemoteServerList">127.0.0.1:27017</property>
+                <property name="Database">mydb</property>
+            </properties>
+        </connector>           
+        
+                    			
 	</connectors>
 	<vdbs>
 		<vdb>vdb1.xml</vdb>

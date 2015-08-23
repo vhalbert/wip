@@ -46,8 +46,8 @@ public class TestXMLConfiguration {
 		Assert.assertNotNull(c.getTransactionMgrConfiguration());
 		
 		
-		Assert.assertEquals(5, c.getTranslators().size());
-		Assert.assertEquals(4, c.getConnectors().size());
+		Assert.assertEquals(6, c.getTranslators().size());
+		Assert.assertEquals(5, c.getConnectors().size());
 		Assert.assertEquals(2, c.getVDBs().size());
 		
 		Collection<TranslatorConfiguration> mt = c.getTranslators();
@@ -77,6 +77,9 @@ public class TestXMLConfiguration {
 			} else if (t.getName().equals("ws-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/CustomerRESTWebSvcSource");
 				Assert.assertEquals(0, t.getProperties().size());
+			} else if (t.getName().equals("mongodb-connector")) {
+				Assert.assertEquals(t.getJndiName(), "java:/mongoDS");
+				Assert.assertEquals(2, t.getProperties().size());
 			}
 		}
 		

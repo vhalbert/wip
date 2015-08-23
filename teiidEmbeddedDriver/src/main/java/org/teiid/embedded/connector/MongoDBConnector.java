@@ -30,20 +30,20 @@ import org.teiid.embedded.Configuration;
 import org.teiid.embedded.TeiidEmbeddedMgr;
 import org.teiid.embedded.component.TeiidConnectorWrapper;
 import org.teiid.embedded.configuration.ConnectorConfiguration;
-import org.teiid.resource.adapter.cassandra.CassandraManagedConnectionFactory;
+import org.teiid.resource.adapter.mongodb.MongoDBManagedConnectionFactory;
 
 /**
  * @author vanhalbert
  *
  */
-public class CassandraConnector extends TeiidConnectorWrapper {
-	public static final String ADDRESS_PROPERTY = "Address";
-	public static final String KEYSPACE_PROPERTY = "Keyspace";
+public class MongoDBConnector extends TeiidConnectorWrapper {
+	public static final String SERVERLIST_PROPERTY = "RemoteServerList";
+	public static final String DBNAME_PROPERTY = "Database";
 	
-	private static final String CASSANDRA_PROP_FILE = "cassandra.properties";
+	private static final String MONGODB_PROP_FILE = "mongodb.properties";
 
-	private String address = null;
-	private String keyspace = null;
+	private String serverlist = null;
+	private String dbname = null;
 
 	@Override
 	public void initialize(TeiidEmbeddedMgr manager, Configuration config)
@@ -52,14 +52,14 @@ public class CassandraConnector extends TeiidConnectorWrapper {
 		initCassandraProperties();
 		
 		ConnectorConfiguration cc = (ConnectorConfiguration) config;
+		
+		MongoDBManagedConnectionFactory managedconnectionFactory = new MongoDBManagedConnectionFactory();
     	
-		CassandraManagedConnectionFactory managedconnectionFactory = new CassandraManagedConnectionFactory();
-    	
-		if (address != null) {
-			config.setProperty(ADDRESS_PROPERTY, address);
+		if (serverlist != null) {
+			config.setProperty(SERVERLIST_PROPERTY, serverlist);
 		}
-		if (keyspace != null) {
-			config.setProperty(KEYSPACE_PROPERTY, keyspace);
+		if (dbname != null) {
+			config.setProperty(DBNAME_PROPERTY, dbname);
 		}
 		
     	this.applyProperties(managedconnectionFactory, config.getProperties());
@@ -69,19 +69,20 @@ public class CassandraConnector extends TeiidConnectorWrapper {
 	}
 	
 	private void initCassandraProperties() throws IOException {
-		URL urlToFile = ClassLoader.getSystemClassLoader().getResource(CASSANDRA_PROP_FILE);
+		URL urlToFile = ClassLoader.getSystemClassLoader().getResource(MONGODB_PROP_FILE);
 
 		if (urlToFile == null) {
-			throw new RuntimeException("Unable to get URL for file " + CASSANDRA_PROP_FILE);
+			throw new RuntimeException("Unable to get URL for file " + MONGODB_PROP_FILE );
 		}
 		
 		Properties props = PropertiesUtils.loadFromURL(urlToFile);
-		if(props.getProperty("cassandra.address") != null) {
-			address = props.getProperty("cassandra.address");
+		
+		if(props.getProperty("server.list") != null) {
+			serverlist = props.getProperty("server.list");
 		}
 		
-		if(props.getProperty("cassandra.keyspace") != null){
-			keyspace = props.getProperty("cassandra.keyspace");
+		if(props.getProperty("db.name") != null){
+			dbname = props.getProperty("db.name");
 		}
 
 	}

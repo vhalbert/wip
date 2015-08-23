@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+<!--  * =====================================================================*   -->
+<!-- 
+		Rules:  
+			Each object MUST have a name, and be unique within its type
+			Translator:
+				- does not have to have a related connector, but if defined, must
+					match a defined connector
+				- the type MUST be defined, which maps to the Teiid translator types
+			Connector:
+				- jndiName is optional and will be validated @link TeiidConnectorWrapper
+			VDB's are not required, then its assumed user is deploying in their own manner
+
+ -->
+<!--  * =====================================================================* -->
+
+
+<!--  * =====================================================================*   -->
+<!--  *    Embedded defines the following:                  *   -->
+<!--  *    		-  embedded settings                   		*   -->
+<!--  *    		-  transactionmgr, if used                  *   -->
+<!--  * =====================================================================* -->
+
+	<embedded name="teiidEmbeddedInstance">
+		<properties>
+		</properties>
+	
+	</embedded>
+
+<!--  * =====================================================================*   -->
+<!--  *    translators defines the translation logic to use                  *   -->
+<!--  *    and maps to the connector to use                 *   -->
+<!--  * =====================================================================* -->
+
+	<translators>
+        <translator name="translator-mongodb">
+            <connectorName>mongodb-connector</connectorName>
+            <type>mongodb</type>
+            <properties>
+            </properties>
+        </translator>  
+	
+	</translators>
+	
+<!--  * =====================================================================*   -->
+<!--  *    connectors defines the data sources to access                  *   -->
+<!--  * =====================================================================* -->
+
+	
+	<connectors>
+         <connector name="mongodb-connector">
+            <type>mongodb</type>
+            <jndiName>java:/mongoDS</jndiName>
+            <properties>
+                <property name="RemoteServerList">127.0.0.1:27017</property>
+                <property name="Database">mydb</property>
+            </properties>
+        </connector>      
+	</connectors>
+	<vdbs>
+	</vdbs>
+</configuration>
+

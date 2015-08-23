@@ -82,7 +82,6 @@ public class TestTranslators {
 		config.setType("cassandra");
 		
 		Properties props = new Properties();
-		props.setProperty("SupportsDirectQueryProcedure", "true");
 		config.setProperties(props);
 		
 		H2JDBCTranslator ft = new H2JDBCTranslator();
@@ -115,6 +114,20 @@ public class TestTranslators {
 		config.setProperties(props);
 		
 		WSTranslator ft = new WSTranslator();
+		ft.initialize(MANAGER, config);
+		
+	}
+	
+	@Test public void testMongoDBTranslator() throws Exception {	
+		TranslatorConfiguration config = new TranslatorConfiguration();
+		config.setName("mongodb-Translator");
+		config.setConnectorName("mongodb-Connector");
+		config.setType("mongodb");
+		
+		Properties props = new Properties();
+		config.setProperties(props);
+		
+		MongoDBTranslator ft = new MongoDBTranslator();
 		ft.initialize(MANAGER, config);
 		
 	}	
