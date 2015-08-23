@@ -52,14 +52,29 @@
                 <artifactId>translator-file</artifactId>
                 <version>${version.org.jboss.teiid}</version>
             </dependency>
-    
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>translator-ws</artifactId>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>   
             <dependency>
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>connector-file</artifactId>
                 <classifier>lib</classifier>
                 <version>${version.org.jboss.teiid}</version>
             </dependency>
-    
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>connector-ws</artifactId>
+                <classifier>lib</classifier>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>           
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>connector-cassandra</artifactId>
+                <classifier>lib</classifier>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>   
             <dependency>
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>translator-jdbc</artifactId>
@@ -69,7 +84,12 @@
                 <groupId>org.jboss.teiid.connectors</groupId>
                 <artifactId>translator-excel</artifactId>
                 <version>${version.org.jboss.teiid}</version>
-            </dependency>   
+            </dependency>  
+             <dependency>
+                <groupId>org.jboss.teiid.connectors</groupId>
+                <artifactId>translator-cassandra</artifactId>
+                <version>${version.org.jboss.teiid}</version>
+            </dependency>              
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>

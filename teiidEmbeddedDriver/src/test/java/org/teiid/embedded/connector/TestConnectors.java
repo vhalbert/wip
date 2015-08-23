@@ -82,6 +82,19 @@ public class TestConnectors {
 		
 	}
 	
+	@Test public void testWSConnector() throws Exception {	
+		ConnectorConfiguration config = new ConnectorConfiguration();
+		config.setName("wsConnector");
+		config.setJndiName("java:/CustomerRESTWebSvcSource");
+		
+		Properties props = new Properties();
+		config.setProperties(props);
+		
+		WSConnector ft = new WSConnector();
+		ft.initialize(MANAGER, config);
+		
+	}	
+	
 	@AfterClass
 	public static  void shutDown() {
 		DRIVER.shutdown();

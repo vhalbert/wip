@@ -46,8 +46,8 @@ public class TestXMLConfiguration {
 		Assert.assertNotNull(c.getTransactionMgrConfiguration());
 		
 		
-		Assert.assertEquals(4, c.getTranslators().size());
-		Assert.assertEquals(3, c.getConnectors().size());
+		Assert.assertEquals(5, c.getTranslators().size());
+		Assert.assertEquals(4, c.getConnectors().size());
 		Assert.assertEquals(2, c.getVDBs().size());
 		
 		Collection<TranslatorConfiguration> mt = c.getTranslators();
@@ -57,8 +57,10 @@ public class TestXMLConfiguration {
 				Assert.assertEquals(0, t.getProperties().size());
 			} else if (t.getName().equals("h2-translator")) {
 				Assert.assertEquals(1, t.getProperties().size());
-			}else if (t.getName().equals("excel-translator")) {
+			} else if (t.getName().equals("excel-translator")) {
 				Assert.assertEquals(1, t.getProperties().size());
+			} else if (t.getName().equals("ws-translator")) {
+				Assert.assertEquals(0, t.getProperties().size());
 			}
 		}
 		Collection<ConnectorConfiguration> ct = c.getConnectors();
@@ -72,6 +74,9 @@ public class TestXMLConfiguration {
 			} else if (t.getName().equals("cassandra-connector")) {
 				Assert.assertEquals(t.getJndiName(), "java:/demoCassandra");
 				Assert.assertEquals(2, t.getProperties().size());
+			} else if (t.getName().equals("ws-connector")) {
+				Assert.assertEquals(t.getJndiName(), "java:/CustomerRESTWebSvcSource");
+				Assert.assertEquals(0, t.getProperties().size());
 			}
 		}
 		

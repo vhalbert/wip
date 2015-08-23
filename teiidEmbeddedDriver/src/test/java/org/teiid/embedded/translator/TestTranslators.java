@@ -103,7 +103,21 @@ public class TestTranslators {
 		ExcelTranslator ft = new ExcelTranslator();
 		ft.initialize(MANAGER, config);
 		
-	}		
+	}	
+	
+	@Test public void testWSTranslator() throws Exception {	
+		TranslatorConfiguration config = new TranslatorConfiguration();
+		config.setName("wsTranslator");
+		config.setConnectorName("wsConnector");
+		config.setType("ws");
+		
+		Properties props = new Properties();
+		config.setProperties(props);
+		
+		WSTranslator ft = new WSTranslator();
+		ft.initialize(MANAGER, config);
+		
+	}	
 	
 	@AfterClass
 	public static void shutDown() {

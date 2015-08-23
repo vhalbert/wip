@@ -84,6 +84,14 @@
             <properties>
             </properties>
         </translator>
+        
+        <translator name="ws-translator">
+            <connectorName>ws-connector</connectorName>
+            <type>ws</type>
+            <properties>
+            </properties>
+        </translator>        
+        
 	</translators>
 	
 <!--  * =====================================================================*  
@@ -119,8 +127,14 @@
                 <property name="Address">127.0.0.1</property>
                 <property name="Keyspace">demo</property>
             </properties>
+        </connector> 
         
-        </connector>          			
+        <connector name="ws-connector">
+            <jndiName>java:/CustomerRESTWebSvcSource</jndiName>
+            <type>ws</type>
+            <properties>
+            </properties>       
+        </connector>                 			
 	</connectors>
 	<vdbs>
 		<vdb>vdb1.xml</vdb>
