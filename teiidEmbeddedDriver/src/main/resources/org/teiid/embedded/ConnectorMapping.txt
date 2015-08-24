@@ -1,4 +1,0 @@
-file=org.teiid.embedded.connector.FileConnector
-cassandra=org.teiid.embedded.connector.CassandraConnector
-ws=org.teiid.embedded.connector.WSConnector
-mongodb=org.teiid.embedded.connector.MongoDBConnector
