@@ -21,6 +21,11 @@
  */
 
 
+import java.io.File;
+
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -29,6 +34,20 @@ import org.junit.Test;
  * NOTE:  Need a Teiid Server Running
  */
 public class Test_QS_Util {
+
+	
+	@BeforeClass 
+	public static void initClass() throws Exception {
+		TestServer.createServer(QS_UTIL.DEFAULT_PORT);
+	}
+	
+	@AfterClass
+	public static void shutDown() {
+		try {
+			TestServer.stopServer();
+		} catch (Exception e) {
+		}
+	}
 	
 	private void performTest(String[] args) throws Exception {
 		boolean failure = QS_UTIL.perform(args);
@@ -61,7 +80,7 @@ public class Test_QS_Util {
 	}
 	
 	@Test public void testUtilOption1() throws Exception {
-		String[] args = new String[] {"1", "eap-installer.xml", "."};
+		String[] args = new String[] {"1", "./src/test/resources/eap-installer.xml", "."};
 		performTest(args);
 	}
 	
@@ -84,4 +103,14 @@ public class Test_QS_Util {
 		
 	}
 	
+	@Test public void testUtilOption4() throws Exception {
+		File target = new File("./target/downloaded_file.pdf");
+		
+		String[] args = new String[] {"4", "http://stlab.adobe.com/wiki/images/d/d3/Test.pdf", target.getAbsolutePath()};
+		performTest(args);
+		
+		Assert.assertTrue(target.exists());
+		Assert.assertTrue(target.length() > 0);
+		//if (target.exists())
+	}
 }

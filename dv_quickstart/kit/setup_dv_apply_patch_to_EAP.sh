@@ -2,6 +2,8 @@
 
 #-DTRACE=TRUE
 
+#DIRNAME=`dirname "$0"`
+
 DIRNAME=`pwd`
 
 RUN_CONF="$DIRNAME/setup.conf"
@@ -14,8 +16,12 @@ if [ "x$JBOSS_HOME" = "x" ]; then
 fi
 
 
-cd $JBOSS_HOME/bin
+PATCH_DIR=DIRNAME
 
-./jboss-cli.sh --connect command=:shutdown
+$JBOSS_HOME/bin/jboss-cli.sh --command="patch apply $PATCH_DIR/jboss-eap-6.4.3-patch.zip"
 
-cd $DIRNAME
+
+
+
+
+

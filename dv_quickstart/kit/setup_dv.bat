@@ -1,4 +1,17 @@
-#!/bin/sh
+@echo off
+rem -------------------------------------------------------------------------
+rem JDV Quickstart Installation Script
+rem -------------------------------------------------------------------------
+
+@if not "%ECHO%" == ""  echo %ECHO%
+@if "%OS%" == "Windows_NT" setlocal
+
+if "%OS%" == "Windows_NT" (
+  set "DIRNAME=%~dp0%"
+) else (
+  set DIRNAME=.\
+)
+
 
 #-DTRACE=TRUE
 
@@ -17,27 +30,7 @@ if [ -d "$JBOSS_HOME" ]; then
 	rm -rf $JBOSS_HOME
 fi
 
-if [ ! -f "$EAP_JAR" ]; then
-	echo ""
-	echo "Stop: The EAP $EAP_JAR is not found in $DIRNAME"
-    exit 1
-fi
-
-if [ ! -f "$EAP_PATCH_ZIP" ]; then
-	echo ""
-	echo "Stop: The EAP patch $EAP_PATCH_ZIP is not found in $DIRNAME"
-    exit 1
-fi
-
-if [ ! -f "$DV_JAR" ]; then
-	echo ""
-	echo "Stop: The DV $DV_JAR is not found in $DIRNAME"
-    exit 1
-fi
-
 mkdir $JBOSS_HOME
-
-echo "Installing EAP Server ..."
 
 # substitute the correct installation path
 java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/eap-installer.xml $JBOSS_HOME
@@ -54,16 +47,15 @@ fi
 # install EAP
 java  -jar jboss-eap-6.4.0-installer.jar eap-installer.xml 
 
-echo "Installed EAP Server"
 
 #  start server install the eap 6.4.3 patch
 cd $JBOSS_HOME/bin
 
-echo "Starting EAP Server, to install patches ..."
-
 ./standalone.sh >>console.log &
 
 cd $DIRNAME
+
+echo "Started DV Server"
 
 java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
 
@@ -75,11 +67,10 @@ if [ $? != 0 ] ; then
     exit 1
 fi
 
-echo "Started EAP Server"
-
-echo "Installing EAP 6.4.3 Patch ..."
 
 PATCH_DIR=$DIRNAME
+
+echo "Installing EAP 6.4.3 patch ..."
 
 # install patch
 $JBOSS_HOME/bin/jboss-cli.sh --command="patch apply $PATCH_DIR/jboss-eap-6.4.3-patch.zip"
@@ -94,7 +85,7 @@ echo "Shutting down server ..."
 #  otherwise, the admin config options are not enabled
 java -jar ./lib/dv_quickstart-2.1.0.jar 3 20
 
-echo "Shut down server"
+echo "Server shut down"
 
 echo "Installing DV ..."
 
@@ -112,13 +103,13 @@ java -jar jboss-dv-installer-6.2.0.redhat-2.jar dv-installer.xml
 
 echo "DV server has been installed, starting server"
 
-echo "Starting DV Server ..."
-
 cd $JBOSS_HOME/bin
 
 ./standalone.sh >>console.log &
 
 cd $DIRNAME
+
+echo "Started DV Server"
 
 java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
 
@@ -129,8 +120,6 @@ if [ $? != 0 ] ; then
 	echo "Stop due to error"
     exit 1
 fi
-
-echo "Started DV Server"
 
 #  pause for 20 seconds until the server is fully available
 #  otherwise, the admin config options are not enabled

@@ -5,14 +5,14 @@
 	<TITLE></TITLE>
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.4.1  (Unix)">
 	<META NAME="CREATED" CONTENT="20150803;8541000">
-	<META NAME="CHANGED" CONTENT="20150805;15010800">
+	<META NAME="CHANGED" CONTENT="20150916;13265700">
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
 <P><BR><BR>
 </P>
 <OL>
 	<LI><P>When this kit is unzipped, it will be the location that the
-	EAP and DV downloads should be placed.</P>
+	EAP, EAP Patch and DV downloads should be placed.</P>
 	<LI><P>Download the below kits to this directory location (referred
 	to as quickstart_home).</P>
 	<LI><P>Open a terminal window and 'cd' into this quickstart_home</P>
@@ -22,6 +22,7 @@
 <UL>
 	<UL>
 		<LI><P>install EAP</P>
+		<LI><P>install EAP patches</P>
 		<LI><P>install DV</P>
 		<LI><P>start server</P>
 		<LI><P>configure and deploy quick start data sources (H2 and web
@@ -80,23 +81,23 @@
 			<LI><P>Schema: Accounts 
 			</P>
 			<UL>
-				<LI><P>Table:  Customer (SSN, FirstName, LastName, etc.)</P>
-				<LI><P>Table:  Product (ID, Symbol, Company_Name)</P>
+				<LI><P>Table: Customer (SSN, FirstName, LastName, etc.)</P>
+				<LI><P>Table: Product (ID, Symbol, Company_Name)</P>
 			</UL>
 		</UL>
 		<LI><P>CSV file</P>
 		<UL>
-			<LI><P>Schema:  MarketData</P>
-			<LI><P>View:  Stocks 
+			<LI><P>Schema: MarketData</P>
+			<LI><P>View: Stocks 
 			</P>
 			<UL>
-				<LI><P>Table:  StockPrices (symbol, price)</P>
+				<LI><P>Table: StockPrices (symbol, price)</P>
 			</UL>
 		</UL>
 		<LI><P>Web service</P>
 		<UL>
-			<LI><P>Schema:  CustomerCreditSource</P>
-			<LI><P>View:  CustomerCredit 
+			<LI><P>Schema: CustomerCreditSource</P>
+			<LI><P>View: CustomerCredit 
 			</P>
 			<UL>
 				<LI><P>Table: CustomerCreditView (customernumber, creditlimit,
@@ -105,8 +106,8 @@
 		</UL>
 		<LI><P>Views</P>
 		<UL>
-			<LI><P>Stocks.Stock:   List the stockPrice for each product</P>
-			<LI><P>CustomerCreditInfo.CustomersCreditInfoView:   List the
+			<LI><P>Stocks.Stock: List the stockPrice for each product</P>
+			<LI><P>CustomerCreditInfo.CustomersCreditInfoView: List the
 			creditLimit and creditScore for each customer 
 			</P>
 		</UL>
@@ -117,14 +118,10 @@
 <P>Downloads (click on the link):</P>
 <P>EAP 6.4 -
 <A HREF="http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar</U></FONT></FONT></FONT></A></P>
-<P>For initial testing, pull the DV 6.2 ER3 kit from here:</P>
-<P><A HREF="http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar">http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-ER3/jboss-dv-installer-6.2.0.ER3-redhat-1.jar</A></P>
-<P>The following link is to jboss.org, but its for the 6.1 kit, for
-which the install process isn't for, so it might not work. But when
-DV 6.2 is released, this will be where we'll want the users to pull
-from.</P>
-<P>DV 6.2 -
-<A HREF="http://www.jboss.org/download-manager/file/jboss-dv-installer-6.1.0.redhat-3.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>http://www.jboss.org/download-manager/file/jboss-dv-installer-6.1.0.redhat-3.jar</U></FONT></FONT></FONT></A></P>
+<P>EAP 6.4.3 patches:  <A HREF="https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=39353">EAP
+6.4.3 rollup patches</A></P>
+<P>For initial testing, pull the DV 6.2 CR2 (GA)  kit from here:</P>
+<P><A HREF="http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-CR2/jboss-dv-installer-6.2.0.redhat-2.jar">http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-CR2/jboss-dv-installer-6.2.0.redhat-2.jar</A></P>
 <P>JBDS -
 <A HREF="https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar</U></FONT></FONT></FONT></A></P>
 <P><BR><BR>

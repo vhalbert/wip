@@ -1,6 +1,8 @@
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,7 +11,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.ServerSocket;
+import java.net.URL;
 import java.util.Properties;
+import java.net.URLEncoder;
 
 /*
  * JBoss, Home of Professional Open Source.
@@ -59,6 +66,7 @@ public class QS_UTIL {
 		boolean action1 = false;
 		boolean action2 = false;
 		boolean action3 = false;
+		boolean action4 = false;
 		boolean error = false;
 		if (args.length == 0) { 
 			error = true;
@@ -80,6 +88,11 @@ public class QS_UTIL {
 				if ( args.length > 2 ) {
 					error = true;
 				} 				
+			} else if (args[0].equals("4")) {
+				action4 = true;
+				if ( args.length > 3 ) {
+					error = true;
+				} 				
 			} else {
 				error = true;
 			}
@@ -96,7 +109,7 @@ public class QS_UTIL {
 
 			
 			
-			System.out.println("usage: QS_UTIL <action[1,2,3]> [options] ");
+			System.out.println("usage: QS_UTIL <action[1,2,3,4]> [options] ");
 			if (action1) {
 				System.out.println("where: action = 1 is to backup the current xml file");
 				System.out.println("                QS_UTIL 1 <xmlinputfile> <installpath> " );
@@ -109,6 +122,10 @@ public class QS_UTIL {
 				System.out.println("where: action = 3 is to pause for an amount of time");
 				System.out.println("                QS_UTIL 3 <seconds>" );
 			}
+			if (action4) {
+				System.out.println("where: action = 4 is to download file from internet");
+				System.out.println("                QS_UTIL 4 <url> <targetFile>" );
+			}			
 			System.out.println(action1 + " Args: [" + x + "]" + msg);
 			return error;
 			
@@ -151,6 +168,8 @@ public class QS_UTIL {
 			Thread.sleep(DEAULT_WAIT_TIME);
 		} else if (action3) {
 			pauseForTime(args[1]);
+		} else if (action4) {
+			downloadFile(args[1], args[2]);
 		}
 		
 		return error;
@@ -172,20 +191,7 @@ public class QS_UTIL {
 		} finally {
 			bufferedReader.close();
 		}
-//		
-//		try (InputStream in = new FileInputStream(filename); 
-//			     BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {     
-//			      String str = null;
-//			      StringBuilder sb = new StringBuilder(8192);
-//			      while ((str = r.readLine()) != null) {
-//			        sb.append(str);
-//			      }
-//			     
-//			      return sb;
-//			} catch (IOException ioe) {
-//			  ioe.printStackTrace();
-//			  return null;
-//			}
+
 	}
 	
 	static String getInstallPath(Properties props) {
@@ -231,14 +237,14 @@ public class QS_UTIL {
             if (overwrite) {
                 toFile.delete();
             } else {
-                final String msg = "FileUtils.File_already_exists " + toFileName; //$NON-NLS-1$            
+                final String msg = "QS_Util.File_already_exists " + toFileName; //$NON-NLS-1$            
                 throw new IOException(msg);
             }
         }
         
         File fromFile = new File(fromFileName);
         if (!fromFile.exists()) {
-            throw new FileNotFoundException("FileUtils.File_does_not_exist " +  fromFileName); //$NON-NLS-1$
+            throw new FileNotFoundException("QS_Util.File_does_not_exist " +  fromFile.getAbsolutePath()); //$NON-NLS-1$
         }
         
         FileInputStream fis = null;
@@ -340,30 +346,16 @@ public class QS_UTIL {
 		int cnt = 0;
 		System.out.println("Ping host:port " + hostname + ":" + port);
 		while (cnt < DEFAULT_RETRIES) {
+			System.out.println("ping [#" + cnt + "] ...");
+
 			boolean reachable = isReachableByPing(hostname, port);
 			if (reachable) return true;
-//			try {
-//
-//				InetSocketAddress address = new InetSocketAddress(
-//						InetAddress.getByName(hostname), port);
-//				boolean reach = address.getAddress().isReachable(DEAULT_WAIT_TIME);
-//				if (reach) return true;
-//				
-//				cnt++;
-//
-//			} catch (IOException x) {
-//
-//				System.out.println(".");
-//				//failure = x;
-//				
-//
-//			}
-			System.out.println("..");
+
 			Thread.sleep(DEAULT_WAIT_TIME);
 			cnt++;
 
 		}
-		
+		System.out.println("Could not ping host:port " + hostname + ":" + port);
 		return false;
 	}
 	
@@ -401,5 +393,45 @@ public class QS_UTIL {
 			
 		Thread.sleep( Integer.valueOf(pauseTime) * 1000);
 	}
+	
+	private static void downloadFile(String source, String target) throws Exception {
+		System.out.println("Starting download of " + source);
+
+		try {
+			FileOutputStream fos = new FileOutputStream(new File(target));
+
+			HttpURLConnection connection = (HttpURLConnection) new URL(source).openConnection();
+			
+			BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+					//new URL(source).openStream());
+		    byte data[] = new byte[1024];
+		    int count;
+		    while((count = in.read(data,0,1024)) != -1)
+		    {
+		        fos.write(data, 0, count);
+		        
+		        System.out.print("\b\b\b\b\b\b\b..."+count);
+		    }
+		    
+		    fos.flush();
+		    fos.close();
+		    
+			System.out.println("\rCompleted download to " + target);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+    public static String httpURLEncode(String s) throws Exception {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+            //.replaceAll("\\+", "%20"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        } catch (UnsupportedEncodingException e) {
+        	throw new Exception(e);
+        }
+    }
+
 
 }
