@@ -13,12 +13,16 @@
 <pack index="3" name="Bundles" selected="true"/>
 <pack index="4" name="XMLs and XSDs" selected="true"/>
 <pack index="5" name="Domain" selected="true"/>
-<pack index="6" name="Domain Shell Scripts" selected="true"/>
+<pack index="6" name="Domain Batch Scripts" selected="true"/>
 <pack index="7" name="Modules" selected="true"/>
 <pack index="8" name="Standalone" selected="true"/>
-<pack index="9" name="Standalone Shell Scripts" selected="true"/>
+<pack index="9" name="Standalone Batch Scripts" selected="true"/>
 <pack index="10" name="Welcome Content" selected="true"/>
 <pack index="11" name="Quickstarts" selected="false"/>
+<pack index="12" name="Red Hat JBoss Enterprise Application Platform Natives" selected="true"/>
+<pack index="13" name="Native Windows-x86_64" selected="true"/>
+<pack index="14" name="Native Utils Windows-x86_64" selected="true"/>
+<pack index="15" name="Native Webserver Windows-x86_64" selected="true"/>
 </com.izforge.izpack.panels.TreePacksPanel>
 <com.izforge.izpack.panels.UserInputPanel id="CreateUserPanel">
 <userInput>
@@ -77,3 +81,4 @@
 <com.izforge.izpack.panels.ShortcutPanel id="ShortcutPanel"/>
 <com.izforge.izpack.panels.FinishPanel id="FinishPanel"/>
 </AutomatedInstallation>
+

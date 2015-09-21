@@ -1,21 +1,34 @@
-#!/bin/sh
+@ECHO OFF
 
-#-DTRACE=TRUE
+@if not "%ECHO%" == ""  echo %ECHO%
+@if "%OS%" == "Windows_NT" setlocal
 
-DIRNAME=`pwd`
+if "%OS%" == "Windows_NT" (
+  set "DIRNAME=%~dp0%"
+) else (
+  set DIRNAME=.
+)
 
-RUN_CONF="$DIRNAME/setup.conf"
-if [ -r "$RUN_CONF" ]; then
-    . "$RUN_CONF"
-fi
+rem Read an optional configuration file.
+if "x%STANDALONE_CONF%" == "x" (
+   set "STANDALONE_CONF=%DIRNAME%setup_conf.bat"
+)
+if exist "%STANDALONE_CONF%" (
+   echo Calling "%STANDALONE_CONF%"
+   call "%STANDALONE_CONF%" %*
+) else (
+   echo Config file not found "%STANDALONE_CONF%"
+)
 
-if [ "x$JBOSS_HOME" = "x" ]; then
-        JBOSS_HOME=$DIRNAME/dv_server
-fi
+set "RESOLVED_JBOSS_HOME=%DIRNAME%"
+popd
 
+if "x%JBOSS_HOME%" == "x" (
+  set "JBOSS_HOME=%RESOLVED_JBOSS_HOME%%SERVER_DIR%"
+)
 
-cd $JBOSS_HOME/bin
+cd %JBOSS_HOME%\bin
 
-./jboss-cli.sh --connect command=:shutdown
+call jboss-cli.bat --connect command=:shutdown
 
-cd $DIRNAME
+cd %DIRNAME%

@@ -1,4 +1,8 @@
-@echo off
+@ECHO OFF
+
+REM wipe screen.
+cls
+
 rem -------------------------------------------------------------------------
 rem JDV Quickstart Installation Script
 rem -------------------------------------------------------------------------
@@ -9,142 +13,163 @@ rem -------------------------------------------------------------------------
 if "%OS%" == "Windows_NT" (
   set "DIRNAME=%~dp0%"
 ) else (
-  set DIRNAME=.\
+  set DIRNAME=.
 )
 
+rem Read an optional configuration file.
+if "x%STANDALONE_CONF%" == "x" (
+   set "STANDALONE_CONF=%DIRNAME%setup_conf.bat"
+)
+if exist "%STANDALONE_CONF%" (
+   echo Calling "%STANDALONE_CONF%"
+   call "%STANDALONE_CONF%" %*
+) else (
+   echo Config file not found "%STANDALONE_CONF%"
+)
 
-#-DTRACE=TRUE
+set "RESOLVED_JBOSS_HOME=%DIRNAME%"
+popd
 
-DIRNAME=`pwd`
+if "x%JBOSS_HOME%" == "x" (
+  set "JBOSS_HOME=%RESOLVED_JBOSS_HOME%%SERVER_DIR%"
+)
 
-RUN_CONF="$DIRNAME/setup.conf"
-if [ -r "$RUN_CONF" ]; then
-    . "$RUN_CONF"
-fi
+ echo JBOSS_HOME %JBOSS_HOME%
 
-if [ "x$JBOSS_HOME" = "x" ]; then
-        JBOSS_HOME=$DIRNAME/dv_server
-fi
+if not exist "%EAP_JAR%" (
+        echo Need to download EAP %EAP_JAR% package from the Customer Support Portal
+        echo and place it in the %DIRNAME% directory to proceed...
+  goto END
+ )
+ 
+if not exist "%EAP_PATCH_ZIP%" (
+        echo Need to download EAP PATCHES %EAP_PATCH_ZIP% package from the Customer Support Portal
+        echo and place it in the %SRC_DIR% directory to proceed...
+  goto END
+ ) 
+ 
+if not exist "%DV_JAR%" (
+       echo Need to download DV %DV_JAR% package from the Customer Support Portal
+       echo and place it in the %DIRNAME% directory to proceed...
+  goto END
+ )  
 
-if [ -d "$JBOSS_HOME" ]; then
-	rm -rf $JBOSS_HOME
-fi
+if exist "%JBOSS_HOME%" (
+    echo Removing JBOSS_HOME '%JBOSS_HOME%' 
 
-mkdir $JBOSS_HOME
+    rmdir %JBOSS_HOME% /s /q
+)
 
-# substitute the correct installation path
-java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/eap-installer.xml $JBOSS_HOME
+echo JBOSS_HOME '%JBOSS_HOME%' 
+mkdir %JBOSS_HOME%
 
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
+echo
+echo Installing EAP Server kit %EAP_JAR%...
 
-#  BZ : https://bugzilla.redhat.com/show_bug.cgi?id=1225450
-#  issue with using INSTALL_PATH (-DINSTALL_PATH=..)
+rem # substitute the correct installation path
+call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 %DIRNAME%\%EAP_AUTOFILE% %JBOSS_HOME%
 
-# install EAP
-java  -jar jboss-eap-6.4.0-installer.jar eap-installer.xml 
+if not "%ERRORLEVEL%" == "0" (
+  echo.
+	echo Error Occurred During setting installation path!
+	echo.
+	GOTO :EOF
+)
 
+rem run headless installation
+call java -jar %EAP_JAR% %EAP_AUTOFILE%
 
-#  start server install the eap 6.4.3 patch
-cd $JBOSS_HOME/bin
+if not "%ERRORLEVEL%" == "0" (
+  echo.
+	echo Error Occurred During JBoss EAP Installation!
+	echo.
+	GOTO :EOF
+)
 
-./standalone.sh >>console.log &
+echo Waiting for EAP to install
+echo.
 
-cd $DIRNAME
+timeout 25 /nobreak
 
-echo "Started DV Server"
+rem call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 3 20
 
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
+echo Installed EAP Server kit
 
-echo "Ping Status: " $?
+echo Starting EAP Server to install patches
+echo.
 
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
+start "" "%JBOSS_HOME%\bin\standalone.bat"
 
+echo Starting EAP, wait for 20 seconds
+echo.
 
-PATCH_DIR=$DIRNAME
+timeout 20 /nobreak
 
 echo "Installing EAP 6.4.3 patch ..."
 
-# install patch
-$JBOSS_HOME/bin/jboss-cli.sh --command="patch apply $PATCH_DIR/jboss-eap-6.4.3-patch.zip"
+rem install patch
+call "%JBOSS_HOME%\bin\jboss-cli.bat" "patch apply %DIRNAME%\jboss-eap-6.4.3-patch.zip --override-all"
 
 echo "Installed EAP 6.4.3 Patch"
 
 echo "Shutting down server ..."
 
-./shutdown_server.sh
+cd %DIRNAME%
 
-#  pause for 20 seconds until the server is fully available
-#  otherwise, the admin config options are not enabled
-java -jar ./lib/dv_quickstart-2.1.0.jar 3 20
+call "shutdown_server.bat"
 
-echo "Server shut down"
+timeout 10 /nobreak
 
-echo "Installing DV ..."
+echo "Shut down server"
 
-# substitute the correct installation path
-java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/dv-installer.xml $JBOSS_HOME
+echo
+echo Installing DV Server kit %DV_JAR%...
 
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
+rem # substitute the correct installation path
+call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 %DIRNAME%\%DV_AUTOFILE% %JBOSS_HOME%
 
-# install DV
-java -jar jboss-dv-installer-6.2.0.redhat-2.jar dv-installer.xml 
+if not "%ERRORLEVEL%" == "0" (
+  echo.
+	echo Error Occurred During setting installation path!
+	echo.
+	GOTO :EOF
+)
 
-echo "DV server has been installed, starting server"
+rem run headless installation
+call java -jar %DV_JAR% %DV_AUTOFILE%
 
-cd $JBOSS_HOME/bin
+echo Installing DV,wait for 110 seconds
+echo.
 
-./standalone.sh >>console.log &
+timeout 110 /nobreak
 
-cd $DIRNAME
+echo Installed DV kit
 
-echo "Started DV Server"
+echo Starting DV Server
+echo.
 
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
+start "" "%JBOSS_HOME%\bin\standalone.bat"
 
-echo "Ping Status: " $?
+echo Starting DV and wait for 40 seconds
+echo.
 
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
+timeout 40 /nobreak
 
-#  pause for 20 seconds until the server is fully available
-#  otherwise, the admin config options are not enabled
-java -jar ./lib/dv_quickstart-2.1.0.jar 3 30
+echo Configure quickstart data sources...
+echo.
+xcopy /Y /Q /S "%DIRNAME%\deployment\teiidfiles\*" "%JBOSS_HOME%\teiidfiles\"
 
-echo "Configure quickstart data sources..."
-
-cp -r ./deployment/teiidfiles  $JBOSS_HOME
-
-cd $JBOSS_HOME/
-
-./bin/jboss-cli.sh  --connect --file=$DIRNAME/deployment/scripts/setup.cli
-
-cd $DIRNAME
-
-cp $JBOSS_HOME/teiidfiles/vdb/*.*  $JBOSS_HOME/standalone/deployments
-
-echo "Completed configuring quickstart data sources"
-
-echo ""
-echo "********************************************
-echo "DV Server is ready to run the DV Quickstart"
-echo "********************************************
+call "%JBOSS_HOME%\bin\jboss-cli.bat  --connect --file=%DIRNAME%\deployment\scripts\setup.cli"
 
 
+xcopy /Y /Q /S "%JBOSS_HOME%\teiidfiles\vdb\*" "%JBOSS_HOME%\standalone\deployments"
 
 
+echo Completed configuring quickstart data sources
 
+echo.
+echo ********************************************
+echo DV Server is ready to run the DV Quickstart
+echo ********************************************
+
+:END
