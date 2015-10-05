@@ -24,7 +24,7 @@ set "EAP_AUTOFILE=eap-server.xml"
 
 rem # set the EAP patch kit to install
 rem #
-set "EAP_PATCH_ZIP=jboss-eap-6.4.3-patch.zip"
+rem set "EAP_PATCH_ZIP=jboss-eap-6.4.3-patch.zip"
 
 
 rem # set the JDV kit to install

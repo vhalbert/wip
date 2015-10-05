@@ -42,12 +42,6 @@ if not exist "%EAP_JAR%" (
   goto END
  )
  
-if not exist "%EAP_PATCH_ZIP%" (
-        echo Need to download EAP PATCHES %EAP_PATCH_ZIP% package from the Customer Support Portal
-        echo and place it in the %SRC_DIR% directory to proceed...
-  goto END
- ) 
- 
 if not exist "%DV_JAR%" (
        echo Need to download DV %DV_JAR% package from the Customer Support Portal
        echo and place it in the %DIRNAME% directory to proceed...
@@ -91,36 +85,9 @@ echo.
 
 timeout 25 /nobreak
 
-rem call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 3 20
-
 echo Installed EAP Server kit
 
-echo Starting EAP Server to install patches
-echo.
-
-start "" "%JBOSS_HOME%\bin\standalone.bat"
-
-echo Starting EAP, wait for 20 seconds
-echo.
-
-timeout 20 /nobreak
-
-echo "Installing EAP 6.4.3 patch ..."
-
-rem install patch
-call "%JBOSS_HOME%\bin\jboss-cli.bat" "patch apply %DIRNAME%\jboss-eap-6.4.3-patch.zip --override-all"
-
-echo "Installed EAP 6.4.3 Patch"
-
-echo "Shutting down server ..."
-
 cd %DIRNAME%
-
-call "shutdown_server.bat"
-
-timeout 10 /nobreak
-
-echo "Shut down server"
 
 echo
 echo Installing DV Server kit %DV_JAR%...

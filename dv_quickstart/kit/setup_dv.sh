@@ -23,12 +23,6 @@ if [ ! -f "$EAP_JAR" ]; then
     exit 1
 fi
 
-if [ ! -f "$EAP_PATCH_ZIP" ]; then
-	echo ""
-	echo "Stop: The EAP patch $EAP_PATCH_ZIP is not found in $DIRNAME"
-    exit 1
-fi
-
 if [ ! -f "$DV_JAR" ]; then
 	echo ""
 	echo "Stop: The DV $DV_JAR is not found in $DIRNAME"
@@ -52,51 +46,11 @@ fi
 #  issue with using INSTALL_PATH (-DINSTALL_PATH=..)
 
 # install EAP
-java  -jar jboss-eap-6.4.0-installer.jar eap-installer.xml 
+java  -jar $EAP_JAR eap-installer.xml 
 
-echo "Installed EAP Server"
+echo "Installed EAP Server kit $EAP_JAR"
 
-#  start server install the eap 6.4.3 patch
-cd $JBOSS_HOME/bin
-
-echo "Starting EAP Server, to install patches ..."
-
-./standalone.sh >>console.log &
-
-cd $DIRNAME
-
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
-
-echo "Ping Status: " $?
-
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
-
-echo "Started EAP Server"
-
-echo "Installing EAP 6.4.3 Patch ..."
-
-PATCH_DIR=$DIRNAME
-
-# install patch
-$JBOSS_HOME/bin/jboss-cli.sh --command="patch apply $PATCH_DIR/jboss-eap-6.4.3-patch.zip"
-
-echo "Installed EAP 6.4.3 Patch"
-
-echo "Shutting down server ..."
-
-./shutdown_server.sh
-
-#  pause for 20 seconds until the server is fully available
-#  otherwise, the admin config options are not enabled
-java -jar ./lib/dv_quickstart-2.1.0.jar 3 20
-
-echo "Shut down server"
-
-echo "Installing DV ..."
+echo "Installing DV kit $DV_JAR ..."
 
 # substitute the correct installation path
 java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/dv-installer.xml $JBOSS_HOME
@@ -108,9 +62,9 @@ if [ $? != 0 ] ; then
 fi
 
 # install DV
-java -jar jboss-dv-installer-6.2.0.redhat-2.jar dv-installer.xml 
+java -jar $DV_JAR dv-installer.xml 
 
-echo "DV server has been installed, starting server"
+echo "DV kit has been installed, starting server"
 
 echo "Starting DV Server ..."
 
