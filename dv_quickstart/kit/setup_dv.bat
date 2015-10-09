@@ -92,18 +92,9 @@ cd %DIRNAME%
 echo
 echo Installing DV Server kit %DV_JAR%...
 
-rem # substitute the correct installation path
-call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 %DIRNAME%\%DV_AUTOFILE% %JBOSS_HOME%
-
-if not "%ERRORLEVEL%" == "0" (
-  echo.
-	echo Error Occurred During setting installation path!
-	echo.
-	GOTO :EOF
-)
 
 rem run headless installation
-call java -jar %DV_JAR% %DV_AUTOFILE%
+call java -DINSTALL_PATH=%JBOSS_HOME% -jar %DV_JAR% %DV_AUTOFILE%
 
 echo Installing DV,wait for 110 seconds
 echo.

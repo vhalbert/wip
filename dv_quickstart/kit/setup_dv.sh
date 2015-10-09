@@ -52,17 +52,8 @@ echo "Installed EAP Server kit $EAP_JAR"
 
 echo "Installing DV kit $DV_JAR ..."
 
-# substitute the correct installation path
-java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/dv-installer.xml $JBOSS_HOME
-
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
-
 # install DV
-java -jar $DV_JAR dv-installer.xml 
+java -DINSTALL_PATH=$JBOSS_HOME  -jar $DV_JAR dv-installer.xml 
 
 echo "DV kit has been installed, starting server"
 
