@@ -91,7 +91,7 @@ cd $JBOSS_HOME/
 
 cd $DIRNAME
 
-cp $JBOSS_HOME/teiidfiles/vdb/*.*  $JBOSS_HOME/standalone/deployments
+#cp $JBOSS_HOME/teiidfiles/vdb/*.*  $JBOSS_HOME/standalone/deployments
 
 echo "Completed configuring quickstart data sources"
 
