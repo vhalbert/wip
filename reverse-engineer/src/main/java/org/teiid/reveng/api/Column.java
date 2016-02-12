@@ -28,7 +28,7 @@ import org.teiid.reveng.util.StringBuilderUtil;
  * @author vanhalbert
  *
  */
-public abstract class Column implements Comparable<Column> {
+public class Column  {
 	
 	public enum NullType {
 		No_Nulls {
@@ -51,11 +51,13 @@ public abstract class Column implements Comparable<Column> {
     private String memberName;
     
     /**
-     * Defines JDBC type of the column.
+     * Defines java sql type of the column.
      */
-    private int type = TypesMapping.NOT_DEFINED;
+    private int type = java.sql.Types.VARCHAR;
     
     private String javaType = null;
+    
+    private String typeName = "";
     
     /**
      * Defines whether the attribute is indexed
@@ -74,6 +76,8 @@ public abstract class Column implements Comparable<Column> {
     private NullType nullType;
     
     private String remarks;    
+    
+    private int order;
 
 
     public Column(Table parent, String name) {
@@ -107,6 +111,14 @@ public abstract class Column implements Comparable<Column> {
     public String getJavaType() {
     	return this.javaType;
     }
+    
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
     
 	public String getDefaultValue() {
 		return defaultValue;
@@ -174,12 +186,20 @@ public abstract class Column implements Comparable<Column> {
         this.scale = scale;
     }
     
+    public int getOrder() {
+    	return order;
+    }
+    
+    public void setOrder(int order) {
+    	this.order = order;
+    }
+    
     @Override
 	public String toString() {
     	StringBuilderUtil sbu = new StringBuilderUtil(this).append("name", getName());
-        String type = TypesMapping.getSqlNameByType(getType());
+ //       String type = TypesMapping.getSqlNameByType(getType());
 
-        sbu.append("DBColumn", type != null ? type : "type(" + getType() + ")");
+        sbu.append("DBColumn", "type [" + getTypeName() + "]");
        
         if (scale > -1 || precision > -1) {
         	 sbu.append("scale", "[" + scale + ", " + precision + "]");
@@ -213,34 +233,33 @@ public abstract class Column implements Comparable<Column> {
 	@Override
 	public boolean equals(Object obj) {
 		Column c = (Column) obj;
-		if (this.getParent() == null || c.getParent() == null) return false;
+		if (this == obj) return true;
+		if (this.getParent() == null && c.getParent() != null) return false;
+		if (this.getParent() != null && c.getParent() == null) return false;
 		
-		if (this.getParent() == c.getParent() || 
-				this.getParent().getName().equals(c.getParent().getName())) {
-			if (this.getName().equals(c.getName()) &&
+		if (this.getParent() != null && c.getParent() != null) {
+			if (!this.getParent().getName().equals(c.getParent().getName())) {
+				return false;
+			}
+									
+		}
+		
+		if (this.getName().equals(c.getName()) &&
 				this.getType() == c.getType() &&
 				this.getPrecision() == c.getPrecision() &&
 				this.getScale() == c.getScale() &&
 				this.isIndexed() == c.isIndexed() &&
 				this.isMandatory() == c.isMandatory() ) {
 					return true;
-			}
-					
 		}
+
 		return false;
 	}
 
 	/**
 	 * @return typeName
 	 */
-	public abstract String getTypeName();
+//	public abstract String getTypeName();
 
-	/**
-	 *
-	 * @param o 
-	 * @return int
-	 * @see java.lang.Comparable#compareTo(java.lang.Object)
-	 */
-	public abstract int compareTo(Column o);
 
 }

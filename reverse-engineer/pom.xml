@@ -1,140 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <parent>
-           <groupId>org.jboss.teiid</groupId>
-             <artifactId>teiid-parent</artifactId>
-             <version>8.12.0.Final</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>org.jboss.teiid</groupId>
+		<artifactId>teiid-parent</artifactId>
+		<version>8.12.0.Final</version>
+	</parent>
 
- <!-- 
-    <parent>
-           <groupId>org.jboss.as</groupId>
-             <artifactId>jboss-as-parent</artifactId>
-             <version>7.4.2.Final-redhat-2</version>
-    </parent>
- -->
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.teiid.util</groupId>
-  <artifactId>reverse-engineer</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>Reverse Engineer a View into Java Objects</name>
-  <description>Reverse Engineer a View into Java Objects</description>
-  
-   <properties>
-        <version.junit>4.11</version.junit>
-        <version.org.mockito>1.10.19</version.org.mockito>
-        <version.org.infinispan.hibernate.search>4.6.1.Final-redhat-1</version.org.infinispan.hibernate.search> <!-- versions required by infinispan  -->     
-        <version.org.jboss.teiid>8.12.0.Final</version.org.jboss.teiid>
+	<!-- <parent> <groupId>org.jboss.as</groupId> <artifactId>jboss-as-parent</artifactId> 
+		<version>7.4.2.Final-redhat-2</version> </parent> -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.teiid.util</groupId>
+	<artifactId>reverse-engineer</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>Reverse Engineer a View into Java Objects</name>
+	<description>Reverse Engineer a View into Java Objects</description>
+
+	<properties>
+		<version.junit>4.11</version.junit>
+		<version.org.mockito>1.10.19</version.org.mockito>
+		<version.org.infinispan.hibernate.search>4.6.1.Final-redhat-1</version.org.infinispan.hibernate.search> <!-- versions required by infinispan -->
+		<version.org.jboss.teiid>8.12.0.Final</version.org.jboss.teiid>
+		<version.mysql.mysql-connector-java>5.1.25</version.mysql.mysql-connector-java>
+		<main.class.remote-query>org.teiid.reveng.GeneratePojoFromDB</main.class.remote-query>
+		
 	</properties>
-	
-	 <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>   
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <!-- scope>test</scope -->
-        </dependency>  
+
+	<dependencies>
+
 		<dependency>
-		  <groupId>commons-lang</groupId>
-		  <artifactId>commons-lang</artifactId>
-		  <version>2.6.0.redhat-4</version>
-		</dependency>   
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-api</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-api</artifactId>
 			<type>test-jar</type>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-common-core</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-common-core</artifactId>
 			<type>test-jar</type>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-metadata</artifactId>
-			<version>${version.org.jboss.teiid}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-client</artifactId>
-			<version>${version.org.jboss.teiid}</version>
 		</dependency>
-        <dependency>
-            <groupId>org.jboss.teiid</groupId>
-            <artifactId>teiid-admin</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-        </dependency>  
+		<dependency>
+			<groupId>org.jboss.teiid</groupId>
+			<artifactId>teiid-admin</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-engine</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>        
+		</dependency>
 		<dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-engine</artifactId>
 			<type>test-jar</type>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>    
+		</dependency>
 		<dependency>
-			<groupId>org.jboss.teiid.connectors</groupId>  
-			<artifactId>translator-jdbc</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>        
-		<dependency>
-			<groupId>org.jboss.teiid.connectors</groupId>  
-			<artifactId>translator-loopback</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>        
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-search-engine</artifactId>
-            <version>${version.org.infinispan.hibernate.search}</version>
-        </dependency>	
-         <dependency>
 			<groupId>org.jboss.teiid</groupId>
 			<artifactId>teiid-runtime</artifactId>
-			<version>${version.org.jboss.teiid}</version>
-		</dependency>       	
-    	<dependency>
-			<groupId>javax.transaction</groupId>
-            <artifactId>jta</artifactId>
-		</dependency>	
-           <dependency>
-            	<groupId>javax.resource</groupId>
-            	<artifactId>connector-api</artifactId>
-       		</dependency> 			
-    </dependencies>
-  
-  	<dependencyManagement>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.teiid.connectors</groupId>
+			<artifactId>translator-loopback</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.infinispan.protostream</groupId>
+			<artifactId>protostream</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-search-engine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.teiid.connectors</groupId>
+			<artifactId>translator-jdbc</artifactId>
+		</dependency>
+        <dependency>
+                <!--Must be JDBC 4 (Java 6) compliant-->
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+        </dependency>	
+	</dependencies>
+
+	<dependencyManagement>
 		<dependencies>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${version.junit}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>${version.org.mockito}</version>
-            </dependency>        
- 		</dependencies>
-    </dependencyManagement>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${version.junit}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>${version.org.mockito}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-api</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-api</artifactId>
+				<type>test-jar</type>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-common-core</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-common-core</artifactId>
+				<type>test-jar</type>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-metadata</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-client</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-admin</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-engine</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-engine</artifactId>
+				<type>test-jar</type>
+				<version>${version.org.jboss.teiid}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-runtime</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid.connectors</groupId>
+				<artifactId>translator-loopback</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.jboss.teiid.connectors</groupId>
+				<artifactId>translator-jdbc</artifactId>
+				<version>${version.org.jboss.teiid}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6.0.redhat-4</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.infinispan.protostream</groupId>
+				<artifactId>protostream</artifactId>
+				<version>${version.org.infinispan.protostream}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-search-engine</artifactId>
+				<version>${version.org.infinispan.hibernate.search}</version>
+			</dependency>
+           <dependency>
+                <!--Must be JDBC 4 (Java 6) compliant-->
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${version.mysql.mysql-connector-java}</version>
+                
+           </dependency>
+          <dependency>
+               <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>           			
+         </dependency>
+  	</dependencies>
+	</dependencyManagement>
 
 	<build>
 		<outputDirectory>target/classes</outputDirectory>
@@ -156,5 +227,30 @@
 				</excludes>
 			</resource>
 		</resources>
+		<plugins>
+		
+            <!-- This plugin permits the execution of this quickstart 
+                through mvn exec:java command -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.3.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- classpathScope>test</classpathScope-->
+                    <mainClass>${main.class.remote-query}</mainClass>
+                    <arguments>  
+       					<argument>${tableNames}</argument>  
+      				</arguments>  
+                    <workingDirectory>${project.build.outputDirectory}</workingDirectory>  
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
 </project>

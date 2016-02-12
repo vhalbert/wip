@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
+import org.teiid.reveng.util.StringBuilderUtil;
 
 
 /**
@@ -115,7 +116,17 @@ public abstract class Table {
 		return true;
 	}	
 	
-	public abstract Column createColumn(String name);
+    @Override
+	public String toString() {
+    	StringBuilderUtil sbu = new StringBuilderUtil(this).append("name", getName());
+    	
+    	return sbu.toString();
+    }
+    
+	
+	public Column createColumn(String name) {
+		throw new UnsupportedOperationException("createColumn is not currently supported");
+	}
 
 
 }

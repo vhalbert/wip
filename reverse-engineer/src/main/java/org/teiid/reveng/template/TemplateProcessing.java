@@ -27,6 +27,8 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.teiid.reveng.Options;
+import org.teiid.reveng.api.AnnotationType;
 import org.teiid.reveng.api.Column;
 import org.teiid.reveng.api.MetadataProcessor;
 import org.teiid.reveng.api.Table;
@@ -38,22 +40,23 @@ import org.teiid.reveng.api.Table;
 public class TemplateProcessing {
 
 	private String path;
+	private Options options;
+	private AnnotationType annotationType;
 	
 	public TemplateProcessing() {
 	}
 
-	public TemplateProcessing(String path) {
-		this.path = path;
+	public TemplateProcessing(String outpath) {
+		this.path = outpath;
 	}
 
-	// public void createJavaClassFromTemplate() {
-	//        FileUtils.copy(webInfClassesDirectory.getCanonicalPath() + pathToResource + File.separator + "ResourceTemplate.java", //$NON-NLS-1$
-	// resourceJavaFilePath,
-	// true);
-	// File resourceJavaFile = new File(resourceJavaFilePath);
-	//
-	// }
+	public TemplateProcessing(String outpath, Options options) {
+		this(outpath);
+		this.options = options;
+		annotationType = options.getAnnotationTypeInstance();
+	}
 
+	
 	public void processTables(MetadataProcessor metadata)
 			throws FileNotFoundException {
 
@@ -78,6 +81,9 @@ public class TemplateProcessing {
 			PrintWriter outputStream = new PrintWriter(fileOutput);
 
 			printHeader(outputStream, t);
+			printImports(outputStream, t);
+			
+			printClass(outputStream, t);
 			printAttributes(outputStream, t);
 			printGetterSetters(outputStream, t);
 			printToString(outputStream, t);
@@ -101,36 +107,74 @@ public class TemplateProcessing {
 		outputStream.println("/**");
 		outputStream.println("* Maps a relational database table "
 				+ t.getName() + " to a java object, " + t.getClassName());
-		outputStream.println("* This class was generated, do not edit it.");
 		outputStream.println("*");
 		outputStream.println("* " + (t.getRemarks() != null ? t.getRemarks() : ""));
 		outputStream.println("*");
 		outputStream.println("* @author	ReverseEngineer");
 		outputStream.println("*/");
 
-		outputStream.println("import java.io.Serializable;");
-		outputStream.println("import java.sql.*;");
-		outputStream.println("import java.util.*;");
-		outputStream.println("public class " + t.getClassName()
-				+ " implements Serializable {");
 
 	} // printHeader()
 
+	/**
+	 * prints imports to outputStream
+	 * 
+	 * @param outputStream
+	 *            where to print the header
+	 * @param t
+	 *            the Table representing the class
+	 */
+	protected void printImports(PrintWriter outputStream, Table t) {
+
+		outputStream.println("import java.io.Serializable;");
+		outputStream.println("import java.sql.*;");
+		outputStream.println("import java.util.*;");
+		
+		if (annotationType != null) {
+			List<String> imports = annotationType.getImports();
+			for(String i : imports) {
+				outputStream.println(i);
+			}		
+		}		
+	} // printImports()	
+		
+	protected void printClass(PrintWriter outputStream, Table t) {
+		outputStream.println("\r");
+		if (annotationType != null) {
+			String a = annotationType.getAnnotation(t);
+			outputStream.println(a);
+			
+		}
+		outputStream.println("public class " + t.getClassName()
+				+ " implements Serializable {");
+
+		
+	} // printClass
+	
 	protected void printAttributes(PrintWriter outputStream, Table t) {
 		List<Column> columns = t.getColumns();
 
 		for (Column c : columns) {
+			if (annotationType != null) {
+				outputStream.println("\r");
+
+				String a = annotationType.getAnnotation(c);
+				outputStream.println("\t" + a);				
+			}
 
 			outputStream.println(buildAttributeStatement(c));
 		}
 	}
 
 	protected void printGetterSetters(PrintWriter outputStream, Table t) {
+		outputStream.println("\r");
+
 		List<Column> columns = t.getColumns();
 
 		for (Column c : columns) {
 
 			outputStream.println(buildGetStatement(c));
+
 			outputStream.println(buildSetStatement(c));
 		}
 
@@ -228,7 +272,7 @@ public class TemplateProcessing {
 	public String buildToString(Table table) {
 
 		StringBuffer result = new StringBuffer();
-		result.append("\tpublic String toString()  {\n\tStringBuffer output = new StringBuffer();\n");
+		result.append("\tpublic String toString()  {\n\t\tStringBuffer output = new StringBuffer();\n");
 
 		List<Column> columns = table.getColumns();
 

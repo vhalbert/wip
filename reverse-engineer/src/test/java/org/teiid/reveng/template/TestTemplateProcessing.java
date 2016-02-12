@@ -22,6 +22,7 @@
 package org.teiid.reveng.template;
 
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.teiid.reveng.metadata.db.DBMetadataProcessor;
-
 import org.teiid.core.util.UnitTestUtil;
+import org.teiid.reveng.Options;
+import org.teiid.reveng.metadata.db.DBMetadataProcessor;
 
 /**
  * @author vanhalbert
@@ -62,11 +63,6 @@ public class TestTemplateProcessing {
        	VDB.initialize();
         
        	conn = VDB.getConnection();
-       	
-//    	server = new FakeServer(true);
-//    	server.setThrowMetadataErrors(false); //there are invalid views due to aggregate datatype changes
-//    	server.deployVDB("QT_Ora9DS", UnitTestUtil.getTestDataPath()+"/QT_Ora9DS_1.vdb");
-//        conn = server.createConnection("jdbc:teiid:QT_Ora9DS"); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     @Test
@@ -77,9 +73,49 @@ public class TestTemplateProcessing {
 		  tables.add("%");
 		  metadata.loadMetadata(conn, null, null, tables);
 
+		  String path = UnitTestUtil.getTestScratchPath() + File.separatorChar+ "noannotations";
+		  File f = new File(path);
+		  f.mkdirs();
     	
-			TemplateProcessing tp = new TemplateProcessing(UnitTestUtil.getTestScratchPath());
+			TemplateProcessing tp = new TemplateProcessing(path);
 			tp.processTables(metadata);
     }
+    
+    @Test
+    public void testBuildingTemplateWithHibernateAnnotations() throws Exception {
+    	
+		  DBMetadataProcessor metadata = new DBMetadataProcessor();
+		  List<String> tables =  new ArrayList<String>();
+		  tables.add("%");
+		  metadata.loadMetadata(conn, null, null, tables);
 
+		  Options o = new Options();
+		  o.setAnnotationType(Options.Annotation_Type.Hibernate);
+    	
+		  String path = UnitTestUtil.getTestScratchPath() + File.separatorChar+ "hibernateannotations";
+		  File f = new File(path);
+		  f.mkdirs();
+    	
+			TemplateProcessing tp = new TemplateProcessing(path, o);
+			tp.processTables(metadata);
+    }   
+
+    @Test
+    public void testBuildingTemplateWithProtobufAnnotations() throws Exception {
+    	
+		  DBMetadataProcessor metadata = new DBMetadataProcessor();
+		  List<String> tables =  new ArrayList<String>();
+		  tables.add("%");
+		  metadata.loadMetadata(conn, null, null, tables);
+
+		  Options o = new Options();
+		  o.setAnnotationType(Options.Annotation_Type.Protobuf);
+    	
+		  String path = UnitTestUtil.getTestScratchPath() + File.separatorChar+ "protobufannotations";
+		  File f = new File(path);
+		  f.mkdirs();
+    	
+			TemplateProcessing tp = new TemplateProcessing(path, o);
+			tp.processTables(metadata);
+    }   
 }

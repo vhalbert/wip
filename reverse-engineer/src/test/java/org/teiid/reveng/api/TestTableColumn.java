@@ -33,33 +33,33 @@ import org.junit.Test;
  */
 public class TestTableColumn {
 	
-	class TColumn extends Column { 
-	     /**
-		 * @param parent 
-	     * @param name
-		 */
-		public TColumn(Table parent, String name) {
-			super(parent, name);
-			
-		}
+//	class TColumn extends Column { 
+//	     /**
+//		 * @param parent 
+//	     * @param name
+//		 */
+//		public TColumn(Table parent, String name) {
+//			super(parent, name);
+//			
+//		}
 
-		@Override
-		public String getTypeName() {
-			return "NA";
-		}
+//		@Override
+//		public String getTypeName() {
+//			return "NA";
+//		}
 
-		@Override
-		public int compareTo(Column o) {
-			if (this == o) {
-				return 0;
-			} if (this.getName().equals(o.getName())) {
-				return 0;
-			}
-			
-			return -1;
-		}
+//		@Override
+//		public int compareTo(Column o) {
+//			if (this == o) {
+//				return 0;
+//			} if (this.getName().equals(o.getName())) {
+//				return 0;
+//			}
+//			
+//			return -1;
+//		}
 		
-	}
+//	}
 	
 	class TTable extends Table {
 
@@ -73,7 +73,7 @@ public class TestTableColumn {
 
 		@Override
 		public Column createColumn(String name) {
-			Column col = new TColumn(this, name);
+			Column col = new Column(this, name);
 			this.addColumn(col);
 			return col;
 		}

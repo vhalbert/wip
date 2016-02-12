@@ -125,6 +125,7 @@ public class TypesMapping {
     public static final String JAVA_TIME = "java.sql.Time";
     public static final String JAVA_TIMESTAMP = "java.sql.Timestamp";
     public static final String JAVA_BLOB = "java.sql.Blob";
+    public static final String JAVA_OBJECT = "java.lang.Object";
 
     /**
      * Keys: SQL string type names, Values: SQL int type definitions from java.sql.Types
@@ -176,6 +177,8 @@ public class TypesMapping {
         SQL_STRING_TYPE.put(SQL_NVARCHAR, NVARCHAR);
         SQL_STRING_TYPE.put(SQL_OTHER, OTHER);
         SQL_STRING_TYPE.put(SQL_NULL, NULL);
+        SQL_STRING_TYPE.put(SQL_BINARY, java.sql.Types.JAVA_OBJECT);
+ 
 
         SQL_ENUM_TYPE.put(ARRAY, SQL_ARRAY);
         SQL_ENUM_TYPE.put(BIGINT, SQL_BIGINT);
@@ -207,7 +210,9 @@ public class TypesMapping {
         SQL_ENUM_TYPE.put(SQLXML, SQL_SQLXML);
         SQL_ENUM_TYPE.put(OTHER, SQL_OTHER);
         SQL_ENUM_TYPE.put(NULL, SQL_NULL);
+        SQL_ENUM_TYPE.put(java.sql.Types.JAVA_OBJECT, SQL_BINARY);
 
+        
         SQL_ENUM_JAVA.put(BIGINT, JAVA_LONG);
         SQL_ENUM_JAVA.put(BINARY, JAVA_BYTES);
         SQL_ENUM_JAVA.put(BIT, JAVA_BOOLEAN);
@@ -235,6 +240,7 @@ public class TypesMapping {
         SQL_ENUM_JAVA.put(VARCHAR, JAVA_STRING);
         SQL_ENUM_JAVA.put(NVARCHAR, JAVA_STRING);
         SQL_ENUM_JAVA.put(SQLXML, JAVA_STRING);
+        SQL_ENUM_JAVA.put(java.sql.Types.JAVA_OBJECT, JAVA_OBJECT);
 
         JAVA_SQL_ENUM.put(JAVA_LONG, BIGINT);
         JAVA_SQL_ENUM.put(JAVA_BYTES, BINARY);

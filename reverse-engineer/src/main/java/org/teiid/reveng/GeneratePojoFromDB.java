@@ -23,19 +23,15 @@ package org.teiid.reveng;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.teiid.reveng.api.Table;
+import org.teiid.core.util.UnitTestUtil;
 import org.teiid.reveng.metadata.db.DBMetadataProcessor;
 import org.teiid.reveng.template.TemplateProcessing;
 
@@ -62,6 +58,7 @@ public class GeneratePojoFromDB {
 	*               User="user";
 	*               Password="";
 	*               Schema = "Northwind";
+	*               Catalog = null;
 	*</pre>
 	*/  
 
@@ -73,22 +70,23 @@ public class GeneratePojoFromDB {
 	//Database connection parameters from config file
 	String jdbcDriver;
 	String dbUrl;
-	String dbClassName;
+//	String dbClassName;
 	String user;
 	String password;
 	String dbSchema;
-
-	Connection con = null;
+	String dbCatalog;
+	
+	Connection conn = null;
 
 	//Strings for building output
-	String Constructor;
-	String Selectors;
-	String SetMethods;
-	String StaticInitializer; 
-	String sqlTypeString;
-	String ToString;
+//	String Constructor;
+//	String Selectors;
+//	String SetMethods;
+//	String StaticInitializer; 
+//	String sqlTypeString;
+//	String ToString;
 
-	String javaTypeString = new String();
+//	String javaTypeString = new String();
 
 	  if (configFileName == null) {
 	    System.err.println("ERROR: You must enter config file name on command line");
@@ -108,10 +106,11 @@ public class GeneratePojoFromDB {
 	  dbUrl = props.getProperty("DbUrl");
 	  user = props.getProperty("User");
 	  password = props.getProperty("Password");
-	  dbSchema = props.getProperty("Schema");
+	  dbSchema = props.getProperty("Schema", null);
+	  dbCatalog = props.getProperty("Catalog", null);
 
 	  try {
-	      con = connect(jdbcDriver, dbUrl, user, password);
+	      conn = connect(jdbcDriver, dbUrl, user, password);
 	  }
 	  catch (ClassNotFoundException eClass) {
 	      System.err.println("ERROR: Driver couldn't be loaded for: " + jdbcDriver);
@@ -127,125 +126,30 @@ public class GeneratePojoFromDB {
 	  try {
 		  
 		  DBMetadataProcessor metadata = new DBMetadataProcessor();
-			
-//			List<Table> tables = dmp.getTableMetadata();
-
-
-
-		List<String> tableNames = new ArrayList<String>();
-	    for (int argCounter = 0; argCounter < args.length; argCounter++) {
-	    	tableNames.add(args[argCounter]);
-	    }
-  	    metadata.loadMetadata(con, null, dbSchema, tableNames);
-
-		
-		TemplateProcessing tp = new TemplateProcessing();
-		tp.processTables(metadata);
-	
-//  	    ReverseEngineerFactory factory = ReverseEngineerFactory.createObjectFactory(metadata,null);
+		  List<String> tables =  new ArrayList<String>();
 		  
+		    for (int argCounter = 0; argCounter < args.length; argCounter++) {
+		    	tables.add(args[argCounter]);
+		    }
+//		  tables.add("%");
+		  metadata.loadMetadata(conn, dbCatalog, dbSchema, tables);
 
-	    //remove all references to these strings, we are done
-//	    Selectors = null;
-//	    SetMethods = null;
-//	    Constructor = null;
-//	    //reinitialize to empty string
-//	    Selectors = new String("");
-//	    SetMethods = new String("");
-//	    Constructor = new String("");
-//	    ToString = new String("public String toString () {\n\tStringBuffer output = new StringBuffer();\n");
-//	    StaticInitializer = new String("static {\n\tm_colList = new Hashtable();\n\tColumnInfo colInfo;\n");
-
-//	    DatabaseMetaData metadata = con.getMetaData();
-
-//	    String className = columnNameToMemberName(args[argCounter]);
-//	    className = className + "Table";
-//	    String fileName = className + ".java";
-//	    String memberName = "";
-//	    String tableName;
-//
-//	    File outputFile = new File(fileName);
-//
-//	    FileOutputStream fileOutput = new FileOutputStream(outputFile);
-//
-//	    PrintWriter outputStream = new PrintWriter(fileOutput);
-
-//	    printHeader(outputStream, className);
-//	    outputStream.println("import java.sql.*;");
-//	    outputStream.println("import java.util.*;");
-//	    outputStream.println("public abstract class " + className + " {" );
-
-//	    //define constant for name of database table
-//	    outputStream.println("//constant for database table name");
-//
-//	    //assumption is that table names are in upper case.  This works for
-//	    //DB2 not for Sybase
-//	    tableName = args[argCounter].toUpperCase();
-//
-//	    outputStream.println("\tprotected static final String TABLE_NAME = \"" + tableName + "\";"); 
-//	    outputStream.println("\tprivate static Hashtable m_colList;");
-//	    outputStream.println("//member variables for columns");
-
-//	    ResultSet colResults = metadata.getColumns(null, dbSchema, tableName, null);
-//
-//	    while (colResults.next()) {
-//	        //convert column name to title case and remove '_' characters
-//	        String DBColumnName = colResults.getString("COLUMN_NAME");
-//	        String columnName = columnNameToMemberName(DBColumnName);
-//
-//	        short colType = colResults.getShort("DATA_TYPE");
-//
-//	        outputStream.print("\tprotected ");
-//
-//	        StaticInitializer = StaticInitializer + "\tcolInfo = new ColumnInfo();\n";
-//	        StaticInitializer = StaticInitializer + "\tcolInfo.setName(\"" + DBColumnName +"\");\n";
-//	        ToString = ToString + "\toutput.append(\"" + DBColumnName + ":\\t\\t\");\n";
-//		ToString = ToString + "\toutput.append(get" + columnName + "());\n";
-//		ToString = ToString + "\toutput.append(\"\\n\");\n";
-//
-//	        javaTypeString = sqlTypeToJavaTypeString(colType);
-//	        sqlTypeString = sqlTypeToSqlTypeString(colType);
-//	        memberName = "m_" + columnName;
-//	        outputStream.println(javaTypeString + " " + memberName + ";");
-//	        Selectors = Selectors + "\tpublic " + javaTypeString + " get" + columnName ;
-//	        Selectors = Selectors + "() {return " + memberName + ";}\n";
-//	        StaticInitializer = StaticInitializer + "\tcolInfo.setDataType(Types." + sqlTypeString + ");\n";
-//	        StaticInitializer = StaticInitializer + "\tm_colList.put(\"" + DBColumnName + "\", colInfo);\n";
-//
-//	        SetMethods += buildSetStatement(columnName, memberName, colType) + "\n";
-//	      }
-//	      Constructor = "public " + className + " ( ) {}\n";
-//
-//	      StaticInitializer = StaticInitializer + " \n}";
-//
-//	      ToString = ToString +  "\n\treturn output.toString();\n}\n";
-//
-//	      //output the generated code
-//	      outputStream.println("\t//Static Initializer");
-//	      outputStream.println(StaticInitializer);
-//	      outputStream.println("\t//Constructor");
-//	      outputStream.println(Constructor);
-//	      outputStream.println("\t//Selectors");
-//	      outputStream.println(Selectors);
-//	      outputStream.println("\t//Set Methods");
-//	      outputStream.println(SetMethods);
-//	      outputStream.println("\t//ToString method");
-//	      outputStream.println(ToString);
-//	      //output the standard methods that every table object has
-//	      outputStream.println("public ColumnInfo getColumnInfo (String colName) { return (ColumnInfo) m_colList.get(colName); }");
-//	      outputStream.println("public Hashtable getColumns () { return (Hashtable)m_colList.clone(); }");
-//	    
-//	    outputStream.println("} // class " + className);
-//	    outputStream.close();
-//	    colResults.close();
-
+		  Options o = new Options();
+		  o.setAnnotationType(Options.Annotation_Type.Hibernate);
+    	
+		  String path = UnitTestUtil.getTestScratchPath() + File.separatorChar+ "execjavafiles";
+		  File f = new File(path);
+		  f.mkdirs();
+    	
+			TemplateProcessing tp = new TemplateProcessing(path, o);
+			tp.processTables(metadata);
 	  
 	  } catch (Exception e) {
 	    System.err.println("ERROR: exception caught: " + e.getMessage());
 	    e.printStackTrace();
 	  } finally {
 		  try {
-			con.close();
+			conn.close();
 		} catch (SQLException e) {
 		}
 	  }

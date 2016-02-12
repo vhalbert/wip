@@ -80,7 +80,7 @@ public final class DBMetadataProcessor implements MetadataProcessor {
 					String remarks = tables.getString(5);
 					
 					dbtable = new DBTable(tableName);
-					dbtable.setRemarks(remarks + "\r\rCreated " + new Date() + "\r From (catalog:schema:table): " + tableCatalog + ":" + tableSchema + ":" + tableName );
+					dbtable.setRemarks((remarks != null ? "* " + remarks : "*") + "\r*\r* Created " + new Date() + "\r* From (catalog:schema:table): " + tableCatalog + ":" + tableSchema + ":" + tableName );
 					
 					ResultSet columns = metadata.getColumns(tableCatalog, tableSchema, tableName, null);
 					processColumns(dbtable, columns);
@@ -101,9 +101,10 @@ public final class DBMetadataProcessor implements MetadataProcessor {
 	private void processColumns(DBTable dbTable, ResultSet columns)
 			throws SQLException {
 		int rsColumns = columns.getMetaData().getColumnCount();
+		int order = 0;
 		while (columns.next()) {
 
-			addColumn(columns, dbTable, rsColumns);
+			addColumn(columns, dbTable, rsColumns, ++order);
 		}
 		columns.close();
 	}
@@ -113,13 +114,14 @@ public final class DBMetadataProcessor implements MetadataProcessor {
 	 * @param columns
 	 * @param dbtable 
 	 * @param rsColumns
+	 * @param order
 	 * @throws SQLException
 	 */
-	protected void addColumn(ResultSet columns, DBTable dbtable, int rsColumns) throws SQLException {
+	protected void addColumn(ResultSet columns, DBTable dbtable, int rsColumns, int order) throws SQLException {
 //		String tableCatalog = columns.getString(1);
 //		String tableSchema = columns.getString(2);
 //		String tableName = columns.getString(3);
-		
+
 		String columnName = columns.getString(4);
 		DBColumn column = dbtable.createColumn(columnName);
 		
@@ -128,6 +130,7 @@ public final class DBMetadataProcessor implements MetadataProcessor {
 		int columnSize = columns.getInt(7);
 		column.setType(type);
 		column.setTypeName(typeName);
+		column.setOrder(order);
 //		String runtimeType = getRuntimeType(type, typeName, columnSize);
 		//note that the resultset is already ordered by position, so we can rely on just adding columns in order
 //		column.setNameInSource(quoteName(columnName));

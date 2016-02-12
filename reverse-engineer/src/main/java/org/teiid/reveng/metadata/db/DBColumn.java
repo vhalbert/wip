@@ -21,7 +21,7 @@
  */
 package org.teiid.reveng.metadata.db;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
+//import org.apache.commons.lang.builder.CompareToBuilder;
 import org.teiid.reveng.api.Column;
 import org.teiid.reveng.api.Table;
 
@@ -30,7 +30,7 @@ import org.teiid.reveng.api.Table;
 	 */
 	public class DBColumn extends Column {
 					    
-	    protected String typeName;
+//	    protected String typeName;
 
 		public DBColumn(Table parent, String name) {
 	        super(parent, name);
@@ -40,25 +40,25 @@ import org.teiid.reveng.api.Table;
 	        return (alias != null) ? alias + '.' + this.getName() : this.getName();
 	    }
 
-		@Override
-		public String getTypeName() {
-			return typeName;
-		}
+//		@Override
+//		public String getTypeName() {
+//			return typeName;
+//		}
 
-		public void setTypeName(String typeName) {
-			this.typeName = typeName;
-		}
-
-	    @Override
-	    public  int compareTo(Column o) {
-		        return new CompareToBuilder()
-		        .append(o.getName(), this.getName())
-		        .append(o.getType(), getType())
-		        .append(o.isIndexed(), isIndexed())
-		        .append(o.getMaxLength(), getMaxLength())
-		        .append(o.getScale(), getScale())
-		        .toComparison();
-		}
+//		public void setTypeName(String typeName) {
+//			this.typeName = typeName;
+//		}
+//
+//	    @Override
+//	    public  int compareTo(Column o) {
+//		        return new CompareToBuilder()
+//		        .append(o.getName(), this.getName())
+//		        .append(o.getType(), getType())
+//		        .append(o.isIndexed(), isIndexed())
+//		        .append(o.getMaxLength(), getMaxLength())
+//		        .append(o.getScale(), getScale())
+//		        .toComparison();
+//		}
 	    
 	    
 	}
