@@ -22,6 +22,7 @@
 		<version.org.infinispan.hibernate.search>4.6.1.Final-redhat-1</version.org.infinispan.hibernate.search> <!-- versions required by infinispan -->
 		<version.org.jboss.teiid>8.12.0.Final</version.org.jboss.teiid>
 		<version.mysql.mysql-connector-java>5.1.25</version.mysql.mysql-connector-java>
+    	<version.org.codehaus.mojo.exec.plugin>1.2.1</version.org.codehaus.mojo.exec.plugin>
 		<main.class.remote-query>org.teiid.reveng.GeneratePojoFromDB</main.class.remote-query>
 		
 	</properties>
@@ -231,10 +232,10 @@
 		
             <!-- This plugin permits the execution of this quickstart 
                 through mvn exec:java command -->
-            <plugin>
+           <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.3.2</version>
+                <version>${version.org.codehaus.mojo.exec.plugin}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -246,11 +247,12 @@
                     <!-- classpathScope>test</classpathScope-->
                     <mainClass>${main.class.remote-query}</mainClass>
                     <arguments>  
-       					<argument>${tableNames}</argument>  
+       					<argument>${tablenames}</argument>
+       					<argument>${configfilename}</argument>  
       				</arguments>  
-                    <workingDirectory>${project.build.outputDirectory}</workingDirectory>  
+                    <workingDirectory>${project.build.outputDirectory}/pojos</workingDirectory>  
                 </configuration>
-            </plugin>
+            </plugin>                
         </plugins>
 	</build>
 </project>

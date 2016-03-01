@@ -27,3 +27,6 @@ Design:
 
  
  -  end goal - Creat a Java class with appropriate annotations, and then jar them up.
+ 
+ 
+ mvn exec:java  -Dtablenames=table1,table2,..   -
