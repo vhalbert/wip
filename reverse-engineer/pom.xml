@@ -235,7 +235,6 @@
            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>${version.org.codehaus.mojo.exec.plugin}</version>
                 <executions>
                     <execution>
                         <goals>
