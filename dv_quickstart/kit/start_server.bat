@@ -27,12 +27,27 @@ if "x%JBOSS_HOME%" == "x" (
   set "JBOSS_HOME=%RESOLVED_JBOSS_HOME%%SERVER_DIR%"
 )
 
+if !exist "%JBOSS_HOME%\bin\standalone.bat" (
+   echo "Stop, first run setup_dv.bat to install DV Server"
+   goto END
+)
+
+
+call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 2 %HOST% %PORT% true
+if errorlevel == 0 (
+        echo *** Server is already running at %HOST%:%PORT% ***
+        goto END
+)
+
+
 cd %JBOSS_HOME%\bin
 
-call jboss-cli.bat --connect command=:shutdown
+call standalone.bat %*
 
 cd %DIRNAME%
 
 echo **********************
-echo DV Server is shutdown
+echo DV Server is started
 echo **********************
+
+:END

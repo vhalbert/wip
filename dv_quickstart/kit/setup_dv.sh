@@ -17,12 +17,6 @@ if [ -d "$JBOSS_HOME" ]; then
 	rm -rf $JBOSS_HOME
 fi
 
-if [ ! -f "$EAP_JAR" ]; then
-	echo ""
-	echo "Stop: The EAP $EAP_JAR is not found in $DIRNAME"
-    exit 1
-fi
-
 if [ ! -f "$DV_JAR" ]; then
 	echo ""
 	echo "Stop: The DV $DV_JAR is not found in $DIRNAME"
@@ -31,29 +25,12 @@ fi
 
 mkdir $JBOSS_HOME
 
-echo "Installing EAP Server ..."
-
-# substitute the correct installation path
-java -jar ./lib/dv_quickstart-2.1.0.jar 1 $DIRNAME/eap-installer.xml $JBOSS_HOME
-
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to error"
-    exit 1
-fi
-
-#  BZ : https://bugzilla.redhat.com/show_bug.cgi?id=1225450
-#  issue with using INSTALL_PATH (-DINSTALL_PATH=..)
-
-# install EAP
-java  -jar $EAP_JAR eap-installer.xml 
-
-echo "Installed EAP Server kit $EAP_JAR"
-
 echo "Installing DV kit $DV_JAR ..."
 
+java -jar ./lib/dv_quickstart-2.1.0.jar 1 auto_install.xml.variables admin.pwd $ADMIN_PWD
+
 # install DV
-java -DINSTALL_PATH=$JBOSS_HOME  -jar $DV_JAR dv-installer.xml 
+java -DINSTALL_PATH=$JBOSS_HOME  -jar $DV_JAR auto_install.xml 
 
 echo "DV kit has been installed, starting server"
 
@@ -65,13 +42,13 @@ cd $JBOSS_HOME/bin
 
 cd $DIRNAME
 
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 localhost 9990
+java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT
 
 echo "Ping Status: " $?
 
 if [ $? != 0 ] ; then
 	echo ""
-	echo "Stop due to error"
+	echo "Stop due to server has not started on $HOST:$PORT"
     exit 1
 fi
 
@@ -91,13 +68,17 @@ cd $JBOSS_HOME/
 
 cd $DIRNAME
 
-#cp $JBOSS_HOME/teiidfiles/vdb/*.*  $JBOSS_HOME/standalone/deployments
-
 echo "Completed configuring quickstart data sources"
 
 echo ""
 echo "********************************************
 echo "DV Server is ready to run the DV Quickstart"
+echo ""
+echo "Installed at $JBOSS_HOME"
+echo ""
+echo "Connect to URL: jdbc:teiid:portfolio@mm://$HOST:31000"
+echo "using Teiid User: Username/Password: teiidUser / $ADMIN_PWD"
+
 echo "********************************************
 
 

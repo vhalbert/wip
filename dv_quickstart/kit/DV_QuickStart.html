@@ -1,134 +1,180 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.4.1  (Unix)">
-	<META NAME="CREATED" CONTENT="20150803;8541000">
-	<META NAME="CHANGED" CONTENT="20150916;13265700">
-</HEAD>
-<BODY LANG="en-US" DIR="LTR">
-<P><BR><BR>
-</P>
-<OL>
-	<LI><P>When this kit is unzipped, it will be the location that the
-	EAP, EAP Patch and DV downloads should be placed.</P>
-	<LI><P>Download the below kits to this directory location (referred
-	to as quickstart_home).</P>
-	<LI><P>Open a terminal window and 'cd' into this quickstart_home</P>
-	<LI><P>run the setup_dv.sh (.bat) script to install and configure
-	the DV server. This will:</P>
-</OL>
-<UL>
-	<UL>
-		<LI><P>install EAP</P>
-		<LI><P>install EAP patches</P>
-		<LI><P>install DV</P>
-		<LI><P>start server</P>
-		<LI><P>configure and deploy quick start data sources (H2 and web
-		service)</P>
-		<LI><P>deploy example VDB, name portfolio 
-		</P>
-	</UL>
-</UL>
-<OL START=5>
-	<LI><P>Notes on installation</P>
-</OL>
-<UL>
-	<UL>
-		<LI><P>1 common password for all users (admin, teiidUser,
-		dashboardAdmin): admin_1!</P>
-		<UL>
-			<LI><P>To change the password, the following 2 files need to be
-			changed</P>
-			<UL>
-				<LI><P>eap-installer.xml.variables</P>
-				<LI><P>dv-installer.xml.variables</P>
-			</UL>
-		</UL>
-		<LI><P>to stop the server, run shutdown_server.sh</P>
-	</UL>
-</UL>
-<OL START=6>
-	<LI><P>Test the vdb</P>
-</OL>
-<UL>
-	<UL>
-		<LI><P>connect</P>
-		<UL>
-			<LI><P>URL: jdbc:teiid:<A HREF="mailto:portfolio@mm">portfolio@mm</A>://localhost:31000</P>
-			<LI><P>Username/Password: admin / admin_1!</P>
-		</UL>
-		<LI><P>Example queries</P>
-		<UL>
-			<LI><P>(h2) select * from Accounts.Customer</P>
-			<LI><P>(csv) select * from Stocks.StockPrices</P>
-			<LI><P>(webservice) select * from
-			CustomerCredit.CustomersCreditView</P>
-			<LI><P>(h2 &amp; csv) select * from Stocks.StockPrices</P>
-			<LI><P>(h2 &amp; webservice) select * from
-			CustomerCreditInfo.CustomersCreditInfoView</P>
-		</UL>
-	</UL>
-</UL>
-<OL>
-	<LI VALUE=1><P>Example Data</P>
-</OL>
-<UL>
-	<UL>
-		<LI><P>H2 database</P>
-		<UL>
-			<LI><P>Schema: Accounts 
-			</P>
-			<UL>
-				<LI><P>Table: Customer (SSN, FirstName, LastName, etc.)</P>
-				<LI><P>Table: Product (ID, Symbol, Company_Name)</P>
-			</UL>
-		</UL>
-		<LI><P>CSV file</P>
-		<UL>
-			<LI><P>Schema: MarketData</P>
-			<LI><P>View: Stocks 
-			</P>
-			<UL>
-				<LI><P>Table: StockPrices (symbol, price)</P>
-			</UL>
-		</UL>
-		<LI><P>Web service</P>
-		<UL>
-			<LI><P>Schema: CustomerCreditSource</P>
-			<LI><P>View: CustomerCredit 
-			</P>
-			<UL>
-				<LI><P>Table: CustomerCreditView (customernumber, creditlimit,
-				creditscore)</P>
-			</UL>
-		</UL>
-		<LI><P>Views</P>
-		<UL>
-			<LI><P>Stocks.Stock: List the stockPrice for each product</P>
-			<LI><P>CustomerCreditInfo.CustomersCreditInfoView: List the
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 4.4.7.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2016-05-25T20:16:49.601407627"/>
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2016-05-25T20:15:43.845586999">
+</head>
+<body lang="en-US" dir="ltr">
+<p align="center"><font size="5" style="font-size: 18pt"><b>Data
+Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
+<ol>
+	<li/>
+<p>Unzip the Quickstart kit, which will be the location that
+	the DV server kit should be placed and the quickstart run.</p>
+	<li/>
+<p>The DV 6.3 ER3 (Beta) kit is included in the download</p>
+	<li/>
+<p>Open a terminal window and 'cd' into this quickstart_home</p>
+	<li/>
+<p>run the setup_dv.sh (.bat) script to install and configure
+	the DV server. This will:</p>
+</ol>
+<ul>
+	<ul>
+		<li/>
+<p>install DV</p>
+		<li/>
+<p>start server</p>
+		<li/>
+<p>configure and deploy quick start data sources (H2 and web
+		service)</p>
+		<li/>
+<p>deploy example VDB, name portfolio 
+		</p>
+	</ul>
+</ul>
+<ol start="5">
+	<li/>
+<p>Notes on installation</p>
+</ol>
+<ul>
+	<ul>
+		<li/>
+<p>The common password for all users (admin, teiidUser,
+		dashboardAdmin): redhat1!</p>
+		<li/>
+<p>To change the password, the following files need to be
+		changed:</p>
+		<ul>
+			<ul>
+				<li/>
+<p>setup.conf</p>
+				<li/>
+<p>setup.conf.bat</p>
+			</ul>
+		</ul>
+		<li/>
+<p>to stop the server, run shutdown_server.sh (.bat)</p>
+		<li/>
+<p>to restart the server after shutting down, run
+		start_server.sh (.bat)</p>
+	</ul>
+</ul>
+<ol start="6">
+	<li/>
+<p>Test the vdb</p>
+</ol>
+<ul>
+	<ul>
+		<li/>
+<p>connect</p>
+		<ul>
+			<li/>
+<p>URL: jdbc:teiid:<a href="mailto:portfolio@mm">portfolio@mm</a>://localhost:31000</p>
+			<li/>
+<p>Username/Password:  teiidUser / redhat1!</p>
+		</ul>
+		<li/>
+<p>Example queries (data source)</p>
+		<ul>
+			<li/>
+<p>(h2) select * from Accounts.Customer</p>
+			<li/>
+<p>(csv) select * from Stocks.StockPrices</p>
+			<li/>
+<p>(webservice) select * from
+			CustomerCredit.CustomersCreditView</p>
+			<li/>
+<p>(h2 &amp; csv) select * from Stocks.StockPrices</p>
+			<li/>
+<p>(h2 &amp; webservice) select * from
+			CustomerCreditInfo.CustomersCreditInfoView</p>
+		</ul>
+	</ul>
+</ul>
+<ol>
+	<li value="1"/>
+<p>Example Data</p>
+</ol>
+<ul>
+	<ul>
+		<li/>
+<p>H2 database</p>
+		<ul>
+			<li/>
+<p>Schema: Accounts 
+			</p>
+			<ul>
+				<li/>
+<p>Table: Customer (SSN, FirstName, LastName, etc.)</p>
+				<li/>
+<p>Table: Product (ID, Symbol, Company_Name)</p>
+			</ul>
+		</ul>
+		<li/>
+<p>CSV file</p>
+		<ul>
+			<li/>
+<p>Schema: MarketData</p>
+			<li/>
+<p>View: Stocks 
+			</p>
+			<ul>
+				<li/>
+<p>Table: StockPrices (symbol, price)</p>
+			</ul>
+		</ul>
+		<li/>
+<p>Web service</p>
+		<ul>
+			<li/>
+<p>Schema: CustomerCreditSource</p>
+			<li/>
+<p>View: CustomerCredit 
+			</p>
+			<ul>
+				<li/>
+<p>Table: CustomerCreditView (customernumber, creditlimit,
+				creditscore)</p>
+			</ul>
+		</ul>
+		<li/>
+<p>Views</p>
+		<ul>
+			<li/>
+<p>Stocks.Stock: List the stockPrice for each product</p>
+			<li/>
+<p>CustomerCreditInfo.CustomersCreditInfoView: List the
 			creditLimit and creditScore for each customer 
-			</P>
-		</UL>
-	</UL>
-</UL>
-<P><BR><BR>
-</P>
-<P>Downloads (click on the link):</P>
-<P>EAP 6.4 -
-<A HREF="http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>http://www.jboss.org/download-manager/file/jboss-eap-6.4.0.GA-installer.jar</U></FONT></FONT></FONT></A></P>
-<P>EAP 6.4.3 patches:  <A HREF="https://access.redhat.com/jbossnetwork/restricted/softwareDownload.html?softwareId=39353">EAP
-6.4.3 rollup patches</A></P>
-<P>For initial testing, pull the DV 6.2 CR2 (GA)  kit from here:</P>
-<P><A HREF="http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-CR2/jboss-dv-installer-6.2.0.redhat-2.jar">http://dev138.mw.lab.eng.bos.redhat.com/candidate/dv-6.2.0-CR2/jboss-dv-installer-6.2.0.redhat-2.jar</A></P>
-<P>JBDS -
-<A HREF="https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar"><FONT COLOR="#0000e9"><FONT FACE="ArialMT, sans-serif"><FONT SIZE=3 STYLE="font-size: 13pt"><U>https://www.jboss.org/download-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar</U></FONT></FONT></FONT></A></P>
-<P><BR><BR>
-</P>
-<P><BR><BR>
-</P>
-<P><BR><BR>
-</P>
-</BODY>
-</HTML>
+			</p>
+		</ul>
+	</ul>
+</ul>
+<p><br/>
+<br/>
+
+</p>
+<p>Downloads (click on the link):</p>
+<p>DV 6.3 Beta kit:
+<a href="http://download.devel.redhat.com/devel/candidates/JBDV/JBDV-6.3.0.ER3">http://download.devel.redhat.com/devel/candidates/JBDV/JBDV-6.3.0.ER3</a></p>
+<p>JBDS (Teiid Designer)
+<a href="https://www.jboss.org/downloadd-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar">https://www.jboss.org/downloadd-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar</a></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+</body>
+</html>

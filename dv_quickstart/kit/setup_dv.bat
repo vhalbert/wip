@@ -35,12 +35,6 @@ if "x%JBOSS_HOME%" == "x" (
 )
 
  echo JBOSS_HOME %JBOSS_HOME%
-
-if not exist "%EAP_JAR%" (
-        echo Need to download EAP %EAP_JAR% package from the Customer Support Portal
-        echo and place it in the %DIRNAME% directory to proceed...
-  goto END
- )
  
 if not exist "%DV_JAR%" (
        echo Need to download DV %DV_JAR% package from the Customer Support Portal
@@ -57,41 +51,12 @@ if exist "%JBOSS_HOME%" (
 echo JBOSS_HOME '%JBOSS_HOME%' 
 mkdir %JBOSS_HOME%
 
-echo
-echo Installing EAP Server kit %EAP_JAR%...
-
-rem # substitute the correct installation path
-call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 %DIRNAME%\%EAP_AUTOFILE% %JBOSS_HOME%
-
-if not "%ERRORLEVEL%" == "0" (
-  echo.
-	echo Error Occurred During setting installation path!
-	echo.
-	GOTO :EOF
-)
-
-rem run headless installation
-call java -jar %EAP_JAR% %EAP_AUTOFILE%
-
-if not "%ERRORLEVEL%" == "0" (
-  echo.
-	echo Error Occurred During JBoss EAP Installation!
-	echo.
-	GOTO :EOF
-)
-
-echo Waiting for EAP to install
-echo.
-
-timeout 25 /nobreak
-
-echo Installed EAP Server kit
-
 cd %DIRNAME%
 
 echo
 echo Installing DV Server kit %DV_JAR%...
 
+call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 auto_install.xml.variables admin.pwd %ADMIN_PWD%
 
 rem run headless installation
 call java -DINSTALL_PATH=%JBOSS_HOME% -jar %DV_JAR% %DV_AUTOFILE%
@@ -128,6 +93,11 @@ echo Completed configuring quickstart data sources
 echo.
 echo ********************************************
 echo DV Server is ready to run the DV Quickstart
+echo 
+echo Installed at %JBOSS_HOME%
+echo
+echo Connect to URL: jdbc:teiid:portfolio@mm://localhost:31000
+echo using Teiid User: Username/Password: teiidUser / %ADMIN_PWD%
 echo ********************************************
 
 :END

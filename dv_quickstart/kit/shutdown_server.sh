@@ -19,3 +19,8 @@ cd $JBOSS_HOME/bin
 ./jboss-cli.sh --connect command=:shutdown
 
 cd $DIRNAME
+
+echo ""
+echo "**********************"
+echo "DV Server is shutdown"
+echo "**********************"

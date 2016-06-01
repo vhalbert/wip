@@ -20,14 +20,18 @@
  * 02110-1301 USA.
  */
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 /**
  */
 @SuppressWarnings("nls")
 public class TestServer {
 	protected static int PORT = 11311;
+	protected static String IPADDRESS;
 	protected static final int TIMEOUT = 0;
 	
 	protected static ServerSocket SERVER;
@@ -37,22 +41,19 @@ public class TestServer {
 
 
 	public static synchronized void createServer(int port) throws Exception {
-//		String hostAddress = hostAddress();
-//		String hostPort = Integer.toString(hostPort());
-//		String timeoutStr = Integer.toString(TIMEOUT);
 		PORT = port;
 
 		EXEC = new Executor(port);
 		
 		Thread t1 = new Thread(EXEC);
 	    t1.start();
-		
 
 	}
 	
 	public static synchronized void stopServer() throws Exception {
 		try {
-			SERVER.close();
+			EXEC.stopRunning();
+
 		} catch (Exception e) {
 			
 		}
@@ -63,7 +64,13 @@ public class TestServer {
 	}
 
 	public static String hostName() {
-		return "LOCALHOST";
+		try {
+			IPADDRESS = InetAddress.getByName("localhost").getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		return IPADDRESS;
+//		return "LOCALHOST";
 	}
 
 //	public static String hostAddress() {
@@ -74,24 +81,48 @@ public class TestServer {
 //		}
 //	}
 
-	public static class Executor implements Runnable {
+	public static class Executor extends Thread {
 		private int exec_port;
+		private boolean running = false;
 		public Executor(int port) {
 			exec_port = port;
+			running = true;
+		}
+		
+		public void stopRunning() {
+			running = false;
 		}
 		/**
-		 * {@inheritDoc}
 		 *
 		 * @see java.lang.Runnable#run()
 		 */
 		@Override
 		public void run() {
 			try {
-			SERVER = new ServerSocket(exec_port);
-			//accepting the client request on the given port(2223)
-			CLIENT = SERVER.accept();
-			} catch (Exception e) {
-				e.printStackTrace();
+				SERVER = new ServerSocket(exec_port, 5, InetAddress.getByName("localhost"));
+			} catch (Throwable e) {
+				// if port already used, then stop running this instance
+				running = false;
+				return;				
+			}
+
+			while (running) {
+				try {
+					CLIENT = SERVER.accept();
+				} catch (Throwable e) {
+					// if port already used, then stop running this instance
+					running = false;
+				}
+			}
+			
+			try {
+				CLIENT.close();
+			} catch (IOException e) {
+			}
+			
+			try {
+				SERVER.close();
+			} catch (IOException e) {
 			}
 		}
 		

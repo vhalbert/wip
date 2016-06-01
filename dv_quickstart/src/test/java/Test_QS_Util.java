@@ -36,9 +36,13 @@ import org.junit.Test;
 public class Test_QS_Util {
 
 	
-	@BeforeClass 
+	@BeforeClass
 	public static void initClass() throws Exception {
-		TestServer.createServer(QS_UTIL.DEFAULT_PORT);
+		try {
+			TestServer.createServer(QS_UTIL.DEFAULT_PORT);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@AfterClass
@@ -80,11 +84,12 @@ public class Test_QS_Util {
 	}
 	
 	@Test public void testUtilOption1() throws Exception {
-		String[] args = new String[] {"1", "./src/test/resources/eap-installer.xml", "."};
+		String[] args = new String[] {"1", "./src/test/resources/auto_install.xml.variables", "pwd", "mypassword"};
 		performTest(args);
 	}
 	
-	@Test public void testUtilOption2a() throws Exception {
+	@Test( expected = Exception.class )
+	public void testUtilOption2a() throws Exception {
 		String[] args = new String[] {"2"};
 		performTest(args);
 		
@@ -96,8 +101,15 @@ public class Test_QS_Util {
 		
 	}
 	
-	@Test( expected = Exception.class )
+	@Test
 	public void testUtilOption2c() throws Exception {
+		String[] args = new String[] {"2", QS_UTIL.DEFAULT_HOST, String.valueOf(QS_UTIL.DEFAULT_PORT)};
+		performTest(args);
+		
+	}
+	
+	@Test( expected = Exception.class )
+	public void testUtilOption2d() throws Exception {
 		String[] args = new String[] {"2", "localhost", "8888"};
 		performTest(args);
 		

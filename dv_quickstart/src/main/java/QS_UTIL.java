@@ -2,7 +2,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.Console;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,12 +10,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.ServerSocket;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
-import java.util.Properties;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /*
  * JBoss, Home of Professional Open Source.
@@ -49,17 +52,22 @@ public class QS_UTIL {
 	
 	public static int DEFAULT_BUFFER_SIZE = 2048;
 	
-	public static String DEFAULT_HOST = "localhost";
-	public static int DEFAULT_PORT = 9999;
+	public static String DEFAULT_HOST = hostAddress();
+	public static int DEFAULT_PORT = 9990;
 	public static int DEAULT_WAIT_TIME = 6000;  // 3 seconds
 	public static int DEFAULT_RETRIES = 10;
 	
 	public static void main(String[] args) throws Exception {
+            try {
 		boolean failure = QS_UTIL.perform(args);
 		
+
 		if (failure) {
 			System.exit(-1);
 		}
+            } catch (Throwable t) {
+                System.exit(-1);
+            }
 	}
 	
 	public static boolean perform(String[] args) throws Exception {
@@ -74,12 +82,12 @@ public class QS_UTIL {
 
 			if (args[0].equals("1") ) {
 				action1 = true;
-				if (args.length != 3 ) {
+				if (args.length != 4 ) {
 					error = true;
 				} 
 			} else if (args[0].equals("2") ) {
 				action2 = true;
-				if ( args.length > 3 ) {
+				if ( args.length < 2 || args.length > 4 ) {
 					error = true;
 				} 
 				
@@ -111,12 +119,12 @@ public class QS_UTIL {
 			
 			System.out.println("usage: QS_UTIL <action[1,2,3,4]> [options] ");
 			if (action1) {
-				System.out.println("where: action = 1 is to backup the current xml file");
-				System.out.println("                QS_UTIL 1 <xmlinputfile> <installpath> " );
+				System.out.println("where: action = 1 is to replace value in file");
+				System.out.println("                QS_UTIL 1 <inputfile> <searchValue> <replaceValue> " );
 			}
 			if (action2) {
 				System.out.println("where: action = 2 is to ping the server to determine if its up and running");
-				System.out.println("                QS_UTIL 2 [hostname:localhost[port:31000]]" );
+				System.out.println("                QS_UTIL 2 <hostname> [port<default 9990>] [true<return immediately if down>] " );
 			}
 			if (action3) {
 				System.out.println("where: action = 3 is to pause for an amount of time");
@@ -132,40 +140,48 @@ public class QS_UTIL {
 		}
 		
 		if (action1) {
-			String readFrom = null;
-			String xmlfile = args[1];
-			String backupfile = xmlfile + ".bak";
+		//	String readFrom = null;
+			String readFrom = args[1];
+			String backupfile = readFrom + ".bak";
 
 			File bkf = new File(backupfile);
 			if (bkf.exists()) {
 				System.out.println("No backup done, file exists " + backupfile );
-				readFrom = backupfile;
+		//		readFrom = backupfile;
 			} else {
-				System.out.println("Backup file " + xmlfile + " to " +  backupfile);
-				copy(xmlfile, backupfile, true);
-				readFrom = xmlfile;
+				System.out.println("Backup file " + readFrom + " to " +  backupfile);
+				copy(readFrom, backupfile, true);
+		//		readFrom = xmlfile;
 			}
 			
 			StringBuilder sb = readFile(readFrom);
-			
-			StringBuilder newsb = replace(sb,SEARCH_VAR, args[2] );
-			write(newsb.toString(), xmlfile);
+
+			StringBuilder newsb = replace(sb, "${" + args[2] + "}", args[3] );
+			write(newsb.toString(), readFrom);
 		} else if (action2) {
 			String host = DEFAULT_HOST;
 			int port = DEFAULT_PORT;
 //			boolean isAlive = isAlive(host, port);
 			if (args.length == 2) {
-				host = args[1];
+				if (! args[1].toLowerCase().equals("localhost")) {	
+					host = args[1];
+				}
 			}
 			if (args.length == 3) {
 				port = Integer.valueOf(args[2]);
-			}
-			boolean isAlive = isAlive(host, port);
+			} 
+            int retries = DEFAULT_RETRIES;
+            if (args.length == 4) {
+				if (args[3].toLowerCase().equals("true")) {	
+					retries = 0;
+				}            	
+            }
+			boolean isAlive = isAlive(host, port, retries);
 			if (!isAlive) {
 				System.out.println("Unable to detect the [host:port] " + host + ":" + port );
 				return true;
 			}
-			Thread.sleep(DEAULT_WAIT_TIME);
+
 		} else if (action3) {
 			pauseForTime(args[1]);
 		} else if (action4) {
@@ -216,9 +232,15 @@ public class QS_UTIL {
 	    if (source != null && search != null && search.length() > 0 && replace != null) {
 	        int start = source.indexOf(search);
             if (start > -1) {
-                return source.replace(start, start + search.length(), replace);
-	        }
-	    }
+                        System.out.println("Replacing " + search + " with " +  replace);
+                        return source.replace(start, start + search.length(), replace);
+	        } 
+            System.out.println("*** WARNING **** Did not find match for  " + search);
+             
+
+	    } else {
+                System.out.println("*** WARNING **** Did not find match for  " + search);
+            }
 	    return source;    
 	} 
 	
@@ -342,51 +364,101 @@ public class QS_UTIL {
 	  }
   }
   
-	private static boolean isAlive(String hostname, int port) throws Exception {
+	private static boolean isAlive(String hostname, int port, int retries) throws Exception {
 		int cnt = 0;
 		System.out.println("Ping host:port " + hostname + ":" + port);
-		while (cnt < DEFAULT_RETRIES) {
+		while (cnt <= retries) {
 			System.out.println("ping [#" + cnt + "] ...");
 
 			boolean reachable = isReachableByPing(hostname, port);
+		//	boolean reachable = isReachable(InetAddress.getByName(hostname).getHostAddress());
 			if (reachable) return true;
 
+            cnt++;
+            // in cases where retries is set to 0 dont sleep
+            if (cnt > retries) break;
+
 			Thread.sleep(DEAULT_WAIT_TIME);
-			cnt++;
+			
 
 		}
 		System.out.println("Could not ping host:port " + hostname + ":" + port);
 		return false;
 	}
 	
-	public static boolean isReachableByPing(String host, int port) {
-	    try{
-	    	// nc -zv <hostname/ip> <port/port range>
-	            String cmd = "";
-	            if(System.getProperty("os.name").startsWith("Windows")) {   
-	                    // For Windows
-	                    cmd = "nc -zv " + host + " " + port;
-	            } else {
-	                    // For Linux and OSX
-	            	cmd = "nc -zv " + host + " " + port;
+	 public static boolean isReachable(String internetProtocolAddress) throws IOException
+	    {
+	        List<String> command = new ArrayList<String>();
+	        command.add("ping");
+
+            if(System.getProperty("os.name").startsWith("Windows"))   
+
+	        {
+	            command.add("-n");
+	        } else
+	        {
+	            command.add("-c");
+	        }
+
+	        command.add("1");
+	        command.add(internetProtocolAddress);
+
+	        ProcessBuilder processBuilder = new ProcessBuilder(command);
+	        Process process = processBuilder.start();
+
+	        BufferedReader standardOutput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+	        String outputLine;
+
+	        while ((outputLine = standardOutput.readLine()) != null)
+	        {
+	            // Picks up Windows and Unix unreachable hosts
+	            if (outputLine.toLowerCase().contains("destination host unreachable"))
+	            {
+	                return false;
 	            }
+	        }
 
-	            Process myProcess = Runtime.getRuntime().exec(cmd);
-	            myProcess.waitFor();
+	        return true;
+	    }	
+	public static boolean isReachableByPing(String host, int port) {
+		Socket ignored = null;
+		    try {
+		    	ignored = new Socket(host, port);
+		    	ignored.close();
+		        return true;
+		    } catch (IOException e) {
+		        return false;
+		    } 
 
-	            if(myProcess.exitValue() == 0) {
-
-	                    return true;
-	            } 
-
-	             return false;
-	            
-
-	    } catch( Exception e ) {
-
-	            e.printStackTrace();
-	            return false;
-	    }
+		
+//		try{
+//	    	// nc -zv <hostname/ip> <port/port range>
+//	            String cmd = "";
+//	            if(System.getProperty("os.name").startsWith("Windows")) {   
+//	                    // For Windows
+//	                    cmd = "nc -zv " + host + " " + port;
+//	            } else {
+//	                    // For Linux and OSX
+//	            	cmd = "nc -zv " + host + " " + port;
+//	            }
+//
+//	            Process myProcess = Runtime.getRuntime().exec(cmd);
+//	            myProcess.waitFor();
+//
+//	            if(myProcess.exitValue() == 0) {
+//
+//	                    return true;
+//	            } 
+//
+//	             return false;
+//	            
+//
+//	    } catch( Exception e ) {
+//
+//	            e.printStackTrace();
+//	            return false;
+//	    }
 	}	
 	private static void pauseForTime(String pauseTime) throws Exception {
 		System.out.println("pausing for : " + pauseTime + " seconds");
@@ -432,6 +504,12 @@ public class QS_UTIL {
         	throw new Exception(e);
         }
     }
-
-
+	public static String hostAddress() {
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
+

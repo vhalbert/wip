@@ -14,28 +14,23 @@ rem # Set JBOSS_HOME
 
 rem set "JBOSS_HOME=  "
 
-rem # set the EAP kit to install
-rem #
-set "EAP_JAR=jboss-eap-6.4.0-installer.jar"
-
-rem # set the auto installer file to use
-rem #
-set "EAP_AUTOFILE=eap-server.xml"
-
-rem # set the EAP patch kit to install
-rem #
-rem set "EAP_PATCH_ZIP=jboss-eap-6.4.3-patch.zip"
-
-
 rem # set the JDV kit to install
 rem #
-set "DV_JAR=jboss-dv-installer-6.2.0.redhat-2.jar"
+set "DV_JAR=jboss-dv-6.3.0.ER3-installer.jar"
 
 rem # set the auto installer file to use
 rem #
-set "DV_AUTOFILE=dv-installer.xml"
+set "DV_AUTOFILE=auto_install.xml"
 
 
 rem # set the EAP server directory name to install into
 rem #
-set "SERVER_DIR=eap_server"
+set "SERVER_DIR=dv_server"
+
+rem # set the password to be used by the installer
+rem #
+set "ADMIN_PWD=redhat1!"
+
+rem # the default host:port to use to ping the server
+set "HOST=localhost"
+set "PORT=9990"
