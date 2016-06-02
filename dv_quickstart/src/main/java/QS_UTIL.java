@@ -58,16 +58,16 @@ public class QS_UTIL {
 	public static int DEFAULT_RETRIES = 10;
 	
 	public static void main(String[] args) throws Exception {
-            try {
-		boolean failure = QS_UTIL.perform(args);
-		
+        try {
+        	boolean failure = QS_UTIL.perform(args);
+	
 
-		if (failure) {
-			System.exit(-1);
-		}
-            } catch (Throwable t) {
-                System.exit(-1);
-            }
+        	if (failure) {
+        		System.exit(-1);
+        	}
+        } catch (Throwable t) {
+            System.exit(-1);
+        }
 	}
 	
 	public static boolean perform(String[] args) throws Exception {
@@ -151,7 +151,6 @@ public class QS_UTIL {
 			} else {
 				System.out.println("Backup file " + readFrom + " to " +  backupfile);
 				copy(readFrom, backupfile, true);
-		//		readFrom = xmlfile;
 			}
 			
 			StringBuilder sb = readFile(readFrom);
@@ -161,7 +160,6 @@ public class QS_UTIL {
 		} else if (action2) {
 			String host = DEFAULT_HOST;
 			int port = DEFAULT_PORT;
-//			boolean isAlive = isAlive(host, port);
 			if (args.length == 2) {
 				if (! args[1].toLowerCase().equals("localhost")) {	
 					host = args[1];

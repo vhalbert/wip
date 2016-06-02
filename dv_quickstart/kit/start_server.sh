@@ -22,10 +22,12 @@ fi
 # check for running server
 java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT true
 
-echo "Ping Status: " $?
+#unix needs a pause in this situation
+sleep 3
+echo "Ping Status x: " $?
 STATUS=$?
 
-if [ $STATUS -eq 0 ] ; then
+if [ $STATUS -eq -1 ] ; then
 	echo ""
 	echo "Stop, server at $HOST:$PORT is already running"
     exit 1
