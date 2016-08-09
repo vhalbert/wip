@@ -57,24 +57,22 @@ public class QS_UTIL {
 	public static int DEAULT_WAIT_TIME = 6000;  // 3 seconds
 	public static int DEFAULT_RETRIES = 10;
 	
+	public static int HOSTPORT_NOT_FOUND = -1;
+	public static int HOSTPORT_FOUND = 0;
+	
 	public static void main(String[] args) throws Exception {
-        try {
-        	boolean failure = QS_UTIL.perform(args);
-	
+         	int status = QS_UTIL.perform(args);
+			System.out.println("QS_UTIL exit status: " + status );
 
-        	if (failure) {
-        		System.exit(-1);
-        	}
-        } catch (Throwable t) {
-            System.exit(-1);
-        }
-	}
+        	System.exit(status);
+ 	}
 	
-	public static boolean perform(String[] args) throws Exception {
+	public static int perform(String[] args) throws Exception {
 		boolean action1 = false;
 		boolean action2 = false;
 		boolean action3 = false;
 		boolean action4 = false;
+		int rtn = -1;
 		boolean error = false;
 		if (args.length == 0) { 
 			error = true;
@@ -135,7 +133,7 @@ public class QS_UTIL {
 				System.out.println("                QS_UTIL 4 <url> <targetFile>" );
 			}			
 			System.out.println(action1 + " Args: [" + x + "]" + msg);
-			return error;
+			throw new Exception("Invalid arguments");
 			
 		}
 		
@@ -157,6 +155,7 @@ public class QS_UTIL {
 
 			StringBuilder newsb = replace(sb, "${" + args[2] + "}", args[3] );
 			write(newsb.toString(), readFrom);
+			return 0;
 		} else if (action2) {
 			String host = DEFAULT_HOST;
 			int port = DEFAULT_PORT;
@@ -177,16 +176,23 @@ public class QS_UTIL {
 			boolean isAlive = isAlive(host, port, retries);
 			if (!isAlive) {
 				System.out.println("Unable to detect the [host:port] " + host + ":" + port );
-				return true;
+				return HOSTPORT_NOT_FOUND;
 			}
+			
+			touchFile("hostport_found.txt");
+			return HOSTPORT_FOUND;
 
 		} else if (action3) {
 			pauseForTime(args[1]);
+			return 0;
 		} else if (action4) {
 			downloadFile(args[1], args[2]);
+			return 0;
 		}
 		
-		return error;
+		System.out.println("Processing error, no Action determined " );
+
+		return -1;
 	}
 	
 	static StringBuilder readFile(String filename) throws Exception {
@@ -509,5 +515,18 @@ public class QS_UTIL {
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public static void touchFile(String filename)  {
+	       File newfile = new File(filename);
+	        if (newfile.exists()) {
+	            return;
+	        }
+	        try {
+				newfile.createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+	}
 }
 
+ 

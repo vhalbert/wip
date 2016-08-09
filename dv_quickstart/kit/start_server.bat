@@ -32,13 +32,20 @@ if !exist "%JBOSS_HOME%\bin\standalone.bat" (
    goto END
 )
 
+set "PINGFILE=hostport_found.txt"
+if exist "%PINGFILE%" (
+        del "%PINGFILE%"
+)
 
 call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 2 %HOST% %PORT% true
-if errorlevel == 0 (
+
+if exist "%PINGFILE%" (
         echo *** Server is already running at %HOST%:%PORT% ***
         goto END
 )
 
+
+:INSTALL
 
 cd %JBOSS_HOME%\bin
 

@@ -19,19 +19,22 @@ if [ ! -f "$JBOSS_HOME/bin/standalone.sh" ]; then
     exit 1
 fi
 
+PINGFILE="hostport_found.txt"
+
+if [ -f "$PINGFILE" ]; then
+        rm $PINGFILE
+fi
+
 # check for running server
 java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT true
 
-#unix needs a pause in this situation
-sleep 3
-echo "Ping Status x: " $?
-STATUS=$?
 
-if [ $STATUS -eq -1 ] ; then
-	echo ""
-	echo "Stop, server at $HOST:$PORT is already running"
-    exit 1
-else 
+if [ -f "$PINGFILE" ]; then
+        echo ""
+        echo "Stop, server at $HOST:$PORT is already running"
+        exit 1
+fi
+
         cd $JBOSS_HOME/bin
 
         ./standalone.sh &
@@ -42,6 +45,8 @@ else
         echo "**********************"
         echo "DV Server is started"
         echo "**********************"
-fi
+
+
+
 
 

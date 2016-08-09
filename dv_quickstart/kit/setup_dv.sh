@@ -42,21 +42,23 @@ cd $JBOSS_HOME/bin
 
 cd $DIRNAME
 
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT
+PINGFILE="hostport_found.txt"
 
-echo "Ping Status: " $?
-
-if [ $? != 0 ] ; then
-	echo ""
-	echo "Stop due to server has not started on $HOST:$PORT"
-    exit 1
+if [ -f "$PINGFILE" ]; then
+        rm $PINGFILE
 fi
 
-echo "Started DV Server"
+#determine when the server is running
+java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT
 
-#  pause for 20 seconds until the server is fully available
-#  otherwise, the admin config options are not enabled
-java -jar ./lib/dv_quickstart-2.1.0.jar 3 30
+if [ ! -f "$PINGFILE" ]; then
+        echo ""
+        echo "Stop, server at $HOST:$PORT is not running"
+        exit 1
+fi
+
+
+echo "Started DV Server"
 
 echo "Configure quickstart data sources..."
 

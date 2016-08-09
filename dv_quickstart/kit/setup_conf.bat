@@ -16,7 +16,7 @@ rem set "JBOSS_HOME=  "
 
 rem # set the JDV kit to install
 rem #
-set "DV_JAR=jboss-dv-6.3.0.ER3-installer.jar"
+set "DV_JAR=jboss-dv-installer-6.3.0.redhat-1.jar"
 
 rem # set the auto installer file to use
 rem #
