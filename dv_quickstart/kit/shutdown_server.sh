@@ -20,6 +20,10 @@ cd $JBOSS_HOME/bin
 
 cd $DIRNAME
 
+echo "Stopping H2 database..."
+
+./stop_h2_server.sh
+
 echo ""
 echo "**********************"
 echo "DV Server is shutdown"

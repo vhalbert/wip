@@ -4,23 +4,24 @@
 @if "%OS%" == "Windows_NT" setlocal
 
 if "%OS%" == "Windows_NT" (
-  set "DIRNAME=%~dp0%"
+  set "SETUPDIR=%~dp0%"
 ) else (
-  set DIRNAME=.
+  set SETUPDIR=.
 )
 
 rem Read an optional configuration file.
-if "x%STANDALONE_CONF%" == "x" (
-   set "STANDALONE_CONF=%DIRNAME%setup_conf.bat"
+if "x%SETUP_CONF%" == "x" (
+   set "SETUP_CONF=%SETUPDIR%setup_conf.bat"
 )
-if exist "%STANDALONE_CONF%" (
-   echo Calling "%STANDALONE_CONF%"
-   call "%STANDALONE_CONF%" %*
+if exist "%SETUP_CONF%" (
+   echo Calling "%SETUP_CONF%"
+   call "%SETUP_CONF%" %*
 ) else (
-   echo Config file not found "%STANDALONE_CONF%"
+   echo Config file not found "%SETUP_CONF%"
+   goto END
 )
 
-set "RESOLVED_JBOSS_HOME=%DIRNAME%"
+set "RESOLVED_JBOSS_HOME=%SETUPDIR%"
 popd
 
 if "x%JBOSS_HOME%" == "x" (
@@ -31,8 +32,14 @@ cd %JBOSS_HOME%\bin
 
 call jboss-cli.bat --connect command=:shutdown
 
-cd %DIRNAME%
+cd %SETUPDIR%
+
+echo Stoping H2 database...
+
+call "%SETUPDIR%\stop_h2_server.bat"
 
 echo **********************
 echo DV Server is shutdown
 echo **********************
+
+:END

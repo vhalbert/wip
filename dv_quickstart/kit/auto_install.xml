@@ -35,7 +35,13 @@
 <com.izforge.izpack.panels.UserInputPanel id="jsssecuritydomain"/>
 <com.redhat.installer.asconfiguration.jdbc.panel.JBossJDBCDriverSetupPanel id="jdbc.panel"/>
 <com.izforge.izpack.panels.UserInputPanel id="dblogging.panel"/>
-<com.izforge.izpack.panels.UserInputPanel id="javaopts.panel"/>
+<com.izforge.izpack.panels.UserInputPanel id="javaopts.panel">
+<userInput>
+<entry key="javaopts.set.custom.standalone" value="true"/>
+<entry key="javaopts.standalone" value="-Xms2048m -Xmx2048m -XX:MaxPermSize=512M -Djava.net.preferIPv4Stack=true -Djboss.modules.policy-permissions=true -Djboss.modules.system.pkgs=org.jboss.byteman"/>
+<entry key="javaopts.set.custom.domain" value="false"/>
+</userInput>
+</com.izforge.izpack.panels.UserInputPanel>
 <com.izforge.izpack.panels.SummaryPanel id="SummaryPanel"/>
 <com.izforge.izpack.panels.InstallPanel id="InstallPanel"/>
 <com.izforge.izpack.panels.ProcessPanel id="ProcessPanel"/>

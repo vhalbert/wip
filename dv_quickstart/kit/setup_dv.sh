@@ -34,35 +34,19 @@ java -DINSTALL_PATH=$JBOSS_HOME  -jar $DV_JAR auto_install.xml
 
 echo "DV kit has been installed, starting server"
 
-echo "Starting DV Server ..."
+cp  ../lib/h2-1.3.168.redhat-4.jar  $JBOSS_HOME/modules/system/layers/base/com/h2database/h2/main
 
-cd $JBOSS_HOME/bin
+./start_server.sh
 
-./standalone.sh >>console.log &
+# pause for 40 seconds
+sleep 40
 
 cd $DIRNAME
-
-PINGFILE="hostport_found.txt"
-
-if [ -f "$PINGFILE" ]; then
-        rm $PINGFILE
-fi
-
-#determine when the server is running
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT
-
-if [ ! -f "$PINGFILE" ]; then
-        echo ""
-        echo "Stop, server at $HOST:$PORT is not running"
-        exit 1
-fi
-
-
-echo "Started DV Server"
 
 echo "Configure quickstart data sources..."
 
 cp -r ./deployment/teiidfiles  $JBOSS_HOME
+
 
 cd $JBOSS_HOME/
 

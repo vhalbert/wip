@@ -19,32 +19,35 @@ if [ ! -f "$JBOSS_HOME/bin/standalone.sh" ]; then
     exit 1
 fi
 
-PINGFILE="hostport_found.txt"
+echo "Starting H2 database..."
 
-if [ -f "$PINGFILE" ]; then
-        rm $PINGFILE
-fi
+./start_h2_server.sh &
 
-# check for running server
-java -jar ./lib/dv_quickstart-2.1.0.jar 2 $HOST $PORT true
+echo "Starting DV Server ..."
 
+cd $JBOSS_HOME/bin
 
-if [ -f "$PINGFILE" ]; then
-        echo ""
-        echo "Stop, server at $HOST:$PORT is already running"
-        exit 1
-fi
+./standalone.sh  &
 
-        cd $JBOSS_HOME/bin
+cd $DIRNAME
 
-        ./standalone.sh &
+echo ""
+echo "********************************************
+echo "DV Server is ready"
+echo ""
+echo "Installed at $JBOSS_HOME"
+echo ""
+echo "Connect to URL: jdbc:teiid:portfolio@mm://$HOST:31000"
+echo "using Teiid User: Username/Password: teiidUser / $ADMIN_PWD"
 
-        cd $DIRNAME
+echo "********************************************
+        
+echo ""
+echo "**********************"
+echo "H2 Server Accounts database is available at:  jdbc:h2:tcp://localhost:$H2PORT/accounts"
+echo "**********************"
 
-        echo ""
-        echo "**********************"
-        echo "DV Server is started"
-        echo "**********************"
+        
 
 
 

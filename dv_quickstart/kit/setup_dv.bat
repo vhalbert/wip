@@ -11,23 +11,24 @@ rem -------------------------------------------------------------------------
 @if "%OS%" == "Windows_NT" setlocal
 
 if "%OS%" == "Windows_NT" (
-  set "DIRNAME=%~dp0%"
+  set "SETUPDIR=%~dp0%"
 ) else (
-  set DIRNAME=.
+  set SETUPDIR=.
 )
 
 rem Read an optional configuration file.
-if "x%STANDALONE_CONF%" == "x" (
-   set "STANDALONE_CONF=%DIRNAME%setup_conf.bat"
+if "x%SETUP_CONF%" == "x" (
+   set "SETUP_CONF=%SETUPDIR%setup_conf.bat"
 )
-if exist "%STANDALONE_CONF%" (
-   echo Calling "%STANDALONE_CONF%"
-   call "%STANDALONE_CONF%" %*
+if exist "%SETUP_CONF%" (
+   echo Calling "%SETUP_CONF%"
+   call "%SETUP_CONF%" %*
 ) else (
-   echo Config file not found "%STANDALONE_CONF%"
+   echo Config file not found "%SETUP_CONF%"
+   goto END
 )
 
-set "RESOLVED_JBOSS_HOME=%DIRNAME%"
+set "RESOLVED_JBOSS_HOME=%SETUPDIR%"
 popd
 
 if "x%JBOSS_HOME%" == "x" (
@@ -38,7 +39,7 @@ if "x%JBOSS_HOME%" == "x" (
  
 if not exist "%DV_JAR%" (
        echo Need to download DV %DV_JAR% package from the Customer Support Portal
-       echo and place it in the %DIRNAME% directory to proceed...
+       echo and place it in the %SETUPDIR% directory to proceed...
   goto END
  )  
 
@@ -51,44 +52,44 @@ if exist "%JBOSS_HOME%" (
 echo JBOSS_HOME '%JBOSS_HOME%' 
 mkdir %JBOSS_HOME%
 
-cd %DIRNAME%
+cd %SETUPDIR%
 
 echo
 echo Installing DV Server kit %DV_JAR%...
 
-call java -jar %DIRNAME%\lib\dv_quickstart-2.1.0.jar 1 auto_install.xml.variables admin.pwd %ADMIN_PWD%
+call java -jar %SETUPDIR%\lib\dv_quickstart-2.1.0.jar 1 auto_install.xml.variables admin.pwd %ADMIN_PWD%
+call java -jar %SETUPDIR%\lib\dv_quickstart-2.1.0.jar 1 auto_install.xml install.path %JBOSS_HOME%
 
 rem run headless installation
-call java -DINSTALL_PATH=%JBOSS_HOME% -jar %DV_JAR% %DV_AUTOFILE%
+java -jar %DV_JAR% %DV_AUTOFILE%
 
-echo Installing DV,wait for 110 seconds
+echo Installing DV,wait for 210 seconds
 echo.
 
-timeout 110 /nobreak
+timeout 210 /nobreak
 
 echo Installed DV kit
+
+xcopy /Y /Q /S "%SETUPDIR%\deployment\teiidfiles\*.*" "%JBOSS_HOME%\teiidfiles\"
+
+call java -jar %SETUPDIR%\lib\dv_quickstart-2.1.0.jar 1 %JBOSS_HOME%\teiidfiles\standalone.xml teiid_files_loc %JBOSS_HOME%\teiidfiles\ true
+
+copy "%SETUPDIR%\lib\h2-1.3.168.redhat-4.jar" "%JBOSS_HOME%\modules\system\layers\base\com\h2database\h2\main\h2-1.3.168.redhat-4.jar"
+copy "%JBOSS_HOME%\teiidfiles\standalone.xml" "%JBOSS_HOME%\standalone\configuration\standalone.xml"
+
+xcopy /Y /Q /S "%JBOSS_HOME%\teiidfiles\vdb\*.*" "%JBOSS_HOME%\standalone\deployments"
+xcopy /Y /Q /S "%JBOSS_HOME%\teiidfiles\war\*.*" "%JBOSS_HOME%\standalone\deployments"
 
 echo Starting DV Server
 echo.
 
-start "" "%JBOSS_HOME%\bin\standalone.bat"
+call "%SETUPDIR%\start_server.bat"
 
 echo Starting DV and wait for 40 seconds
 echo.
 
 timeout 40 /nobreak
 
-echo Configure quickstart data sources...
-echo.
-xcopy /Y /Q /S "%DIRNAME%\deployment\teiidfiles\*" "%JBOSS_HOME%\teiidfiles\"
-
-call "%JBOSS_HOME%\bin\jboss-cli.bat  --connect --file=%DIRNAME%\deployment\scripts\setup.cli"
-
-
-rem xcopy /Y /Q /S "%JBOSS_HOME%\teiidfiles\vdb\*" "%JBOSS_HOME%\standalone\deployments"
-
-
-echo Completed configuring quickstart data sources
 
 echo.
 echo ********************************************
@@ -96,7 +97,7 @@ echo DV Server is ready to run the DV Quickstart
 echo 
 echo Installed at %JBOSS_HOME%
 echo
-echo Connect to URL: jdbc:teiid:portfolio@mm://localhost:31000
+echo Connect to URL: jdbc:teiid:portfolio@mm://%HOST%:31000
 echo using Teiid User: Username/Password: teiidUser / %ADMIN_PWD%
 echo ********************************************
 

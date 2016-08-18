@@ -34,3 +34,6 @@ set "ADMIN_PWD=redhat1!"
 rem # the default host:port to use to ping the server
 set "HOST=localhost"
 set "PORT=9990"
+
+rem # the default port for H2 server
+set "H2PORT=9092"

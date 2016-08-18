@@ -21,35 +21,13 @@ if exist "%SETUP_CONF%" (
    goto END
 )
 
-set "RESOLVED_JBOSS_HOME=%SETUPDIR%"
-popd
+set "CP=%SETUPDIR%\lib\*"
 
-if "x%JBOSS_HOME%" == "x" (
-  set "JBOSS_HOME=%RESOLVED_JBOSS_HOME%%SERVER_DIR%"
-)
+java -cp %CP% org.h2.tools.Server -tcpShutdown tcp://localhost:%H2PORT% -tcpShutdownForce
 
-if EXIST "%JBOSS_HOME%\bin\standalone.bat" goto INSTALL
-
-   echo "Stop, first run setup_dv.bat to install DV Server"
-   goto END
-
-
-:INSTALL
-
-echo "Starting H2 database..."
-
-start cmd /k "%SETUPDIR%\start_h2_server.bat"
-
-echo "Starting DV Server ..."
-
-#cd %JBOSS_HOME%\bin
-
-call  "%JBOSS_HOME%\bin\standalone.bat"
-
-cd %SETUPDIR%
 
 echo **********************
-echo DV Server is started
+echo H2 database is shutdown
 echo **********************
 
 :END

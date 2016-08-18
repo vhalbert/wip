@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+
 /*
  * JBoss, Home of Professional Open Source.
  * See the COPYRIGHT.txt file distributed with this work for information
@@ -72,6 +75,7 @@ public class QS_UTIL {
 		boolean action2 = false;
 		boolean action3 = false;
 		boolean action4 = false;
+		boolean action5 = false;
 		int rtn = -1;
 		boolean error = false;
 		if (args.length == 0) { 
@@ -80,7 +84,7 @@ public class QS_UTIL {
 
 			if (args[0].equals("1") ) {
 				action1 = true;
-				if (args.length != 4 ) {
+				if (args.length < 4 || args.length > 5 ) {
 					error = true;
 				} 
 			} else if (args[0].equals("2") ) {
@@ -98,7 +102,17 @@ public class QS_UTIL {
 				action4 = true;
 				if ( args.length > 3 ) {
 					error = true;
-				} 				
+				} 	
+			} else if (args[0].equals("5")) {
+				action4 = true;
+				if ( args.length > 3 ) {
+					error = true;
+				} 	
+			} else if (args[0].equals("5")) {
+				action4 = true;
+				if ( args.length > 3 ) {
+					error = true;
+				} 					
 			} else {
 				error = true;
 			}
@@ -118,7 +132,7 @@ public class QS_UTIL {
 			System.out.println("usage: QS_UTIL <action[1,2,3,4]> [options] ");
 			if (action1) {
 				System.out.println("where: action = 1 is to replace value in file");
-				System.out.println("                QS_UTIL 1 <inputfile> <searchValue> <replaceValue> " );
+				System.out.println("                QS_UTIL 1 <inputfile> <searchValue> <replaceValue> <false|true [useforwardslash]> " );
 			}
 			if (action2) {
 				System.out.println("where: action = 2 is to ping the server to determine if its up and running");
@@ -131,7 +145,11 @@ public class QS_UTIL {
 			if (action4) {
 				System.out.println("where: action = 4 is to download file from internet");
 				System.out.println("                QS_UTIL 4 <url> <targetFile>" );
-			}			
+			}	
+			if (action5) {
+				System.out.println("where: action = 5 is to perform ping using Teiid JDBC Driver connection");
+				System.out.println("                QS_UTIL 5 <jdbcurl> <username> <password> <pingfile>" );
+			}
 			System.out.println(action1 + " Args: [" + x + "]" + msg);
 			throw new Exception("Invalid arguments");
 			
@@ -151,24 +169,32 @@ public class QS_UTIL {
 				copy(readFrom, backupfile, true);
 			}
 			
+			String replaceValue = args[3];
+            if (args.length == 5) {
+				if (args[4].toLowerCase().equals("true")) {	
+					replaceValue =  replaceValue.replace("\\", "/");
+				}            	
+            }
+			
 			StringBuilder sb = readFile(readFrom);
 
-			StringBuilder newsb = replace(sb, "${" + args[2] + "}", args[3] );
+			StringBuilder newsb = replaceAll(sb, "${" + args[2] + "}", replaceValue );
 			write(newsb.toString(), readFrom);
 			return 0;
 		} else if (action2) {
 			String host = DEFAULT_HOST;
 			int port = DEFAULT_PORT;
-			if (args.length == 2) {
+			if (args.length > 1) {
 				if (! args[1].toLowerCase().equals("localhost")) {	
 					host = args[1];
 				}
 			}
-			if (args.length == 3) {
+
+			if (args.length > 2) {
 				port = Integer.valueOf(args[2]);
 			} 
             int retries = DEFAULT_RETRIES;
-            if (args.length == 4) {
+            if (args.length > 3) {
 				if (args[3].toLowerCase().equals("true")) {	
 					retries = 0;
 				}            	
@@ -188,6 +214,16 @@ public class QS_UTIL {
 		} else if (action4) {
 			downloadFile(args[1], args[2]);
 			return 0;
+		} else if (action5) {
+			boolean isAlive = testConnection(args[0], args[1], args[2], DEFAULT_RETRIES);
+			
+			if (!isAlive) {
+				return HOSTPORT_NOT_FOUND;
+			}
+			
+			touchFile(args[3]);
+			return HOSTPORT_FOUND;
+
 		}
 		
 		System.out.println("Processing error, no Action determined " );
@@ -247,6 +283,31 @@ public class QS_UTIL {
             }
 	    return source;    
 	} 
+	
+	/*
+	 * Replace all occurrences of the search string with the replace string
+	 * in the source string. If any of the strings is null or the search string
+	 * is zero length, the source string is returned.
+	 * @param source the source string whose contents will be altered
+	 * @param search the string to search for in source
+	 * @param replace the string to substitute for search if present
+	 * @return source string with *all* occurrences of the search string
+	 * replaced with the replace string
+	 */
+	public static StringBuilder replaceAll(StringBuilder source, String search, String replace) {
+	    if (source == null || search == null || search.length() == 0 || replace == null) {
+	    	return source;
+	    }
+        int start = source.indexOf(search);
+        if (start > -1) {
+	        while (start > -1) {
+	            int end = start + search.length();
+	            source.replace(start, end, replace);
+	            start = source.indexOf(search, start + replace.length());
+	        }
+        }
+	    return source;    
+	}
 	
     /**
      * Copy a file 
@@ -367,6 +428,40 @@ public class QS_UTIL {
 	      }
 	  }
   }
+  	private static boolean testConnection(String url, String username, String password, int retries) throws Exception {
+		int cnt = 0;
+		Class.forName("org.teiid.jdbc.TeiidDriver");
+	
+		Connection conn = null;
+		while (cnt <= retries) {
+			System.out.println("Ping url" + url);
+	  		try {
+	  			
+	  			conn = DriverManager.getConnection(url, username, password);
+	  			return true;
+	  		} catch (Exception e) {
+	  			
+	  		} finally {
+	  			try {
+	  				if (conn != null) {
+	  					conn.close();
+	  				}
+	  			} catch (Exception e) {
+	  				
+	  			}
+	  		}
+	  		
+            cnt++;
+            // in cases where retries is set to 0 dont sleep
+            if (cnt > retries) break;
+
+			Thread.sleep(DEAULT_WAIT_TIME);
+			
+		}
+		System.out.println("Could not ping url " + url);
+		return false;
+
+  	}
   
 	private static boolean isAlive(String hostname, int port, int retries) throws Exception {
 		int cnt = 0;
@@ -429,11 +524,18 @@ public class QS_UTIL {
 		Socket ignored = null;
 		    try {
 		    	ignored = new Socket(host, port);
-		    	ignored.close();
 		        return true;
 		    } catch (IOException e) {
 		        return false;
-		    } 
+		    } finally {
+                        if (ignored != null) {
+                                try {
+                                        ignored.close();
+                                } catch(IOException ioe) {
+                                }
+
+                        }
+                    }
 
 		
 //		try{
@@ -464,6 +566,8 @@ public class QS_UTIL {
 //	            return false;
 //	    }
 	}	
+
+     
 	private static void pauseForTime(String pauseTime) throws Exception {
 		System.out.println("pausing for : " + pauseTime + " seconds");
 			

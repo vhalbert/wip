@@ -76,8 +76,8 @@ public class Test_QS_Util {
 		
 	}
 	
-	@Test( expected = Exception.class )
-	public void testUtilOption1Error2() throws Exception {
+	@Test( expected = java.io.FileNotFoundException.class )
+	public void testUtilOption1Error2FileNotFound() throws Exception {
 		String[] args = new String[] {"1", "eap-installer.xml", ".", "xx"};
 		performTest(args, -1);
 		
@@ -85,6 +85,11 @@ public class Test_QS_Util {
 	
 	@Test public void testUtilOption1() throws Exception {
 		String[] args = new String[] {"1", "./src/test/resources/auto_install.xml.variables", "pwd", "mypassword"};
+		performTest(args, 0);
+	}
+	
+	@Test public void testUtilOption1_5args() throws Exception {
+		String[] args = new String[] {"1", "./src/test/resources/eap-installer.xml", "install.path", "c:\\my\\path\\", "true"};
 		performTest(args, 0);
 	}
 	

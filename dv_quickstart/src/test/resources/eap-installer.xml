@@ -4,7 +4,7 @@
 <productVersion>6.4.0</productVersion>
 <com.izforge.izpack.panels.HTMLLicencePanel id="HTMLLicencePanel"/>
 <com.izforge.izpack.panels.TargetPanel id="DirectoryPanel">
-<installpath>.</installpath>
+<installpath>c:/my/path/</installpath>
 </com.izforge.izpack.panels.TargetPanel>
 <com.izforge.izpack.panels.TreePacksPanel id="TreePacksPanel">
 <pack index="0" name="Red Hat JBoss Enterprise Application Platform" selected="true"/>
@@ -37,7 +37,7 @@
 <entry key="portDecision" value="false"/>
 <entry key="pureIPv6" value="false"/>
 </userInput>
-</com.izforge.izpack.panels.UserInputPanel>
+</com.izforge.izpack.panels.UserInputPanelc:/my/path/>
 <com.izforge.izpack.panels.UserInputPanel id="SocketStandalonePanel"/>
 <com.izforge.izpack.panels.UserInputPanel id="SocketHaStandalonePanel"/>
 <com.izforge.izpack.panels.UserInputPanel id="SocketFullStandalonePanel"/>
@@ -49,7 +49,7 @@
 <com.izforge.izpack.panels.UserInputPanel id="SocketFullHaDomainPanel"/>
 <com.izforge.izpack.panels.UserInputPanel id="ServerLaunchPanel">
 <userInput>
-<entry key="serverStartup" value="none"/>
+<entry key="serverStartup" value="c:/my/path/"/>
 </userInput>
 </com.izforge.izpack.panels.UserInputPanel>
 <com.izforge.izpack.panels.UserInputPanel id="LoggingOptionsPanel">

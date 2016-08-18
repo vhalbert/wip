@@ -5,7 +5,9 @@
 	<title></title>
 	<meta name="generator" content="LibreOffice 4.4.7.2 (Linux)"/>
 	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="2016-05-25T20:16:49.601407627"/>
+	<meta name="changed" content="2016-08-10T10:33:29.210004788"/>
+	<meta name="created" content="00:00:00">
+	<meta name="changed" content="2016-05-25T20:16:49.601407627">
 	<meta name="created" content="00:00:00">
 	<meta name="changed" content="2016-05-25T20:15:43.845586999">
 </head>
@@ -14,12 +16,25 @@
 Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
 <ol>
 	<li/>
-<p>Unzip the Quickstart kit, which will be the location that
-	the DV server kit should be placed and the quickstart run.</p>
-	<li/>
-<p>The DV 6.3 ER3 (Beta) kit is included in the download</p>
-	<li/>
-<p>Open a terminal window and 'cd' into this quickstart_home</p>
+<p>Installing Quickstart kit</p>
+</ol>
+<ul>
+	<ul>
+		<li/>
+<p>Open a terminal window</p>
+		<li/>
+<p>create an empty folder and 'cd' into this quickstart_home
+		folder</p>
+		<li/>
+<p>copy the Quick start kit into this folder</p>
+		<li/>
+<p>Unzip the the Quick start kit</p>
+		<li/>
+<p>the DV 6.3 installer.jar should exist in the root of this
+		folder.</p>
+	</ul>
+</ul>
+<ol start="2">
 	<li/>
 <p>run the setup_dv.sh (.bat) script to install and configure
 	the DV server. This will:</p>
@@ -29,10 +44,12 @@ Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
 		<li/>
 <p>install DV</p>
 		<li/>
+<p>start H2 database server</p>
+		<li/>
 <p>start server</p>
 		<li/>
-<p>configure and deploy quick start data sources (H2 and web
-		service)</p>
+<p>configure and deploy quick start data sources (H2, web
+		service and csv file)</p>
 		<li/>
 <p>deploy example VDB, name portfolio 
 		</p>
@@ -58,14 +75,19 @@ Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
 <p>setup.conf.bat</p>
 			</ul>
 		</ul>
-		<li/>
-<p>to stop the server, run shutdown_server.sh (.bat)</p>
-		<li/>
-<p>to restart the server after shutting down, run
-		start_server.sh (.bat)</p>
 	</ul>
 </ul>
 <ol start="6">
+	<li/>
+<p>Starting and Stopping Server</p>
+	<ol>
+		<li/>
+<p>To stop the server (and H2 database server), run
+		shutdown_server.sh (.bat)</p>
+		<li/>
+<p>To restart the server (and H2 database serve), run
+		start_server.sh (.bat).</p>
+	</ol>
 	<li/>
 <p>Test the vdb</p>
 </ol>
@@ -77,7 +99,7 @@ Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
 			<li/>
 <p>URL: jdbc:teiid:<a href="mailto:portfolio@mm">portfolio@mm</a>://localhost:31000</p>
 			<li/>
-<p>Username/Password:  teiidUser / redhat1!</p>
+<p>Username/Password: teiidUser / redhat1!</p>
 		</ul>
 		<li/>
 <p>Example queries (data source)</p>
@@ -159,11 +181,6 @@ Virtualization (DV) 6.3 Quick Start Instructions</b></font></p>
 <br/>
 
 </p>
-<p>Downloads (click on the link):</p>
-<p>DV 6.3 Beta kit:
-<a href="http://download.devel.redhat.com/devel/candidates/JBDV/JBDV-6.3.0.ER3">http://download.devel.redhat.com/devel/candidates/JBDV/JBDV-6.3.0.ER3</a></p>
-<p>JBDS (Teiid Designer)
-<a href="https://www.jboss.org/downloadd-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar">https://www.jboss.org/downloadd-manager/file/jboss-devstudio-8.1.0.GA-jar_universal.jar</a></p>
 <p><br/>
 <br/>
 
