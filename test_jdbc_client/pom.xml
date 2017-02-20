@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<parent>
+        <groupId>org.jboss.integration-platform</groupId>
+        <artifactId>jboss-integration-platform-parent</artifactId>
+        <version>6.0.0.CR30</version>
+        <relativePath></relativePath>		
+	</parent>
+
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>testclient</artifactId>
+	<groupId>org.teiid.testing</groupId>
+        <version>0.0.1</version>
+	<name>TestClient</name>
+	<description>The testclient client code for testing teiid jdbc as a data source</description>
+
+	<properties>
+		<version.teiid>8.12.5</version.teiid>
+                <version.org.codehaus.mojo.exec.plugin>1.2.1</version.org.codehaus.mojo.exec.plugin>
+                <version.org.jboss.integration-platform>6.0.0.CR30</version.org.jboss.integration-platform>
+        </properties>
+	<dependencyManagement>
+		<dependencies>		
+                          <dependency>
+                            	<groupId>org.jboss.integration-platform</groupId>
+                            	<artifactId>jboss-integration-platform-bom</artifactId>
+                            	<version>${version.org.jboss.integration-platform}</version>
+                            	<scope>import</scope>
+                            	<type>pom</type>
+                          </dependency> 	
+	                <dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-jdbc</artifactId>
+				<version>${version.teiid}</version>
+                                <exclusions>
+					<exclusion>
+						<groupId>org.jboss.as</groupId>
+						<artifactId>jboss-as-parent</artifactId>
+					</exclusion>
+  
+				</exclusions>	
+	                </dependency>
+	        </dependencies>
+        </dependencyManagement>
+
+        <dependencies>
+			<dependency>
+				<groupId>org.jboss.teiid</groupId>
+				<artifactId>teiid-jdbc</artifactId>
+                                <exclusions>
+					<exclusion>
+						<groupId>org.jboss.as</groupId>
+						<artifactId>jboss-as-parent</artifactId>
+					</exclusion>
+  
+				</exclusions>
+			</dependency>	
+        </dependencies>
+
+  <build>
+        <plugins>
+	  <!-- Specify the compiler options and settings -->
+		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+	<!--  			<configuration>
+					<includes>
+						<include>**/pojo/*</include>
+					</includes>
+				</configuration-->
+				<configuration>
+				</configuration>				
+				<executions>
+					<execution>
+						<id>make-a-jar</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+        </plugins>
+</build>
+
+    <profiles>
+        <profile>
+            <id>defaultuser</id>
+            <activation>
+                <property>
+                    <name>vdb</name>
+                </property>
+            </activation>                     
+            <build>
+                <plugins>
+           <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${version.org.codehaus.mojo.exec.plugin}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <classpathScope>test</classpathScope>
+                    <mainClass>JDG_MatView_Testing</mainClass>
+                                    <arguments>
+                                        <argument>localhost</argument>
+                                        <argument>31000</argument>
+                                        <argument>${vdb}</argument>
+                                    </arguments>                   
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+            </plugin>                              
+                </plugins>
+            </build>
+        </profile>         
+    </profiles>
+</project>

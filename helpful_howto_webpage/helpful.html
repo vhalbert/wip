@@ -1,0 +1,348 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title></title>
+	<meta name="generator" content="LibreOffice 4.4.7.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2016-07-25T10:42:13.389723904"/>
+	<meta name="created" content="2015-08-03T00:00:00.008483600">
+	<meta name="changed" content="2016-07-14T09:01:51.132471735">
+</head>
+<body lang="en-US" dir="ltr">
+<p><br/>
+<br/>
+
+</p>
+<p><a href="#GIT|region">GIT</a></p>
+<p><a href="#OData|region">OData</a></p>
+<p><a href="#Docker|region">Docker</a></p>
+<p><a href="#Translators|region">Translators</a></p>
+<p><a href="#Archetypes|region">Archetypes</a></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<div id="GIT" dir="ltr"><a name="GIT|region"></a>
+	<h1>Git</h1>
+</div>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">-
+having issue pushing to the branch due to error: error: failed to
+push some refs to </font></font></font>
+</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<ul>
+	<li/>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">be
+	in the product directory for the branch being pushed</font></font></font></p>
+	<li/>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+	remote -v</font></font></font></p>
+	<li/>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+	pull upstream {target-branch}</font></font></font></p>
+	<li/>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">resolve
+	any conflicts</font></font></font></p>
+	<li/>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">retry
+	push</font></font></font></p>
+</ul>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">-
+reverting commit that is bad</font></font></font></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">http://gitready.com/intermediate/2009/03/16/rolling-back-changes-with-revert.html</font></font></font></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">did:
+git revert [sha] --no-edit</font></font></font></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">then
+did: </font></font></font>
+</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-left: 1.94in; text-indent: -1.94in; margin-bottom: 0in">
+<font color="#f13a28"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+reset origin/(branch} ex: git reset origin/8.7.x</font></font></font></p>
+<p style="margin-left: 1.94in; text-indent: -1.94in; margin-bottom: 0in">
+<br/>
+
+</p>
+<p style="margin-bottom: 0in">- Delete local branch</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in">https://makandracards.com/makandra/621-git-delete-a-branch-local-or-remote</p>
+<p style="margin-left: 1.94in; text-indent: -1.94in; margin-bottom: 0in">
+<br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#f13a28"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">To
+remove a tag: git push [repo] :[tag]</font></font></font></p>
+<p style="margin-left: 1.94in; text-indent: -1.94in; margin-bottom: 0in">
+<br/>
+
+</p>
+<p style="margin-left: 2.1in; text-indent: -2.1in; margin-bottom: 0in; line-height: 120%">
+<font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+push integration :DV_6.0.4_2014</font></font></font></p>
+<p style="margin-left: 2.1in; text-indent: -2.1in; margin-bottom: 0in; line-height: 120%">
+<br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+push upstream :sync-6.2.1-ER3</font></font></font></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><font color="#000000"><font face="Courier, monospace"><font size="2" style="font-size: 11pt">git
+log (see the list of changes)</font></font></font></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in">squash:</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in">git rebase –interactive HEAD~2</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in">Helpfull links:</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<ul>
+	<li/>
+<p style="margin-bottom: 0in"><a href="https://tech.lds.org/wiki/Useful_Maven_Commands">https://tech.lds.org/wiki/Useful_Maven_Commands</a></p>
+	<li/>
+<p></p>
+</ul>
+<div id="OData" dir="ltr"><a name="OData|region"></a>
+	<h1>OData</h1>
+</div>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in">see the metadata:
+<a href="http://localhost:8080/odata/portfolio.1/$metadata">http://localhost:8080/odata/portfolio.1/$metadata</a></p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<p style="margin-bottom: 0in"><br/>
+
+</p>
+<div id="Docker" dir="ltr"><a name="Docker|region"></a>
+	<h1>Docker</h1>
+</div>
+<p><br/>
+<br/>
+
+</p>
+<p>docker-registry.usersys.redhat.com/goldmann/jboss-datavirt:6.0</p>
+<p><br/>
+<br/>
+
+</p>
+<div id="Archetypes" dir="ltr"><a name="Archetypes|region"></a>
+	<h1>Archetypes</h1>
+</div>
+<p><br/>
+<br/>
+
+</p>
+<p>mvn -s ../../settings.xml archetype:generate
+-DarchetypeGroupId=org.jboss.teiid.arche-types
+-DarchetypeArtifactId=translator-archetype -DarchetypeVersion=8.7.0
+-DgroupId=org.jboss.teiid.test.translator
+-DartifactId=test-translator
+-Dpackage=org.teiid.translator.test.translator -Dversion=0.0.1
+-Dtranslator-name=TestTranslator -Dteiid-version=8.7.0.Final</p>
+<p><br/>
+<br/>
+
+</p>
+<div id="Translators" dir="ltr"><a name="Translators|region"></a>
+	<h1>Translators</h1>
+</div>
+<p><br/>
+<br/>
+
+</p>
+<h1>jdg-cache-dsl translator changes</h1>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">JDG translator notes</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">--------------</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">noted issues:</font></p>
+<p><font size="2" style="font-size: 11pt">- boolean attributes: JDG
+will throw an exception if no value is specified on the insert or</font></p>
+<p><font size="2" style="font-size: 11pt">no default value is defined
+in the protobuf definition file.</font></p>
+<p><font size="2" style="font-size: 11pt">- char data types: Protobuf
+data types do not support char type's (see: for list)</font></p>
+<p><font size="2" style="font-size: 11pt">- will not push down NULL
+(Is Null/Is Not Null) criteria, or &lt;&gt; / Not criteria, this is
+because</font></p>
+<p><font size="2" style="font-size: 11pt">JDG considers NULL &lt;&gt;
+1 = true (and SQL does not)</font></p>
+<p><font size="2" style="font-size: 11pt">1. (not suppose to be in DV
+6.2) Operator &lt;&gt; incorrectly handled</font></p>
+<p><font size="2" style="font-size: 11pt">- teiid-3573</font></p>
+<p><font size="2" style="font-size: 11pt">-
+https://bugzilla.redhat.com/show_bug.cgi?id=1242999</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">2. (not in DV 6.2)
+incorrect null ordering</font></p>
+<p><font size="2" style="font-size: 11pt">- teiid-3570</font></p>
+<p><font size="2" style="font-size: 11pt">https://bugzilla.redhat.com/show_bug.cgi?id=1242938</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">3. cannot delete/update
+rows inserted from other hotrod client</font></p>
+<p><font size="2" style="font-size: 11pt">- TEIID-3536</font></p>
+<p><font size="2" style="font-size: 11pt">https://bugzilla.redhat.com/show_bug.cgi?id=1232282</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">To resolve this, the
+CacheTypeMap property will be enhanced. The current format is:</font></p>
+<p><font size="2" style="font-size: 11pt">cacheName:className[;pkFieldName]</font></p>
+<p><font size="2" style="font-size: 11pt">Changing it so that the
+object type of the &quot;pkFieldName&quot; can be specified. So
+changing the format to:</font></p>
+<p><font size="2" style="font-size: 11pt">cacheName:className[;pkFieldName[:cacheKeyJavaType]]</font></p>
+<p><font size="2" style="font-size: 11pt">And only when specified,
+the key value will be transformed to this type before doing a lookup
+by key (i.e, for updates and deletes) or insert.</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">4. Infinispan-dsl-cache
+translator: can't insert value into BYTE and BIGINTEGER columns</font></p>
+<p><font size="2" style="font-size: 11pt">- TEIID-3533</font></p>
+<p><font size="2" style="font-size: 11pt">https://bugzilla.redhat.com/show_bug.cgi?id=1232182</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">- ideally, either use the
+Teiid connection importer so that the data types are set accordingly,
+or use</font></p>
+<p><font size="2" style="font-size: 11pt">a dynamic vdb that only
+maps the translator type (infinispan-cache-dsl) and jndi name to the
+data source/resource adapter</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">BUGS</font></p>
+<p><font size="2" style="font-size: 11pt">5. NPE when inserting when
+no PKEY defined (1232240 TEIID-3535)</font></p>
+<ol start="6">
+	<li/>
+<p><font size="2" style="font-size: 11pt">Exception: Sentence
+	already started. Cannot use 'having(..)' again. (1238357) because
+	passing in null to method</font></p>
+</ol>
+<p><font size="2" style="font-size: 11pt">Other notes:</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">-
+Person,PhoneNumber,PhoneType don't have annotations, but
+addresssbook.proto indicate indexed</font></p>
+<p><font size="2" style="font-size: 11pt">- regarding Memo, which
+does have annotations</font></p>
+<p><font size="2" style="font-size: 11pt">what's the purpose of doing
+this on client (from DV perspective, can it be assumed this is done
+when building the protobin file?):</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">ProtoSchemaBuilder
+protoSchemaBuilder = new ProtoSchemaBuilder();</font></p>
+<p><font size="2" style="font-size: 11pt">String memoSchemaFile =
+protoSchemaBuilder</font></p>
+<p><font size="2" style="font-size: 11pt">.fileName(&quot;memo.proto&quot;)</font></p>
+<p><font size="2" style="font-size: 11pt">.packageName(&quot;quickstart&quot;)</font></p>
+<p><font size="2" style="font-size: 11pt">.addClass(Memo.class)</font></p>
+<p><font size="2" style="font-size: 11pt">.build(ctx);</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">- and assume the following
+is done on the JDG server:</font></p>
+<p><br/>
+<br/>
+
+</p>
+<p><font size="2" style="font-size: 11pt">// register the schemas
+with the server too</font></p>
+<p><font size="2" style="font-size: 11pt">RemoteCache&lt;String,
+String&gt; metadataCache =
+cacheManager.getCache(ProtobufMetadataManagerConstants.PROTOBUF_METADATA_CACHE_NAME);</font></p>
+<p><font size="2" style="font-size: 11pt">metadataCache.put(PROTOBUF_DEFINITION_RESOURCE,
+readResource(PROTOBUF_DEFINITION_RESOURCE));</font></p>
+<p><font size="2" style="font-size: 11pt">metadataCache.put(&quot;memo.proto&quot;,
+memoSchemaFile);</font></p>
+<p><font size="2" style="font-size: 11pt">String errors =
+metadataCache.get(ProtobufMetadataManagerConstants.ERRORS_KEY_SUFFIX);</font></p>
+<p><font size="2" style="font-size: 11pt">if (errors != null) {</font></p>
+<p><font size="2" style="font-size: 11pt">throw new
+IllegalStateException(&quot;Some Protobuf schema files contain
+errors:\n&quot; + errors);</font></p>
+<p><font size="2" style="font-size: 11pt">}</font></p>
+</body>
+</html>
